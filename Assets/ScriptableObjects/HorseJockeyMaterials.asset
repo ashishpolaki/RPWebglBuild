@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13991513459393f4a9f02a928e557821, type: 3}
+  m_Name: HorseJockeyMaterials
+  m_EditorClassIdentifier: 
+  horseMaterials:
+  - {fileID: 2100000, guid: 6b420f700614d8440a8963231cf43552, type: 2}
+  - {fileID: 2100000, guid: 9f76b6ad35d24514c88bdc4411c2f73f, type: 2}
+  - {fileID: 2100000, guid: e0efa9d4075b3424ab99c98fa9671398, type: 2}
+  - {fileID: 2100000, guid: 208b849a34934654689af0c16a79b11e, type: 2}
+  - {fileID: 2100000, guid: 7cf92c6c04fadae4ebdd3c4db8d1b8f8, type: 2}
+  - {fileID: 2100000, guid: 694eb13ee47328e44adabd2488cb7252, type: 2}
+  - {fileID: 2100000, guid: 9498c8ab0f7405c4a9317582d05621d6, type: 2}
+  - {fileID: 2100000, guid: 8e97b57cad2609044a1cdfa01db885ee, type: 2}
+  - {fileID: 2100000, guid: e683b6e289ee72842ae145648cf749d6, type: 2}
+  - {fileID: 2100000, guid: 9405de7137ad0ca45bf69c4102aa926b, type: 2}
+  horseHairMaterials:
+  - {fileID: 2100000, guid: 1a70bede77c1109439867095c196ca6c, type: 2}
+  - {fileID: 2100000, guid: efb8dbf4d5a424646b22984b9ec5834d, type: 2}
+  jockeyMaterials:
+  - {fileID: 2100000, guid: 7288406e83115734ab435a74dc0acf83, type: 2}
+  - {fileID: 2100000, guid: 6564baad0f004f34a8234947f460aaf3, type: 2}
+  - {fileID: 2100000, guid: 78bf196b703c70a41811649268cab9f1, type: 2}
+  - {fileID: 2100000, guid: 924f77b10fb396441b4bcf327135bf96, type: 2}
+  - {fileID: 2100000, guid: 5f8f01ede82a4f44aae4df8e37aaf60d, type: 2}
+  - {fileID: 2100000, guid: 59c854ec964aa5f41a5ba4976404e335, type: 2}
+  - {fileID: 2100000, guid: 957fe6c2236373c42a95d5e2b41135d5, type: 2}
+  - {fileID: 2100000, guid: 063b5580ea043b045bb1ff141a2cfe13, type: 2}
+  - {fileID: 2100000, guid: 321866a0f28115d43ad555d43ed6883e, type: 2}
+  - {fileID: 2100000, guid: 12b5a6242eb164b4fa201fe514ff7c4b, type: 2}
+  - {fileID: 2100000, guid: 2f3c647e5da667343b21ede2ae655a48, type: 2}
+  - {fileID: 2100000, guid: 7f93bbf6cd9d36542a459f71fa204b3d, type: 2}
+  - {fileID: 2100000, guid: 2385263f231f31348b6b771f862444bd, type: 2}
+  - {fileID: 2100000, guid: 75c9f74ee2a134f4aaf38eb2e69da9fc, type: 2}
+  - {fileID: 2100000, guid: d13b3a6b6e4cff24b89a0664eff7ec57, type: 2}
+  - {fileID: 2100000, guid: 01e6ec5b318070146b0102e0da4223a8, type: 2}
+  - {fileID: 2100000, guid: 45eb23e45efd62247a5c0210cba627b4, type: 2}

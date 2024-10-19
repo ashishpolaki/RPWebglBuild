@@ -1,10 +1,114 @@
 {
   "dependencies": {
+    "com.aarquiesolutions.automaticuianchoring": {
+      "version": "https://github.com/Aarquie-Solutions/AutomaticUIAnchoring.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "aa1517f08be55d300a1e399382868fcaf39feb2b"
+    },
+    "com.aarquiesolutions.componentfielddependencyinjector": {
+      "version": "https://github.com/Aarquie-Solutions/ComponentFieldDependencyInjector.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "5e4287413a7ad49a0d783092cd34b4310c5f59aa"
+    },
+    "com.aarquiesolutions.inspectorattributes": {
+      "version": "https://github.com/Aarquie-Solutions/InspectorAttributes.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "80e0e4341e8a633efa5f96973cafb81ac084b1eb"
+    },
+    "com.aarquiesolutions.packagedependencyresolvertool": {
+      "version": "https://github.com/Aarquie-Solutions/PackageDependencyResolverTool.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e15da6afd1bc931bd5a24c09ce193d5ac7a01bd4"
+    },
+    "com.aarquiesolutions.saveandloadsystem": {
+      "version": "https://github.com/Aarquie-Solutions/SaveAndLoadSystem.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.aarquiesolutions.typeextensions": "1.0.0",
+        "com.unity.editorcoroutines": "1.0.0"
+      },
+      "hash": "adbd2dc36a24a1c472ee21e2491d85d69a21f7b1"
+    },
+    "com.aarquiesolutions.settingssystem": {
+      "version": "https://github.com/Aarquie-Solutions/SettingsSystem.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "134f36f452f9271e8056bd58939816e9b11680c1"
+    },
+    "com.aarquiesolutions.singleton": {
+      "version": "https://github.com/Aarquie-Solutions/Singleton.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "13b1dfc50829a3b225ecd5063ddbf5436ec7763a"
+    },
+    "com.aarquiesolutions.tweenlibrary": {
+      "version": "https://github.com/Aarquie-Solutions/TweenLibrary.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "15742b477794e0506beb49914f28463610a97e6b"
+    },
+    "com.aarquiesolutions.typeextensions": {
+      "version": "https://github.com/Aarquie-Solutions/TypeExtensions.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e42378d0eaca5881ba9dcf7f052c751e31d69808"
+    },
+    "com.aarquiesolutions.zipprojecttool": {
+      "version": "https://github.com/Aarquie-Solutions/ZipProjectTool.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "05419ee81161b754539eb7765f79c1ab1a15a2fc"
+    },
+    "com.unity.burst": {
+      "version": "1.8.18",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.cinemachine": {
+      "version": "3.1.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.splines": "2.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.collab-proxy": {
       "version": "2.5.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.collections": {
+      "version": "2.5.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.8.17",
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.nuget.mono-cecil": "1.11.4",
+        "com.unity.test-framework.performance": "3.0.3"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.editorcoroutines": {
@@ -52,11 +156,106 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.mathematics": {
+      "version": "1.3.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.mono-cecil": {
+      "version": "1.11.4",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.performance.profile-analyzer": {
       "version": "1.2.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.authentication": {
+      "version": "3.3.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.services.core": "1.13.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.cloudcode": {
+      "version": "2.7.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.services.core": "1.13.0",
+        "com.unity.services.wire": "1.2.3",
+        "com.unity.nuget.newtonsoft-json": "3.0.2",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.services.authentication": "3.3.3"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.cloudsave": {
+      "version": "3.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.services.core": "1.12.5",
+        "com.unity.services.authentication": "3.3.1"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.core": {
+      "version": "1.13.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.deployment": {
+      "version": "1.3.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.services.core": "1.12.0",
+        "com.unity.services.deployment.api": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.deployment.api": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.wire": {
+      "version": "1.2.7",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.services.core": "1.12.5",
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.unity.services.authentication": "2.7.4"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.settings-manager": {
@@ -66,6 +265,17 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.splines": {
+      "version": "2.6.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.settings-manager": "1.0.3"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.test-framework": {
       "version": "1.4.5",
       "depth": 1,
@@ -73,6 +283,16 @@
       "dependencies": {
         "com.unity.ext.nunit": "2.0.3",
         "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.test-framework.performance": {
+      "version": "3.0.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.31",
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
