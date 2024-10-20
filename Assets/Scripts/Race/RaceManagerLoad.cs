@@ -3,8 +3,7 @@ using UnityEngine;
 using HorseRace.UI;
 using System.Linq;
 using UnityEngine.AI;
-using Unity.Collections;
-using Unity.Jobs;
+using System.Collections;
 
 namespace HorseRace
 {
@@ -20,6 +19,8 @@ namespace HorseRace
         #region Private Variables
         private Dictionary<int, List<Vector3>> horsesVelocityDictionary = new Dictionary<int, List<Vector3>>();
         private Dictionary<int, int> horsesOvertakeDataDictionary = new Dictionary<int, int>();
+        private WaitForSeconds waitForPositionCalculation;
+        private bool areRacePositionsCalculated = true;
         private int preWinnerHorseNumber;
         private string preWinnerJockeyName;
         private int horsesVelocityIndex = 0;
@@ -46,55 +47,11 @@ namespace HorseRace
             base.Initialize(_horses);
             OnLoadRaceStats();
             EventManager.Instance.OnCameraSetup();
-        }
-        public struct HorseRacePositionRequest
-        {
-            public int horseNumber;
-            public List<Vector3> pathCorners;
+            waitForPositionCalculation = new WaitForSeconds(1f / GameManager.Instance.HorsesToSpawnList.Count);
         }
 
-        public struct HorseRacePositionResponse
+        IEnumerator IECalculateHorseRacePositions()
         {
-            public int horseNumber;
-            public int racePosition;
-        }
-
-        public struct HorseRacePositionJob : IJob
-        {
-            [ReadOnly] public NativeSlice<HorseRacePositionRequest> horseRacePositionRequests;
-
-            public void Execute()
-            {
-                NativeArray<float> distances = new NativeArray<float>();
-                for (int i = 0; i < horseRacePositionRequests.Length; i++)
-                {
-                    int horseNumber = horseRacePositionRequests[i].horseNumber;
-
-                    //Calculate distance from horses to finish line
-                    float distance = 0;
-                    for (int j = 0; j < horseRacePositionRequests[i].pathCorners.Count - 1; j++)
-                    {
-                        distance += Vector3.Distance(horseRacePositionRequests[i].pathCorners[j], horseRacePositionRequests[i].pathCorners[j + 1]);
-                    }
-                    distances.Append(distance);
-
-                    //Sort the distances of all the horses and 
-                }
-                //Sort the distances of all the horses and give the race positions accordingly.
-                var sortDistances = distances.OrderBy(x => x);
-
-                for (int i = 0; i < sortDistances.ToArray().Length; i++)
-                {
-                    int horseNumber = horseRacePositionRequests[i].horseNumber;
-                    int racePosition = i + 1;
-                }
-            }
-        }
-
-
-        protected override void UpdateHorseRacePositions()
-        {
-            //Update Race Positions
             Dictionary<int, float> horseDistances = new Dictionary<int, float>();
             NavMeshPath navMeshPath = new NavMeshPath();
             foreach (var horse in horsesByNumber.Values)
@@ -110,25 +67,60 @@ namespace HorseRace
                     distance += Vector3.Distance(navMeshPath.corners[i], navMeshPath.corners[i + 1]);
                 }
                 horseDistances.Add(horse.HorseNumber, distance);
+                yield return waitForPositionCalculation;
             }
 
-            //Sort Horses Distances by ascending order
-            var sortDistances = horseDistances.OrderBy(x => x.Value);
+            // Convert dictionary to list for sorting
+            List<KeyValuePair<int, float>> horseDistanceList = horseDistances.ToList();
 
-            //Set Race Position for Horses
-            for (int i = 0; i < horsesByNumber.Count; i++)
+            // Bubble sort the list by distance
+            for (int i = 0; i < horseDistanceList.Count - 1; i++)
             {
-                int _horseNumber = sortDistances.ElementAt(i).Key;
+                for (int j = 0; j < horseDistanceList.Count - i - 1; j++)
+                {
+                    if (horseDistanceList[j].Value > horseDistanceList[j + 1].Value)
+                    {
+                        // Swap the elements
+                        var temp = horseDistanceList[j];
+                        horseDistanceList[j] = horseDistanceList[j + 1];
+                        horseDistanceList[j + 1] = temp;
+                    }
+                }
+                yield return waitForPositionCalculation;
+            }
+
+
+            // Set Race Position for Horses
+            for (int i = 0; i < horseDistanceList.Count; i++)
+            {
+                int _horseNumber = horseDistanceList[i].Key;
                 int racePosition = i + 1;
                 horsesByNumber[_horseNumber].SetRacePosition(racePosition);
-                horsesByNumber[_horseNumber].UpdateState();
                 horsesInRacePositions[racePosition] = _horseNumber;
             }
 
-            //Update UI
+            // Update UI
             if (horsesInFinishOrder.Count <= 0)
             {
                 UpdateUI(horsesInRacePositions);
+            }
+            areRacePositionsCalculated = true;
+        }
+
+        protected override void UpdateHorseRacePositions()
+        {
+            //Update horses state
+            for (int i = 0; i < horsesByNumber.Count; i++)
+            {
+                int _horseNumber = i + 1;
+                horsesByNumber[_horseNumber].UpdateState();
+            }
+
+            //Calculate Horse RacePositions
+            if (areRacePositionsCalculated)
+            {
+                areRacePositionsCalculated = false;
+                StartCoroutine(IECalculateHorseRacePositions());
             }
         }
         public override Transform RaceWinnerTransform()
