@@ -22,14 +22,15 @@ namespace HorseRace.Camera
         #region Properties
         public Transform WinnerHorseTransform { get { return GameManager.Instance.RaceManager.RaceWinnerTransform(); } }
         public Transform OvertakingHorse { get { return GameManager.Instance.RaceManager.CurrentOvertakingHorse.transform; } }
-        public List<Transform> HorsesInRaceOrderList { get { return GameManager.Instance.RaceManager.HorseTransformsInRaceOrder(); } }
+        [Tooltip("Key: RacePosition, Value : (Horse Number, Transform)")]
+        public Dictionary<int, (int, Transform)> HorsesTransformInRaceOrder { get { return GameManager.Instance.RaceManager.HorseTransformsInRaceOrder(); } }
         public Transform HorseInFirstPlace
         {
             get
             {
-                if (HorsesInRaceOrderList.Count > 0)
+                if (HorsesTransformInRaceOrder.Count > 0)
                 {
-                    return HorsesInRaceOrderList[0];
+                    return HorsesTransformInRaceOrder[1].Item2;
                 }
                 else
                 {

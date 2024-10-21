@@ -80,6 +80,7 @@ namespace HorseRace
                 int racePosition = i + 1;
                 horsesByNumber[_horseNumber].SetRacePosition(racePosition);
                 horsesInRacePositions[racePosition] = _horseNumber;
+                horsesTransformInRaceOrder[racePosition] = (_horseNumber,horsesByNumber[_horseNumber].transform);
             }
 
             // Update UI

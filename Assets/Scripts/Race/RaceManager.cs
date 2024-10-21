@@ -13,9 +13,12 @@ namespace HorseRace
 
         #region Protected Variables
         protected bool isRaceStart;
+        [Tooltip("Key: HorseNumber, Value : HorseController(Monobehaviour Component)")]
         protected Dictionary<int, HorseController> horsesByNumber = new Dictionary<int, HorseController>();
-        [Tooltip("Key: RacePosition, Value : Horse")]
+        [Tooltip("Key: RacePosition, Value : HorseNumber")]
         protected Dictionary<int, int> horsesInRacePositions = new Dictionary<int, int>();
+        [Tooltip("Key: RacePosition, (Value : Item1 = Horse Number , Item2 = Horse Transform)")]
+        protected Dictionary<int,(int,Transform)> horsesTransformInRaceOrder = new Dictionary<int, (int, Transform)>();
         protected List<int> horsesInFinishOrder = new List<int>();
         #endregion
 
@@ -77,15 +80,15 @@ namespace HorseRace
             }
         }
 
-        public List<Transform> HorseTransformsInRaceOrder()
+        public Dictionary<int, (int, Transform)> HorseTransformsInRaceOrder()
         {
-            if (horsesInRacePositions.Count > 0)
+            if (horsesTransformInRaceOrder.Count > 0)
             {
-                return horsesInRacePositions.Select(kvp => horsesByNumber[kvp.Value].transform).ToList();
+                return horsesTransformInRaceOrder;
             }
             else
             {
-                return new List<Transform>();
+                return new Dictionary<int, (int, Transform)>();
             }
         }
         public virtual Transform RaceWinnerTransform()
