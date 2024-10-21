@@ -67,28 +67,11 @@ namespace HorseRace
                     distance += Vector3.Distance(navMeshPath.corners[i], navMeshPath.corners[i + 1]);
                 }
                 horseDistances.Add(horse.HorseNumber, distance);
-                yield return waitForPositionCalculation;
             }
+            yield return waitForPositionCalculation;
 
-            // Convert dictionary to list for sorting
-            List<KeyValuePair<int, float>> horseDistanceList = horseDistances.ToList();
-
-            // Bubble sort the list by distance
-            for (int i = 0; i < horseDistanceList.Count - 1; i++)
-            {
-                for (int j = 0; j < horseDistanceList.Count - i - 1; j++)
-                {
-                    if (horseDistanceList[j].Value > horseDistanceList[j + 1].Value)
-                    {
-                        // Swap the elements
-                        var temp = horseDistanceList[j];
-                        horseDistanceList[j] = horseDistanceList[j + 1];
-                        horseDistanceList[j + 1] = temp;
-                    }
-                }
-                yield return waitForPositionCalculation;
-            }
-
+            // Sort the list by distance using LINQ
+            List<KeyValuePair<int, float>> horseDistanceList = horseDistances.OrderBy(h => h.Value).ToList();
 
             // Set Race Position for Horses
             for (int i = 0; i < horseDistanceList.Count; i++)
