@@ -1,7 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UI;
