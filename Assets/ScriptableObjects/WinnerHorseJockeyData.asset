@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcae5394073caaf43bb67d223309ad07, type: 3}
   m_Name: WinnerHorseJockeyData
   m_EditorClassIdentifier: 
+  winnerHorseMaterials:
+  - {fileID: 2100000, guid: 6b420f700614d8440a8963231cf43552, type: 2}
+  - {fileID: 2100000, guid: 1a70bede77c1109439867095c196ca6c, type: 2}
+  WinnerJockeyMaterials:
+  - {fileID: 2100000, guid: 7288406e83115734ab435a74dc0acf83, type: 2}
