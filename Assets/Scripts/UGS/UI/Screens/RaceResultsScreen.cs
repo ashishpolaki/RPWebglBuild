@@ -27,13 +27,16 @@ namespace UI.Screen
         public override void Open(ScreenTabType screenTabType)
         {
             base.Open(screenTabType);
-            int firstPlaceHorseNumber = GameManager.Instance.HorsesInRaceOrderList[0];
-            foreach (var playerValue in UGSManager.Instance.RaceData.lobbyQualifiedPlayers.Values)
+            if (GameManager.Instance.HorsesInRaceOrderList != null)
             {
-                if(playerValue.Item2 == firstPlaceHorseNumber)
+                int firstPlaceHorseNumber = GameManager.Instance.HorsesInRaceOrderList[0];
+                foreach (var playerValue in UGSManager.Instance.RaceData.lobbyQualifiedPlayers.Values)
                 {
-                    horseJockeyNameTxt.text = $"Winner \n {playerValue.Item1} - Horse #{playerValue.Item2}";
-                    break;
+                    if (playerValue.Item2 == firstPlaceHorseNumber)
+                    {
+                        horseJockeyNameTxt.text = $"Winner \n {playerValue.Item1} - Horse #{playerValue.Item2}";
+                        break;
+                    }
                 }
             }
         }
