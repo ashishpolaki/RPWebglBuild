@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Speed", menuName = "HorseRace/HorseSpeedModifiers")]
+[CreateAssetMenu(fileName = "Speed", menuName = "ScriptableObjects/HorseSpeedModifiers")]
 public class HorseSpeedSO : ScriptableObject
 {
     public float startMinSpeed;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace HorseRace
 {
-    [CreateAssetMenu(fileName = "HorseJockeyData", menuName = "HorseRace/WinnerHorseData")]
+    [CreateAssetMenu(fileName = "HorseJockeyData", menuName = "ScriptableObjects/WinnerHorseData")]
     public class WinnerHorseJockeyDataSO : ScriptableObject
     {
         public Material[] winnerHorseMaterials;

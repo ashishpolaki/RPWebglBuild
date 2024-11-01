@@ -9,6 +9,11 @@ namespace UI
 
         #region Inspector Variables
         [SerializeField] private UIScreenManager screenManager;
+        [SerializeField] private ThemeConfigSO themeConfig;
+        #endregion
+
+        #region Properties
+        public ThemeDataSO CurrentTheme { get; private set; }
         #endregion
 
         #region Unity Methods
@@ -19,13 +24,16 @@ namespace UI
                 Instance = this;
             }
             screenManager.Initialize();
+
+            //Randomly Set Theme
+            CurrentTheme = themeConfig.GenerateRandomTheme();
         }
         #endregion
-        
+
         #region Public Methods
         public void ScreenEvent(ScreenType screenType, UIScreenEvent uIScreenEvent, ScreenTabType screenTabType = ScreenTabType.None)
         {
-            screenManager.ScreenEvent(screenType, uIScreenEvent,screenTabType);
+            screenManager.ScreenEvent(screenType, uIScreenEvent, screenTabType);
         }
         #endregion
     }
