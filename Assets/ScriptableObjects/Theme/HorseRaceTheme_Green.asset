@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d2cf291a2485646930c724942c5987, type: 3}
+  m_Name: HorseRaceTheme_Green
+  m_EditorClassIdentifier: 
+  backGround: {fileID: 0}
+  character: {fileID: 0}
+  bodyBGColor: {r: 0, g: 0, b: 0, a: 0}
+  bodyBGOutlineColor: {r: 0, g: 0, b: 0, a: 0}
+  bodyColor: {r: 0, g: 0, b: 0, a: 0}
+  bodyOutlineColor: {r: 0, g: 0, b: 0, a: 0}
+  headerBG: {r: 0.9245283, g: 0, b: 0, a: 1}
+  headerBGOutline: {r: 0, g: 0, b: 0, a: 0}
+  header: {r: 0, g: 0, b: 0, a: 0}
+  headerOutline: {r: 0, g: 0, b: 0, a: 0}
+  headerText: {r: 0, g: 0, b: 0, a: 0}
+  headerTextOutline: {r: 0, g: 0, b: 0, a: 0}
+  bodyButtonsText: {r: 0, g: 0, b: 0, a: 0}
+  bodyButtonsTextOutline: {r: 0, g: 0, b: 0, a: 0}

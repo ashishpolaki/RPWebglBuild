@@ -16,7 +16,7 @@ namespace UI.Screen
         {
             if (uiHolder == null)
             {
-                uiHolder = GameObject.FindObjectOfType<UIHolder>();
+                uiHolder = Object.FindFirstObjectByType<UIHolder>();
             }
         }
 
