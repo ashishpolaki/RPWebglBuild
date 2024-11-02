@@ -37,7 +37,6 @@ namespace UI.Screen.Tab
         }
         #endregion
 
-
         #region Subscribed Events
         /// <summary>
         /// Sign in failed event

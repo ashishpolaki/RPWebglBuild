@@ -6,12 +6,17 @@ namespace UI.Screen
 {
     public class BaseScreen : MonoBehaviour, IScreen
     {
+        #region Inspector Variables
         [SerializeField] private ScreenType screenType;
         [SerializeField] private ScreenTabType defaultOpenTab;
         [SerializeField] private List<BaseTab> tabs;
+        #endregion
 
+        #region Private Variables
         private ScreenTabType currentOpenTab;
+        #endregion
 
+        #region Properties
         public ScreenType ScreenType => screenType;
         public List<BaseTab> Tabs { get => tabs; }
         public ScreenTabType DefaultOpenTab { get => defaultOpenTab; }
@@ -19,7 +24,9 @@ namespace UI.Screen
 
         public bool IsScreenOpen { get => gameObject.activeSelf; }
         public bool IsAnyTabOpened { get => tabs.Exists(tab => tab.IsOpen); }
+        #endregion
 
+        #region Public Methods
         public virtual void Open(ScreenTabType screenTabType)
         {
             gameObject.SetActive(true);
@@ -103,6 +110,8 @@ namespace UI.Screen
                 return;
             }
         }
+        #endregion
+
     }
     public interface IScreen
     {
@@ -118,12 +127,4 @@ namespace UI.Screen
         public void Hide();
     }
 }
-public enum ScreenType
-{
-    Login,
-    CharacterCustomization,
-    Host,
-    Client,
-    RaceResults,
-    None
-}
+

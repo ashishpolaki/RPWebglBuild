@@ -1,11 +1,12 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "ThemeData", menuName = "ScriptableObjects/Theme/ThemeData")]
 public class ThemeDataSO : ScriptableObject
 {
     public Sprite backGround;
     public Sprite character;
+
+    public Color backGroundTintColor;
 
     public Color bodyBGColor;
     public Color bodyBGOutlineColor;
@@ -17,4 +18,10 @@ public class ThemeDataSO : ScriptableObject
 
     public Color textColor;
     public Color textOutlineColor;
+
+    public Color cloudColor;
+    public Color cloudOutlineColor;
+
+    public Color toggleColor;
+    public Color toggleOutlineColor;
 }

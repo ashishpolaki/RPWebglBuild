@@ -14,4 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   themeDataList:
   - {fileID: 11400000, guid: ac1412a69cc3be047a81b7436119e9c2, type: 2}
-  - {fileID: 11400000, guid: bce79d041195dae4a9c2834eda375d3b, type: 2}

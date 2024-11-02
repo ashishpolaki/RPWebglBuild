@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d2cf291a2485646930c724942c5987, type: 3}
   m_Name: HorseRaceTheme_Green
   m_EditorClassIdentifier: 
-  backGround: {fileID: 0}
-  character: {fileID: 0}
-  bodyBGColor: {r: 0, g: 0, b: 0, a: 0}
-  bodyBGOutlineColor: {r: 0, g: 0, b: 0, a: 0}
-  bodyColor: {r: 0, g: 0, b: 0, a: 0}
-  bodyOutlineColor: {r: 0, g: 0, b: 0, a: 0}
-  headerBG: {r: 0.9245283, g: 0, b: 0, a: 1}
-  headerBGOutline: {r: 0, g: 0, b: 0, a: 0}
-  header: {r: 0, g: 0, b: 0, a: 0}
-  headerOutline: {r: 0, g: 0, b: 0, a: 0}
-  headerText: {r: 0, g: 0, b: 0, a: 0}
-  headerTextOutline: {r: 0, g: 0, b: 0, a: 0}
-  bodyButtonsText: {r: 0, g: 0, b: 0, a: 0}
-  bodyButtonsTextOutline: {r: 0, g: 0, b: 0, a: 0}
+  backGround: {fileID: 21300000, guid: f61e38537393bff488a28a18c22b7f0e, type: 3}
+  character: {fileID: 21300000, guid: 46742ce42af7d8845aa83a72ece67f45, type: 3}
+  backGroundTintColor: {r: 0.85882354, g: 0.90588236, b: 0.8235294, a: 1}
+  bodyBGColor: {r: 0.227451, g: 0.4901961, b: 0.26666668, a: 1}
+  bodyBGOutlineColor: {r: 0.40784317, g: 0.69803923, b: 0.46274513, a: 1}
+  bodyColor: {r: 0.92549026, g: 0.96470594, b: 0.7137255, a: 1}
+  bodyOutlineColor: {r: 0.14509805, g: 0.3019608, b: 0.19607845, a: 1}
+  buttonTextColor: {r: 1, g: 1, b: 1, a: 1}
+  buttonTextOutlineColor: {r: 0.14509805, g: 0.3019608, b: 0.19607845, a: 1}
+  textColor: {r: 0.09411766, g: 0.2392157, b: 0.14117648, a: 1}
+  textOutlineColor: {r: 0.9921569, g: 0.9960785, b: 0.96470594, a: 1}
+  cloudColor: {r: 0.92549026, g: 0.96470594, b: 0.7137255, a: 1}
+  cloudOutlineColor: {r: 0.011764707, g: 0.35686275, b: 0.3254902, a: 1}
+  toggleColor: {r: 0.9254902, g: 0.9647059, b: 0.7137255, a: 1}
+  toggleOutlineColor: {r: 0.38431376, g: 0.6666667, b: 0.43921572, a: 1}

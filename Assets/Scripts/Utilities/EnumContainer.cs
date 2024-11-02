@@ -28,8 +28,6 @@ public enum CameraMode
 }
 #endregion
 
-
-
 #region Sound
 public enum SoundType
 {
@@ -38,6 +36,32 @@ public enum SoundType
     HorseGallop,
     RaceMusic,
     BeforeRaceStart,
+    None
+}
+#endregion
+
+#region UI
+public enum ScreenTabType
+{
+    None,
+    LoginPlayer,
+    RegisterPlayer,
+    RaceSchedule,
+    PlayerName,
+    RoleSelection,
+    Lobby,
+    RegisterVenue,
+    RaceInProgress,
+    RaceResults,
+    Welcome
+}
+public enum ScreenType
+{
+    Login,
+    CharacterCustomization,
+    Host,
+    Client,
+    RaceResults,
     None
 }
 #endregion
