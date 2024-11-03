@@ -1,0 +1,13 @@
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\HorseRaceCloudCode.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\HorseRaceCloudCode.deps.json
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\HorseRaceCloudCode.pdb
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Google.Protobuf.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Grpc.Core.Api.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Grpc.Net.Client.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Grpc.Net.Common.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\JsonSubTypes.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\ashishpolaki\AppData\Local\Temp\HorseRaceCloudCode\module-compilation\Newtonsoft.Json.dll

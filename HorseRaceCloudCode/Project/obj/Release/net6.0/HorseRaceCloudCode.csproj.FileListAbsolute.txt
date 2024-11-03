@@ -1,0 +1,13 @@
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\bin\Release\net6.0\HorseRaceCloudCode.deps.json
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\bin\Release\net6.0\HorseRaceCloudCode.dll
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\bin\Release\net6.0\HorseRaceCloudCode.pdb
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.csproj.AssemblyReference.cache
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.GeneratedMSBuildEditorConfig.editorconfig
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.AssemblyInfoInputs.cache
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.AssemblyInfo.cs
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.csproj.CoreCompileInputs.cache
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.sourcelink.json
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.dll
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\refint\HorseRaceCloudCode.dll
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\HorseRaceCloudCode.pdb
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\ref\HorseRaceCloudCode.dll

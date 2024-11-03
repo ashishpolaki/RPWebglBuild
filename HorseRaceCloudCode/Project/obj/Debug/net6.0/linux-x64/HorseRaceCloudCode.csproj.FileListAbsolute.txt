@@ -1,0 +1,13 @@
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\bin\Debug\net6.0\linux-x64\HorseRaceCloudCode.deps.json
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\bin\Debug\net6.0\linux-x64\HorseRaceCloudCode.dll
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\bin\Debug\net6.0\linux-x64\HorseRaceCloudCode.pdb
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.csproj.AssemblyReference.cache
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.GeneratedMSBuildEditorConfig.editorconfig
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.AssemblyInfoInputs.cache
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.AssemblyInfo.cs
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.csproj.CoreCompileInputs.cache
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.sourcelink.json
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.dll
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\refint\HorseRaceCloudCode.dll
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\HorseRaceCloudCode.pdb
+A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Debug\net6.0\linux-x64\ref\HorseRaceCloudCode.dll
