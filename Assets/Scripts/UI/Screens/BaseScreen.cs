@@ -67,7 +67,17 @@ namespace UI.Screen
         {
             gameObject.SetActive(false);
         }
+        public virtual void OnScreenBack()
+        {
+            //Close the tab that is open and then return.
+            if (currentOpenTab != ScreenTabType.None)
+            {
+                CloseTab(currentOpenTab);
+                return;
+            }
+        }
 
+        #region Tab Methods
         public void OpenTab(ScreenTabType screenTabType)
         {
             for (int i = 0; i < Tabs.Count; i++)
@@ -79,6 +89,11 @@ namespace UI.Screen
                     break;
                 }
             }
+        }
+        public void ChangeTab(ScreenTabType screenTabType)
+        {
+            CloseTab(currentOpenTab);
+            OpenTab(screenTabType);
         }
         public void CloseTab(ScreenTabType screenTabType)
         {
@@ -100,16 +115,8 @@ namespace UI.Screen
             }
             currentOpenTab = ScreenTabType.None;
         }
-
-        public virtual void OnScreenBack()
-        {
-            //Close the tab that is open and then return.
-            if(currentOpenTab != ScreenTabType.None)
-            {
-                CloseTab(currentOpenTab);
-                return;
-            }
-        }
+        #endregion
+       
         #endregion
 
     }

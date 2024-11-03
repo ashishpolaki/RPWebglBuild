@@ -38,6 +38,15 @@ namespace UI.Screen
                     break;
             }
         }
+
+        public void ChangeCurrentScreenTab(ScreenTabType screenTabType)
+        {
+            if (currentActiveScreen != null)
+            {
+                currentActiveScreen.ChangeTab(screenTabType);
+            }
+        }
+
         private void OpenScreen(ScreenType _screenType,ScreenTabType screenTabType)
         {
             InstantiateIfDoesntExist(_screenType);

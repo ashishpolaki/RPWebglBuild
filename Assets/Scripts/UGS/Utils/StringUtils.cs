@@ -43,16 +43,14 @@ public class StringUtils
     #endregion
 
     #region Authentication
-
     public const string USERNAMEPATTERN = "^[a-zA-Z0-9.\\-@_]{3,20}$";
     public const string PASSWORDPATTERN = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[\\W]).{8,30}$";
     public const string PLAYERNAMEPATTERN = "^[^\\s]{1,50}$";
 
-
     public const string USERNAMEERROR = "Username must be between 3 and 20 characters";
     public const string PASSWORDERROR = "Password must be 8-30 characters long, with at least 1 uppercase, 1 lowercase, 1 number, and 1 symbol.";
     public const string PLAYERNAMEERROR = "Player name should not be more than 50 characters and must not contain spaces.";
-
+    public const string PASSWORDMATCHERROR = "Passwords do not match";
     #endregion
 
     public static bool IsStringEmpty(string value)

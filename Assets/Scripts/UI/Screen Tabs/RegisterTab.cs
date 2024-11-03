@@ -9,8 +9,9 @@ namespace UI.Screen.Tab
     public class RegisterTab : BaseTab
     {
         #region Inspector Variables
-        [SerializeField] private InputField username_Input;
-        [SerializeField] private InputField password_Input;
+        [SerializeField] private TMP_InputField username_Input;
+        [SerializeField] private TMP_InputField newPassword_Input;
+        [SerializeField] private TMP_InputField confirmPassword_Input;
         [SerializeField] private Button registerPlayer_btn;
         [SerializeField] private TextMeshProUGUI errorMessage_txt;
         #endregion
@@ -38,7 +39,6 @@ namespace UI.Screen.Tab
         #endregion
 
         #region Subscribed Events
-
         /// <summary>
         /// Sign up failed event, Show error message
         /// </summary>
@@ -54,7 +54,12 @@ namespace UI.Screen.Tab
         }
         #endregion
 
-
+        #region Protected Methods
+        protected override void OnTabBack()
+        {
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.Welcome);
+        }
+        #endregion
 
         #region Private Methods
         /// <summary>
@@ -63,7 +68,8 @@ namespace UI.Screen.Tab
         private void ClearInputFields()
         {
             username_Input.text = string.Empty;
-            password_Input.text = string.Empty;
+            newPassword_Input.text = string.Empty;
+            confirmPassword_Input.text = string.Empty;
             errorMessage_txt.text = string.Empty;
         }
 
@@ -72,8 +78,22 @@ namespace UI.Screen.Tab
         /// </summary>
         private async void RegisterPlayer()
         {
-            Func<Task> method = () => UGSManager.Instance.Authentication.SignUpAsync(username_Input.text, password_Input.text);
+            if(!IsConfirmPasswordValid())
+            {
+                return;
+            }
+            Func<Task> method = () => UGSManager.Instance.Authentication.SignUpAsync(username_Input.text, newPassword_Input.text);
             await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+        }
+
+        private bool IsConfirmPasswordValid()
+        {
+            if (newPassword_Input.text != confirmPassword_Input.text)
+            {
+                errorMessage_txt.text = StringUtils.PASSWORDMATCHERROR;
+                return false;
+            }
+            return true;
         }
         #endregion
     }

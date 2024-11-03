@@ -27,3 +27,6 @@ MonoBehaviour:
   cloudOutlineColor: {r: 0.011764706, g: 0.35686275, b: 0.3254902, a: 1}
   toggleColor: {r: 0.9490196, g: 0.90588236, b: 0.8, a: 1}
   toggleOutlineColor: {r: 0.0627451, g: 0.7921569, b: 0.7137255, a: 1}
+  inputFieldBGColor: {r: 0.03137255, g: 0.6431373, b: 0.5803922, a: 1}
+  inputFieldBGOutlineColor: {r: 0.07450981, g: 0.8117648, b: 0.7372549, a: 1}
+  inputFieldColor: {r: 0.03137255, g: 0.3921569, b: 0.3529412, a: 1}

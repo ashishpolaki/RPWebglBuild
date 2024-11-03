@@ -24,4 +24,9 @@ public class ThemeDataSO : ScriptableObject
 
     public Color toggleColor;
     public Color toggleOutlineColor;
+
+    public Color inputFieldBGColor;
+    public Color inputFieldBGOutlineColor;
+    public Color inputFieldColor;
+
 }

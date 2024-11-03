@@ -35,6 +35,10 @@ namespace UI
         {
             screenManager.ScreenEvent(screenType, uIScreenEvent, screenTabType);
         }
+        public void ChangeCurrentScreenTab(ScreenTabType screenTabType)
+        {
+            screenManager.ChangeCurrentScreenTab(screenTabType);
+        }
         #endregion
     }
 }

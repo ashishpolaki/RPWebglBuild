@@ -28,13 +28,11 @@ namespace UI.Screen.Tab
         #region Private Methods
         private void OpenLoginTab()
         {
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open, ScreenTabType.LoginPlayer);
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close, ScreenTabType.Welcome);
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.LoginPlayer);
         }
         private void OpenRegisterTab()
         {
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open, ScreenTabType.RegisterPlayer);
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close, ScreenTabType.Welcome);
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RegisterPlayer);
         }
         #endregion
     }

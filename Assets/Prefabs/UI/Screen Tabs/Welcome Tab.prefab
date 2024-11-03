@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.050980397, g: 0.6431373, b: 0.5803922, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.0627451, g: 0.79607844, b: 0.7176471, a: 1}
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
 --- !u!1 &2525386201966150674
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9490197, g: 0.9058824, b: 0.8000001, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.011764707, g: 0.35686275, b: 0.3254902, a: 1}
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 0
 --- !u!1 &3508147925274880040
@@ -313,7 +313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2094496422163347351
 RectTransform:
   m_ObjectHideFlags: 0
@@ -349,22 +349,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screenTabType: 10
+  backButton: {fileID: 0}
+  themeUI:
+    textGroup:
+    - {fileID: 5199661992599043690}
+    - {fileID: 6260159038660138997}
+    - {fileID: 4359744482791399677}
+    - {fileID: 7519863773907102027}
+    - {fileID: 6804056565113144}
+    buttonTextGroup:
+    - {fileID: 7427079567249833993}
+    - {fileID: 2397927446682964678}
+    bodyBGImageGroup:
+    - {fileID: 7221368235037894507}
+    - {fileID: 1187548027023636307}
+    bodyImageGroup:
+    - {fileID: 7629112250851669247}
+    - {fileID: 7843016564214456061}
+    inputFieldBGImageGroup: []
+    inputFieldImageGroup: []
+    characterImage: {fileID: 5661164265735017732}
+    cloudCommentImage: {fileID: 3723134357022656203}
   registerTabBtn: {fileID: 7763465857748136650}
   loginTabBtn: {fileID: 7504575117039891864}
-  textGroup:
-  - {fileID: 4359744482791399677}
-  - {fileID: 7519863773907102027}
-  - {fileID: 6804056565113144}
-  - {fileID: 6260159038660138997}
-  - {fileID: 5199661992599043690}
-  CloudCommentImage: {fileID: 3723134357022656203}
-  bodyBGImage:
-  - {fileID: 7221368235037894507}
-  - {fileID: 1187548027023636307}
-  bodyImage:
-  - {fileID: 7843016564214456061}
-  - {fileID: 7629112250851669247}
-  characterImage: {fileID: 5661164265735017732}
 --- !u!1 &4641470030608991044
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,8 +447,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284113928
-  m_fontColor: {r: 0.03137255, g: 0.39215687, b: 0.3529412, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -579,7 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.03137255, g: 0.6431373, b: 0.5803922, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -608,7 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.050980397, g: 0.7960785, b: 0.7176471, a: 1}
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 2, y: 2}
   m_UseGraphicAlpha: 1
 --- !u!1 &5063720068732806276
@@ -823,8 +830,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284113928
-  m_fontColor: {r: 0.03137255, g: 0.39215687, b: 0.3529412, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -959,8 +966,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1110,7 +1117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.011764706, g: 0.35686275, b: 0.3254902, a: 1}
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
 --- !u!1 &7509675765054874216
@@ -1187,8 +1194,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284113928
-  m_fontColor: {r: 0.03137255, g: 0.39215687, b: 0.3529412, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1284,10 +1291,10 @@ RectTransform:
   - {fileID: 1496493384839693067}
   m_Father: {fileID: 6770500324390826701}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.029804641, y: 0.034965128}
-  m_AnchorMax: {x: 0.97019535, y: 0.96503484}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -60, y: -60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5968796022023162312
 CanvasRenderer:
@@ -1552,8 +1559,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284113928
-  m_fontColor: {r: 0.03137255, g: 0.3921569, b: 0.3529412, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

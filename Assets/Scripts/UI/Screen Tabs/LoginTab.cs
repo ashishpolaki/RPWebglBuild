@@ -9,8 +9,8 @@ namespace UI.Screen.Tab
     public class LoginTab : BaseTab
     {
         #region Inspector Variables
-        [SerializeField] private InputField username_Input;
-        [SerializeField] private InputField password_Input;
+        [SerializeField] private TMP_InputField username_Input;
+        [SerializeField] private TMP_InputField password_Input;
         [SerializeField] private Button loginBtn;
         [SerializeField] private TextMeshProUGUI errorMessageTxt;
         #endregion
@@ -18,7 +18,7 @@ namespace UI.Screen.Tab
         #region Unity Methods
         private void OnEnable()
         {
-            ResetInputFields();
+            ResetTextFields();
             loginBtn.onClick.AddListener(() => Login());
             if (UGSManager.Instance != null)
             {
@@ -46,10 +46,16 @@ namespace UI.Screen.Tab
         {
             errorMessageTxt.text = message;
         }
-
         private void OnValidationFailed(string obj)
         {
             errorMessageTxt.text = obj;
+        }
+        #endregion
+
+        #region Protected Methods
+        protected override void OnTabBack()
+        {
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.Welcome);
         }
         #endregion
 
@@ -57,7 +63,7 @@ namespace UI.Screen.Tab
         /// <summary>
         /// Reset UI Fields
         /// </summary>
-        private void ResetInputFields()
+        private void ResetTextFields()
         {
             username_Input.text = string.Empty;
             password_Input.text = string.Empty;

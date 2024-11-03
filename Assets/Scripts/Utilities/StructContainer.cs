@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StructContainer
 {
@@ -86,6 +88,92 @@ public struct VarianceRacePosition
     public int racePosition;
     public int savedHorseNumber;
     public int currentHorseNumber;
+}
+#endregion
+
+#region UI
+[System.Serializable]
+public struct ThemeUI
+{
+    public TextMeshProUGUI[] textGroup;
+    public TextMeshProUGUI[] buttonTextGroup;
+    public Image[] bodyBGImageGroup;
+    public Image[] bodyImageGroup;
+    public Image[] inputFieldBGImageGroup; 
+    public Image[] inputFieldImageGroup; 
+    public Image characterImage;
+    public Image cloudCommentImage;
+
+    public void SetThemeData(ThemeDataSO themeData)
+    {
+        //Set sprite
+        if (characterImage != null)
+        {
+            characterImage.sprite = themeData.character;
+        }
+
+        //Set color
+        if (cloudCommentImage != null)
+        {
+            cloudCommentImage.color = themeData.cloudColor;
+            cloudCommentImage.GetComponent<Outline>().effectColor = themeData.cloudOutlineColor;
+        }
+
+        if (bodyBGImageGroup.Length > 0)
+        {
+            foreach (Image image in bodyBGImageGroup)
+            {
+                image.color = themeData.bodyBGColor;
+                image.GetComponent<Outline>().effectColor = themeData.bodyBGOutlineColor;
+            }
+        }
+        if (textGroup.Length > 0)
+        {
+            foreach (TextMeshProUGUI text in textGroup)
+            {
+                text.color = themeData.textColor;
+                text.outlineColor = themeData.textOutlineColor;
+                text.outlineWidth = 0.2f;
+            }
+        }
+
+        if(buttonTextGroup.Length > 0)
+        {
+            foreach (TextMeshProUGUI text in buttonTextGroup)
+            {
+                text.color = themeData.buttonTextColor;
+                text.outlineColor = themeData.buttonTextOutlineColor;
+                text.outlineWidth = 0.2f;
+            }
+        }
+
+        if (bodyImageGroup.Length > 0)
+        {
+            foreach (Image image in bodyImageGroup)
+            {
+                image.color = themeData.bodyColor;
+                image.GetComponent<Outline>().effectColor = themeData.bodyOutlineColor;
+            }
+        }
+
+        if (inputFieldBGImageGroup.Length > 0)
+        {
+            foreach (Image image in inputFieldBGImageGroup)
+            {
+                image.color = themeData.inputFieldBGColor;
+                image.GetComponent<Outline>().effectColor = themeData.inputFieldBGOutlineColor;
+            }
+        }
+
+        if (inputFieldImageGroup.Length > 0)
+        {
+            foreach (Image image in inputFieldImageGroup)
+            {
+                image.color = themeData.inputFieldColor;
+            }
+        }
+
+    }
 }
 #endregion
 

@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +7,8 @@ namespace UI.Screen.Tab
     {
         #region Inspector Variables
         [SerializeField] private ScreenTabType screenTabType;
-
-        [Header("UI Elements")]
-        [SerializeField] private TextMeshProUGUI[] textGroup;
-        [SerializeField] private Image CloudCommentImage;
-        [SerializeField] private Image characterImage;
-        [SerializeField] private Image[] bodyBGImage;
-        [SerializeField] private Image[] bodyImage;
+        [SerializeField] private Button backButton;
+        [SerializeField] private ThemeUI themeUI;
         #endregion
 
         #region Properties
@@ -33,40 +27,28 @@ namespace UI.Screen.Tab
         public virtual void Close()
         {
             gameObject.SetActive(false);
+            if (backButton != null)
+                backButton.onClick.RemoveAllListeners();
         }
         public virtual void Open()
         {
             gameObject.SetActive(true);
+            if (backButton != null)
+                backButton.onClick.AddListener(() => OnTabBack());
         }
-        public void SetTheme()
+        protected virtual void OnTabBack()
         {
-            ThemeDataSO themeData = UIController.Instance.CurrentTheme;
 
-            //Set sprite
-            characterImage.sprite = themeData.character;
-
-            //Set color
-            foreach (TextMeshProUGUI text in textGroup)
-            {
-                text.color = themeData.textColor;
-                text.outlineColor = themeData.textOutlineColor;
-            }
-            CloudCommentImage.color = themeData.cloudColor;
-            CloudCommentImage.GetComponent<Outline>().effectColor = themeData.cloudOutlineColor;
-
-            foreach (var item in bodyBGImage)
-            {
-                item.color = themeData.bodyBGColor;
-                item.GetComponent<Outline>().effectColor = themeData.bodyBGOutlineColor;
-            }
-            foreach (var item in bodyImage)
-            {
-                item.color = themeData.bodyColor;
-                item.GetComponent<Outline>().effectColor = themeData.bodyOutlineColor;
-            }
         }
         #endregion
 
+        #region Private Methods
+        private void SetTheme()
+        {
+            ThemeDataSO themeData = UIController.Instance.CurrentTheme;
+            themeUI.SetThemeData(themeData);
+        }
+        #endregion
     }
     public interface IScreenTab
     {
