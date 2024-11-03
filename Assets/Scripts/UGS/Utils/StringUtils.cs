@@ -50,6 +50,8 @@ public class StringUtils
     public const string USERNAMEERROR = "Username must be between 3 and 20 characters";
     public const string PASSWORDERROR = "Password must be 8-30 characters long, with at least 1 uppercase, 1 lowercase, 1 number, and 1 symbol.";
     public const string PLAYERNAMEERROR = "Player name should not be more than 50 characters and must not contain spaces.";
+    public const string PLAYERFIRSTNAMEERROR  = "Please enter the first name";
+    public const string PLAYERLASTNAMEERROR = "Please enter the last name";
     public const string PASSWORDMATCHERROR = "Passwords do not match";
     #endregion
 

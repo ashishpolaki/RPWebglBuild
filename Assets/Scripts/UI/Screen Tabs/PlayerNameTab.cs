@@ -1,6 +1,8 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using UGS;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,26 +11,31 @@ namespace UI.Screen.Tab
     public class PlayerNameTab : BaseTab
     {
         #region Inspector Variables
-        [SerializeField] private InputField playerNameInput;
+        [SerializeField] private TMP_InputField playerFirstNameInput;
+        [SerializeField] private TMP_InputField playerLastNameInput;
         [SerializeField] private Button setPlayerNameBtn;
-        [SerializeField] private Button generateRandomNameBtn;
+        [SerializeField] private Button signOutBtn;
         [SerializeField] private TextMeshProUGUI errorMessageText;
-        #endregion
-
-        #region Private Variables
-        private int playerNameMaxCharacters = 50;
         #endregion
 
         #region Unity Methods
         private void OnEnable()
         {
             setPlayerNameBtn.onClick.AddListener(() => SetPlayerName());
-            generateRandomNameBtn.onClick.AddListener(() => GenerateRandomPlayerName());
+            signOutBtn.onClick.AddListener(() => SignOut());
+            if (UGSManager.Instance != null)
+            {
+                UGSManager.Instance.Authentication.OnSignedOut += OnSignedOutEvent;
+            }
         }
         private void OnDisable()
         {
             setPlayerNameBtn.onClick.RemoveAllListeners();
-            generateRandomNameBtn.onClick.RemoveAllListeners();
+            signOutBtn.onClick.RemoveAllListeners();
+            if (UGSManager.Instance != null)
+            {
+                UGSManager.Instance.Authentication.OnSignedOut -= OnSignedOutEvent;
+            }
         }
         #endregion
 
@@ -40,20 +47,43 @@ namespace UI.Screen.Tab
         {
             errorMessageText.text = string.Empty;
 
-            //Set Player Name
-            Func<Task<string>> method = () => UGSManager.Instance.Authentication.SetPlayerNameAsync(playerNameInput.text);
-            errorMessageText.text = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
-            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Show, ScreenTabType.RoleSelection);
-        }
+            if (StringUtils.IsStringEmpty(playerFirstNameInput.text))
+            {
+                errorMessageText.text = StringUtils.PLAYERFIRSTNAMEERROR;
+            }
+            if (StringUtils.IsStringEmpty(playerLastNameInput.text))
+            {
+                errorMessageText.text = StringUtils.PLAYERLASTNAMEERROR;
+            }
+            string playerName = playerFirstNameInput.text + "" + playerLastNameInput.text;
+            //Check if player playerName meets the criteria.
+            if (!CheckPlayerNameCriteria(playerName))
+            {
+                errorMessageText.text = StringUtils.PLAYERNAMEERROR;
+                return;
+            }
 
-        /// <summary>
-        /// Generate Random Name for the Player
-        /// </summary>
-        private async void GenerateRandomPlayerName()
+            //Set Player Name
+            Func<Task<string>> method = () => UGSManager.Instance.Authentication.SetPlayerNameAsync(playerName);
+            errorMessageText.text = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
+        }
+        private void SignOut()
         {
-            Func<Task> method = () => UGSManager.Instance.Authentication.GenerateRandomPlayerName();
-            await LoadingScreen.Instance.PerformAsyncWithLoading(method);
-            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Show, ScreenTabType.RoleSelection);
+            UGSManager.Instance.Authentication.Signout();
+        }
+        /// <summary>
+        /// Clear all the data and open login screen
+        /// </summary>
+        private void OnSignedOutEvent()
+        {
+            UGSManager.Instance.ResetData();
+            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
+            Close();
+        }
+        public bool CheckPlayerNameCriteria(string playerName)
+        {
+            return new Regex(StringUtils.PLAYERNAMEPATTERN).IsMatch(playerName);
         }
         #endregion
     }

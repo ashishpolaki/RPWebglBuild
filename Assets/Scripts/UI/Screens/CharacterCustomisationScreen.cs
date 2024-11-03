@@ -1,31 +1,13 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UI.Screen
 {
     public class CharacterCustomisationScreen : BaseScreen
     {
-        #region Inspector Variables
-        [SerializeField] private Button signOutBtn;
-        #endregion
-
         #region Unity Methods
         private void OnEnable()
         {
-            signOutBtn.onClick.AddListener(() => SignOut());
-            if (UGSManager.Instance != null)
-            {
-                UGSManager.Instance.Authentication.OnSignedOut += OnSignedOutEvent;
-            }
             OnEnableScreen();
-        }
-        private void OnDisable()
-        {
-            signOutBtn.onClick.RemoveAllListeners();
-            if (UGSManager.Instance != null)
-            {
-                UGSManager.Instance.Authentication.OnSignedOut -= OnSignedOutEvent;
-            }
         }
         #endregion
 
@@ -39,22 +21,18 @@ namespace UI.Screen
             }
             else
             {
-                //Open Role Selection Tab
-                OpenTab(ScreenTabType.RoleSelection);
+                //If player is host then open host screen
+                if (UGSManager.Instance.IsHost)
+                {
+                    UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
+                }
+                //If player is not host then open client screen
+                else
+                {
+                    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+                }
+                Close();
             }
-        }
-        private void SignOut()
-        {
-            UGSManager.Instance.Authentication.Signout();
-        }
-        /// <summary>
-        /// Clear all the data and open login screen
-        /// </summary>
-        private void OnSignedOutEvent()
-        {
-            UGSManager.Instance.ResetData();
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
-            Close();
         }
         #endregion
     }

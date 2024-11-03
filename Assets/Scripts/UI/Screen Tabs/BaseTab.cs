@@ -17,7 +17,7 @@ namespace UI.Screen.Tab
         #endregion
 
         #region Unity methods
-        private void Start()
+        protected virtual void Start()
         {
             SetTheme();
         }

@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.CloudSave;
+using UnityEngine;
 
 namespace UGS
 {
@@ -100,6 +101,21 @@ namespace UGS
                 }
             }
             return null;
+        }
+
+        public async void SetHost(bool val)
+        {
+            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>() { { "Host", val } });
+        }
+
+        public async Task<bool> IsHost()
+        {
+            var result = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { "Host" });
+            if (result.TryGetValue("Host",out var val))
+            {
+                return val.Value.GetAs<bool>();
+            }
+            return false;
         }
     }
 }

@@ -74,19 +74,7 @@ public class PlayerAuthenticationTests
             // Assert
             Assert.That(result, Is.True);
         }
-
-        [TestCaseSource(nameof(PlayerNamePassTestCases))]
-        public void CheckPlayerNameCriteria(string playerName)
-        {
-            // Act
-            var result = authentication.CheckPlayerNameCriteria(playerName);
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
         #endregion
-
-
     }
 
     [TestFixture(Category = "PlayerAccountValidation")]
@@ -157,16 +145,6 @@ public class PlayerAuthenticationTests
         {
             // Act
             var result = authentication.CheckPasswordCriteria(password);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [TestCaseSource(nameof(PlayerNameFailTestCases))]
-        public void SetPlayerNameCriteria(string playerName)
-        {
-            // Act
-            var result = authentication.CheckPlayerNameCriteria(playerName);
 
             // Assert
             Assert.That(result, Is.False);

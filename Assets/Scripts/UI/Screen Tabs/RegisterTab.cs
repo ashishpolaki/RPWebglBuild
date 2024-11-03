@@ -25,6 +25,7 @@ namespace UI.Screen.Tab
             {
                 UGSManager.Instance.Authentication.OnSignInFailed += OnSignUpFailed;
                 UGSManager.Instance.Authentication.OnValidationFail += OnValidationFailed;
+                UGSManager.Instance.Authentication.OnSignedInEvent += SignInSuccessful;
             }
         }
         private void OnDisable()
@@ -34,6 +35,7 @@ namespace UI.Screen.Tab
             {
                 UGSManager.Instance.Authentication.OnSignInFailed -= OnSignUpFailed;
                 UGSManager.Instance.Authentication.OnValidationFail -= OnValidationFailed;
+                UGSManager.Instance.Authentication.OnSignedInEvent -= SignInSuccessful;
             }
         }
         #endregion
@@ -51,6 +53,16 @@ namespace UI.Screen.Tab
         private void OnValidationFailed(string obj)
         {
             errorMessage_txt.text = obj;
+        }
+
+        /// <summary>
+        /// Sign in successful event
+        /// </summary>
+        private void SignInSuccessful()
+        {
+            UGSManager.Instance.CloudSave.SetHost(UGSManager.Instance.IsHost);
+            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
         }
         #endregion
 

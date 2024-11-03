@@ -51,36 +51,31 @@ namespace UGS
         #endregion
 
         #region PlayerName
-        public async Task GenerateRandomPlayerName()
-        {
-            try
-            {
-                PlayerName = await AuthenticationService.Instance.GetPlayerNameAsync();
-            }
-            catch (AuthenticationException ex)
-            {
-                // Compare error code to AuthenticationErrorCodes
-                // Notify the player with the proper error message
-                Debug.LogException(ex);
-            }
-            catch (RequestFailedException ex)
-            {
-                // Compare error code to CommonErrorCodes
-                // Notify the player with the proper error message
-                Debug.LogException(ex);
-            }
-            OnPlayerNameChanged?.Invoke(PlayerName);
-        }
-
+        //public async Task GenerateRandomPlayerName()
+        //{
+        //    try
+        //    {
+        //        PlayerName = await AuthenticationService.Instance.GetPlayerNameAsync();
+        //    }
+        //    catch (AuthenticationException ex)
+        //    {
+        //        // Compare error code to AuthenticationErrorCodes
+        //        // Notify the player with the proper error message
+        //        Debug.LogException(ex);
+        //    }
+        //    catch (RequestFailedException ex)
+        //    {
+        //        // Compare error code to CommonErrorCodes
+        //        // Notify the player with the proper error message
+        //        Debug.LogException(ex);
+        //    }
+        //    OnPlayerNameChanged?.Invoke(PlayerName);
+        //}
         public async Task<string> SetPlayerNameAsync(string _playerName)
         {
             try
             {
-                //Check if player name meets the criteria.
-                if (!CheckPlayerNameCriteria(_playerName))
-                {
-                    return StringUtils.PLAYERNAMEERROR;
-                }
+              
                 PlayerName = await AuthenticationService.Instance.UpdatePlayerNameAsync(_playerName);
             }
             catch (AuthenticationException ex)
@@ -125,10 +120,7 @@ namespace UGS
         {
             return new Regex(StringUtils.PASSWORDPATTERN).IsMatch(password);
         }
-        public bool CheckPlayerNameCriteria(string playerName)
-        {
-            return new Regex(StringUtils.PLAYERNAMEPATTERN).IsMatch(playerName);
-        }
+      
 
         public async Task SignUpAsync(string userName, string password)
         {

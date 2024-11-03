@@ -24,6 +24,7 @@ namespace UI.Screen.Tab
             {
                 UGSManager.Instance.Authentication.OnSignInFailed += OnSignInFailed;
                 UGSManager.Instance.Authentication.OnValidationFail += OnValidationFailed;
+                UGSManager.Instance.Authentication.OnSignedInEvent += SignInSuccessful;
             }
         }
         private void OnDisable()
@@ -33,6 +34,7 @@ namespace UI.Screen.Tab
             {
                 UGSManager.Instance.Authentication.OnSignInFailed -= OnSignInFailed;
                 UGSManager.Instance.Authentication.OnValidationFail -= OnValidationFailed;
+                UGSManager.Instance.Authentication.OnSignedInEvent -= SignInSuccessful;
             }
         }
         #endregion
@@ -49,6 +51,18 @@ namespace UI.Screen.Tab
         private void OnValidationFailed(string obj)
         {
             errorMessageTxt.text = obj;
+        }
+        /// <summary>
+        /// Sign in successful event
+        /// </summary>
+        private async void SignInSuccessful()
+        {
+            //Check if the user is a host
+            bool isHost = await UGSManager.Instance.CloudSave.IsHost();
+            UGSManager.Instance.SetHost(isHost);
+
+            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
         }
         #endregion
 
@@ -69,14 +83,14 @@ namespace UI.Screen.Tab
             password_Input.text = string.Empty;
             errorMessageTxt.text = string.Empty;
         }
-      
+
         /// <summary>
         /// Login Request
         /// </summary>
         private async void Login()
         {
             Func<Task> method = () => UGSManager.Instance.Authentication.SignInWithUsernamePasswordAsync(username_Input.text, password_Input.text);
-             await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            await LoadingScreen.Instance.PerformAsyncWithLoading(method);
         }
         #endregion
     }
