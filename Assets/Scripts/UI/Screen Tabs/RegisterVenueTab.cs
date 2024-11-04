@@ -9,9 +9,7 @@ namespace UI.Screen.Tab
     public class RegisterVenueTab : BaseTab
     {
         #region Inspector Variables
-        [SerializeField] private InputField locationLatitude;
-        [SerializeField] private InputField locationLongitude;
-        [SerializeField] private InputField radiusInput;
+        [SerializeField] private TMP_InputField radiusInput;
         [SerializeField] private Button registerVenueBtn;
         [SerializeField] private Button fetchCurrentLocationBtn;
         [SerializeField] private TextMeshProUGUI messageTxt;
@@ -47,8 +45,8 @@ namespace UI.Screen.Tab
             bool islocationFound = await LoadingScreen.Instance.PerformAsyncWithLoading<bool>(method);
             if (islocationFound)
             {
-                locationLatitude.text = GPS.CurrentLocationLatitude.ToString();
-                locationLongitude.text = GPS.CurrentLocationLongitude.ToString();
+              //  locationLatitude.text = GPS.CurrentLocationLatitude.ToString();
+             //   locationLongitude.text = GPS.CurrentLocationLongitude.ToString();
             }
         }
         private async void RegisterVenue()
@@ -56,11 +54,11 @@ namespace UI.Screen.Tab
             messageTxt.text = string.Empty;
 
             //Check if Latitude and Longitude are empty
-            if (StringUtils.IsStringEmpty(locationLatitude.text) || StringUtils.IsStringEmpty(locationLongitude.text))
-            {
-                messageTxt.text = StringUtils.GPSLOCATIONFETCHERROR;
-                return;
-            }
+            //if (StringUtils.IsStringEmpty(locationLatitude.text) || StringUtils.IsStringEmpty(locationLongitude.text))
+            //{
+            //    messageTxt.text = StringUtils.GPSLOCATIONFETCHERROR;
+            //    return;
+            //}
 
             //Check if Radius is empty
             if (StringUtils.IsStringEmpty(radiusInput.text))
@@ -70,11 +68,11 @@ namespace UI.Screen.Tab
             }
 
             //Register Host in Venue Cloud List.
-            double latitude = double.Parse(locationLatitude.text);
-            double longitude = double.Parse(locationLongitude.text);
-            float radius = float.Parse(radiusInput.text);
-            Func<Task> method = () => UGSManager.Instance.CloudCode.RegisterVenue(latitude, longitude, radius);
-            await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            //double latitude = double.Parse(locationLatitude.text);
+            //double longitude = double.Parse(locationLongitude.text);
+            //float radius = float.Parse(radiusInput.text);
+            //Func<Task> method = () => UGSManager.Instance.CloudCode.RegisterVenue(latitude, longitude, radius);
+            //await LoadingScreen.Instance.PerformAsyncWithLoading(method);
         }
         #endregion
     }

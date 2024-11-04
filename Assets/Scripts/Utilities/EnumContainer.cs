@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class EnumContainer
@@ -53,7 +52,13 @@ public enum ScreenTabType
     RegisterVenue,
     RaceInProgress,
     RaceResults,
-    Welcome
+    Welcome,
+    SetVenueName,
+    HostSetting,
+    VenueCheckIn,
+    RaceCheckIn,
+    RaceTimer,
+    NotInRace
 }
 public enum ScreenType
 {
