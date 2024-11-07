@@ -7,9 +7,12 @@ namespace UI.Screen
         #region Unity Methods
         private void OnEnable()
         {
+            colorMat.SetColor("_Color_Hair", Color.red);
             OnEnableScreen();
         }
         #endregion
+
+        public Material colorMat;
 
         #region Private Methods
         private void OnEnableScreen()

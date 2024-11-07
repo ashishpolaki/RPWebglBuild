@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e694cae0a91a6bd4a9aec498f3a0d23a, type: 3}
+  m_Name: FemaleCharacterParts
+  m_EditorClassIdentifier: 
+  CharacterGender: 0
+  CharacterPartCollections:
+  - partType: 2
+    characterParts:
+    - {fileID: 11400000, guid: 52eae0153b77d154a844e5c9f19bb493, type: 2}
+    - {fileID: 11400000, guid: 3666b5df727b3d3439e455613f6cda5e, type: 2}
+    - {fileID: 11400000, guid: 64bfb8c6e477d0c449a8e0a3e40e6a2b, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 3
+    characterParts: []
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 4
+    characterParts:
+    - {fileID: 11400000, guid: 2649333ac4ec74849a0bb816a0454bce, type: 2}
+    - {fileID: 11400000, guid: e084f6a202340274e974b444ee2343d3, type: 2}
+    - {fileID: 11400000, guid: d2dffd0a988b9c94e83004e9fa12183e, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 5
+    characterParts:
+    - {fileID: 11400000, guid: 62453a4681a62fe40a1341dbcc0ef181, type: 2}
+    - {fileID: 11400000, guid: 915b48298d643e849bcd743bb669dfe1, type: 2}
+    - {fileID: 11400000, guid: 4a1bba2f97868064b856a0691d859282, type: 2}
+    - {fileID: 11400000, guid: 99dea8522f29e234a9e25ddf09167e25, type: 2}
+    canTurnOff: 1
+    canChangeColor: 0
+  - partType: 1
+    characterParts:
+    - {fileID: 11400000, guid: 755e6b4b34900634890c4e9d64e6263a, type: 2}
+    - {fileID: 11400000, guid: 9c1140caaba8e014ea421a10b798ddbd, type: 2}
+    - {fileID: 11400000, guid: 15c2ae5adc29df74bad3a64be0c63663, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 6
+    characterParts:
+    - {fileID: 11400000, guid: 786099ecc7ae7444ca63a300dfacb002, type: 2}
+    - {fileID: 11400000, guid: 2106bbb089b854940a46876a405dfc32, type: 2}
+    - {fileID: 11400000, guid: cd87c02663270c047896f4e8bedb25c3, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 7
+    characterParts:
+    - {fileID: 11400000, guid: 9c629d7467eaa884ebab4dcc12952ed5, type: 2}
+    - {fileID: 11400000, guid: 66bab58f8f5b5c948873b002fb5a054d, type: 2}
+    - {fileID: 11400000, guid: 889865f2edc329348b53cac11f8a45a7, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 8
+    characterParts:
+    - {fileID: 11400000, guid: 22f6e25da922e8644be8c9919210755a, type: 2}
+    - {fileID: 11400000, guid: 9e960e8ae75118647ab568d84c823f95, type: 2}
+    - {fileID: 11400000, guid: c33dcbac49a0432498c4f7464ac24880, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 9
+    characterParts:
+    - {fileID: 11400000, guid: 97fb0303923d11f458e75848fc84f7cb, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 10
+    characterParts:
+    - {fileID: 11400000, guid: b7a4ae3e5a653764cb9c84caf57f10a4, type: 2}
+    - {fileID: 11400000, guid: a3cd8e8e2015fbb428aff27565b3c81b, type: 2}
+    - {fileID: 11400000, guid: 59e9e493b2052b444979defcdc27dee6, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 11
+    characterParts:
+    - {fileID: 11400000, guid: 67585d432621bc543ae7304e30f3e67a, type: 2}
+    - {fileID: 11400000, guid: 638e265544c58df4989bf0ca1f7de1b6, type: 2}
+    canTurnOff: 1
+    canChangeColor: 0
+  - partType: 12
+    characterParts:
+    - {fileID: 11400000, guid: 98d50446bb539a740acbe40c56324716, type: 2}
+    - {fileID: 11400000, guid: 2743de67d244f4f4691b9dc1735d1757, type: 2}
+    - {fileID: 11400000, guid: 8186bd40ff7e1454cbb3349240b42845, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 13
+    characterParts:
+    - {fileID: 11400000, guid: f4e6e2a050a629548b908396fa06a3c9, type: 2}
+    - {fileID: 11400000, guid: 2ce31be9dc7b2fa40bcd58595011ef7c, type: 2}
+    - {fileID: 11400000, guid: d5d1d5e001ab8ce46be0585be6311dc0, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 14
+    characterParts:
+    - {fileID: 11400000, guid: 6dc20165d404b014cadc35cdad0b45fc, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 15
+    characterParts:
+    - {fileID: 11400000, guid: 6a5fb92a11a64064597c67ae28da7025, type: 2}
+    - {fileID: 11400000, guid: f009a5c092b127c48ad9e6e9b935a29c, type: 2}
+    - {fileID: 11400000, guid: 3ca351b6576a4534d8d9e56c608688d6, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0
+  - partType: 16
+    characterParts:
+    - {fileID: 11400000, guid: 05b5a4012367d254890fd9ea5dd2e502, type: 2}
+    - {fileID: 11400000, guid: afbec253a6b34b442b76e2bb152bac38, type: 2}
+    - {fileID: 11400000, guid: 8a6c740756a1747459665ce9a0442159, type: 2}
+    canTurnOff: 0
+    canChangeColor: 0

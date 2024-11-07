@@ -70,3 +70,45 @@ public enum ScreenType
     None
 }
 #endregion
+
+#region Character
+
+public enum CharacterPartType
+{
+    None,
+    Head,
+    Eyebrows,
+    FacialHair,
+    Hair,
+    Hat,
+    Hips,
+    LeftHand,
+    LeftLeg,
+    LeftLowerArm,
+    LeftUpperArm,
+    Mask,
+    RightHand,
+    RightLeg,
+    RightLowerArm,
+    RightUpperArm,
+    Torso
+}
+public enum CharacterGenderType
+{
+    Male,
+    Female
+}
+public enum CharacterPartUIType
+{
+    FACE,
+    HAIR,
+    EYEBROWS,
+    BEARD,
+    HAT,
+    MASK,
+    TORSO,
+    ARMS,
+    HANDS,
+    LEGS
+}
+#endregion
