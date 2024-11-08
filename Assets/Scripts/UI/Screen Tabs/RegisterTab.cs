@@ -9,6 +9,8 @@ namespace UI.Screen.Tab
     public class RegisterTab : BaseTab
     {
         #region Inspector Variables
+        [SerializeField] private ToggleUI hostToggle;
+
         [SerializeField] private TMP_InputField username_Input;
         [SerializeField] private TMP_InputField newPassword_Input;
         [SerializeField] private TMP_InputField confirmPassword_Input;
@@ -20,6 +22,8 @@ namespace UI.Screen.Tab
         private void OnEnable()
         {
             registerPlayer_btn.onClick.AddListener(() => RegisterPlayer());
+            hostToggle.OnValueChanged += OnHostToggleHandle;
+
             ClearInputFields();
             if (UGSManager.Instance != null)
             {
@@ -31,12 +35,19 @@ namespace UI.Screen.Tab
         private void OnDisable()
         {
             registerPlayer_btn.onClick.RemoveAllListeners();
+            hostToggle.OnValueChanged -= OnHostToggleHandle;
+
             if (UGSManager.Instance != null)
             {
                 UGSManager.Instance.Authentication.OnSignInFailed -= OnSignUpFailed;
                 UGSManager.Instance.Authentication.OnValidationFail -= OnValidationFailed;
                 UGSManager.Instance.Authentication.OnSignedInEvent -= SignInSuccessful;
             }
+        }
+        protected override void Start()
+        {
+            base.Start();
+            hostToggle.SetThemeColor();
         }
         #endregion
 
@@ -55,14 +66,27 @@ namespace UI.Screen.Tab
             errorMessage_txt.text = obj;
         }
 
+        private void OnHostToggleHandle(bool val)
+        {
+            UGSManager.Instance.SetHost(val);
+        }
+
         /// <summary>
         /// Sign in successful event
         /// </summary>
         private void SignInSuccessful()
         {
-            UGSManager.Instance.CloudSave.SetHost(UGSManager.Instance.IsHost);
-            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Open);
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+            bool isHost = UGSManager.Instance.IsHost;
+            UGSManager.Instance.CloudSave.SetUserHostAsync(isHost);
+            if (isHost)
+            {
+                UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
+                UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+            }
+            else
+            {
+                UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.PlayerName);
+            }
         }
         #endregion
 
@@ -90,7 +114,7 @@ namespace UI.Screen.Tab
         /// </summary>
         private async void RegisterPlayer()
         {
-            if(!IsConfirmPasswordValid())
+            if (!IsConfirmPasswordValid())
             {
                 return;
             }

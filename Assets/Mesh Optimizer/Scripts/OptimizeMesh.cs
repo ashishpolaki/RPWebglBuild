@@ -29,13 +29,17 @@ public class LevelScriptEditor : Editor
 public class OptimizeMesh : MonoBehaviour
 {
     [Range(0.0f, 1.0f)]
-    [SerializeField] float _quality = 0.5f;
+    [SerializeField] float _quality = 1f;
+    [SerializeField] private string gender;
+    [SerializeField] private string partName;
+    [SerializeField] private int partIndex;
     MeshFilter _renderer;
     Mesh _mesh;
     void Start()
     {
         _renderer = GetComponent<MeshFilter>();
         _mesh = _renderer.sharedMesh;
+     
     }
 #if UNITY_EDITOR
     // Update is called once per frame
@@ -63,8 +67,21 @@ public class OptimizeMesh : MonoBehaviour
     {
         if (!EditorApplication.isPlaying)
         {
-            MeshSaverEditor.SaveMesh(_renderer.sharedMesh, "Optimized__" + gameObject.name, false, true);
+            string gameObjectName = $"{gender}_{partName} ({partIndex})";
+            MeshSaverEditor.SaveMesh(_renderer.sharedMesh, gameObjectName, false, true);
+            partIndex++;
+            PlayerPrefs.SetString("gender", gender);
+            PlayerPrefs.SetString("partName", partName);
+            PlayerPrefs.SetInt("partIndex", partIndex);
         }
     }
+
+    private void Awake()
+    {
+        gender = PlayerPrefs.GetString("gender");
+        partName = PlayerPrefs.GetString("partName");
+        partIndex = PlayerPrefs.GetInt("partIndex");
+    }
+  
 #endif
 }

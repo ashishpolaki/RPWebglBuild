@@ -58,11 +58,20 @@ namespace UI.Screen.Tab
         private async void SignInSuccessful()
         {
             //Check if the user is a host
-            bool isHost = await UGSManager.Instance.CloudSave.IsHost();
+            bool isHost = await UGSManager.Instance.CloudSave.IsUserHostAsync();
             UGSManager.Instance.SetHost(isHost);
 
-            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Open);
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+            if (UGSManager.Instance.IsHost)
+            {
+                UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
+                UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+            }
+            else
+            {
+                bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
+                ScreenTabType nextScreenTabType = isPlayerNameEmpty ? ScreenTabType.PlayerName : ScreenTabType.CharacterCustomize;
+                UIController.Instance.ChangeCurrentScreenTab(nextScreenTabType);
+            }
         }
         #endregion
 

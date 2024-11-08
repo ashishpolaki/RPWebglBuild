@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterGender: 1
   partType: 15
-  mesh: {fileID: 4301844, guid: 038320a534bd8b444b43734860d1a211, type: 3}
+  mesh: {fileID: 4301870, guid: 038320a534bd8b444b43734860d1a211, type: 3}

@@ -30,7 +30,7 @@ public class CharacterPartUI : MonoBehaviour
     {
         characterPartType = _characterPart;
         partText.text = characterPartType.ToString();
-        CharacterCustomisationManager.Instance.SetCharacterPartType(characterPartType);
+        CharacterCustomisationManager.Instance.SetCurrentSelectedPart(characterPartType);
     }
     #endregion
 

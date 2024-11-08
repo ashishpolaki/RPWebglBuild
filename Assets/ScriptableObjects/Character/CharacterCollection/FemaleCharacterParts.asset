@@ -107,9 +107,9 @@ MonoBehaviour:
     canChangeColor: 0
   - partType: 15
     characterParts:
-    - {fileID: 11400000, guid: 6a5fb92a11a64064597c67ae28da7025, type: 2}
-    - {fileID: 11400000, guid: f009a5c092b127c48ad9e6e9b935a29c, type: 2}
-    - {fileID: 11400000, guid: 3ca351b6576a4534d8d9e56c608688d6, type: 2}
+    - {fileID: 11400000, guid: c61934a0b82a4dc49b4fcc53472fc978, type: 2}
+    - {fileID: 11400000, guid: efc859195e4d67143837670049f96264, type: 2}
+    - {fileID: 11400000, guid: 15f091f2a5ba38f47898dd1b6b1bf94b, type: 2}
     canTurnOff: 0
     canChangeColor: 0
   - partType: 16

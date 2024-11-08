@@ -47,7 +47,7 @@ public enum ScreenTabType
     RegisterPlayer,
     RaceSchedule,
     PlayerName,
-    RoleSelection,
+    CharacterCustomize,
     Lobby,
     RegisterVenue,
     RaceInProgress,
@@ -63,7 +63,6 @@ public enum ScreenTabType
 public enum ScreenType
 {
     Login,
-    CharacterCustomization,
     Host,
     Client,
     RaceResults,

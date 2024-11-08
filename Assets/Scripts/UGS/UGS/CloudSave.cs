@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.CloudSave;
-using UnityEngine;
+using Unity.Services.CloudSave.Models.Data.Player;
 
 namespace UGS
 {
@@ -103,19 +103,39 @@ namespace UGS
             return null;
         }
 
-        public async void SetHost(bool val)
+        public async void SetUserHostAsync(bool val)
         {
             await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>() { { "Host", val } });
         }
 
-        public async Task<bool> IsHost()
+        public async Task<bool> IsUserHostAsync()
         {
             var result = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { "Host" });
-            if (result.TryGetValue("Host",out var val))
+            if (result.TryGetValue("Host", out var val))
             {
                 return val.Value.GetAs<bool>();
             }
             return false;
+        }
+
+        public async Task SetCharacterDataAsync(string key, SaveCharacterData _storeCharacterData)
+        {
+            Dictionary<string, object> saveData = new Dictionary<string, object>
+            {
+                { key, _storeCharacterData }
+            };
+            await CloudSaveService.Instance.Data.Player.SaveAsync(saveData, new Unity.Services.CloudSave.Models.Data.Player.SaveOptions(new PublicWriteAccessClassOptions()));
+        }
+
+        public async Task<SaveCharacterData> GetCharacterDataAsync(string key)
+        {
+            SaveCharacterData characterData = null;
+            var result = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string> { key }, new LoadOptions(new PublicReadAccessClassOptions()));
+            if (result.TryGetValue(key, out var val))
+            {
+                characterData = val.Value.GetAs<SaveCharacterData>();
+            }
+            return characterData;
         }
     }
 }

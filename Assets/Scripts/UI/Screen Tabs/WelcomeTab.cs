@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,12 +16,19 @@ namespace UI.Screen.Tab
             //Button Click Events
             registerTabBtn.onClick.AddListener(() => OpenRegisterTab());
             loginTabBtn.onClick.AddListener(() => OpenLoginTab());
+            UGSManager.Instance.Authentication.OnSignedInEvent += OnSignInSuccess;
+            UGSManager.Instance.Authentication.OnSignInFailed += OnSignFailed;
         }
         private void OnDisable()
         {
             //Button Click Events
             registerTabBtn.onClick.RemoveAllListeners();
             loginTabBtn.onClick.RemoveAllListeners();
+            if (UGSManager.Instance.Authentication != null)
+            {
+                UGSManager.Instance.Authentication.OnSignedInEvent -= OnSignInSuccess;
+                UGSManager.Instance.Authentication.OnSignInFailed -= OnSignFailed;
+            }
         }
         protected override void Start()
         {
@@ -32,6 +37,46 @@ namespace UI.Screen.Tab
         }
         #endregion
 
+        #region Subscribed Methods
+        private async void OnSignInSuccess()
+        {
+            //Check if the user is a host
+            bool isHost = await UGSManager.Instance.CloudSave.IsUserHostAsync();
+            UGSManager.Instance.SetHost(isHost);
+
+            //Hide loading screen after checking if the user is a host or not.
+            LoadingScreen.Instance.Hide();
+
+            //Open Host Screen
+            if (UGSManager.Instance.IsHost)
+            {
+                UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
+                UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+            }
+            else
+            {
+                bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
+                bool isCharacterNotCustomized = UGSManager.Instance.CloudSave.GetCharacterDataAsync("CharacterData") == null;
+
+                if (isPlayerNameEmpty || isCharacterNotCustomized)
+                {
+                    ScreenTabType nextScreenTabType = isPlayerNameEmpty ? ScreenTabType.PlayerName : ScreenTabType.CharacterCustomize;
+                    UIController.Instance.ChangeCurrentScreenTab(nextScreenTabType);
+                }
+                else
+                {
+                    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+                    UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+                }
+            }
+        }
+
+        private void OnSignFailed(string message)
+        {
+            LoadingScreen.Instance.Hide();
+            Debug.Log(message);
+        }
+        #endregion
 
         #region Private Methods
         private async void CheckCacheSignIn()
@@ -41,31 +86,8 @@ namespace UI.Screen.Tab
             {
                 LoadingScreen.Instance.Show();
                 await UGSManager.Instance.Authentication.CacheSignInAsync();
-                //Check if the user is a host
-                bool isHost = await UGSManager.Instance.CloudSave.IsHost();
-                UGSManager.Instance.SetHost(isHost);
-                LoadingScreen.Instance.Hide();
-                OnSignInSuccess();
             }
         }
-
-        private void OnSignInSuccess()
-        {
-            //Open New Screen
-            if (StringUtils.IsStringEmpty(UGSManager.Instance.Authentication.PlayerName))
-            {
-                UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Open);
-            }
-            else
-            {
-                ScreenType screenType = UGSManager.Instance.IsHost ? ScreenType.Host : ScreenType.Client;
-                UIController.Instance.ScreenEvent(screenType, UIScreenEvent.Open);
-            }
-
-            //Close Current Screen
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
-        }
-
         private void OpenLoginTab()
         {
             UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.LoginPlayer);

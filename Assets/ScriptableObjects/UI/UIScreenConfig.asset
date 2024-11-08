@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screens:
   - {fileID: 3249648341629697967, guid: 579334059efcaab43b1ccc3800e46f31, type: 3}
-  - {fileID: 6728266054668300391, guid: 1b3eb42834a643f4e9c2df4a3398a453, type: 3}
   - {fileID: 2861682017982563202, guid: 1c27cb5d5f1c77b41a4108c42d3ad29b, type: 3}
   - {fileID: 6075880481612246338, guid: 95e4f2534dbcda04bb3791613f5f6629, type: 3}
   - {fileID: 3035898171505514549, guid: a4129842f660b564e8e6dc3a0c5842cb, type: 3}

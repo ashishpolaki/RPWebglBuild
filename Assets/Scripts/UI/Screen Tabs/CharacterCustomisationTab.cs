@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
-using TMPro;
 using CharacterCustomisation;
 
 namespace UI.Screen.Tab
@@ -15,6 +14,7 @@ namespace UI.Screen.Tab
         [SerializeField] private CharacterPartUI characterPartUI;
         [SerializeField] private Button maleButton;
         [SerializeField] private Button femaleButton;
+        [SerializeField] private Button setOutfitButton;
         #endregion
 
         #region Unity methods
@@ -26,6 +26,7 @@ namespace UI.Screen.Tab
             }
             maleButton.onClick.AddListener(() => OnChangeGender(CharacterGenderType.Male));
             femaleButton.onClick.AddListener(() => OnChangeGender(CharacterGenderType.Female));
+            setOutfitButton.onClick.AddListener(() => SetCharacterDataASync());
         }
         protected override void Start()
         {
@@ -43,8 +44,14 @@ namespace UI.Screen.Tab
             }
             maleButton.onClick.RemoveListener(() => OnChangeGender(CharacterGenderType.Male));
             femaleButton.onClick.RemoveListener(() => OnChangeGender(CharacterGenderType.Female));
+            setOutfitButton.onClick.RemoveListener(() => SetCharacterDataASync());
         }
         #endregion
+
+        private void SetCharacterDataASync()
+        {
+            CharacterCustomisationManager.Instance.SaveCharacterData();
+        }
 
         private void OnBodyPartColorChange(Button button)
         {
@@ -53,7 +60,7 @@ namespace UI.Screen.Tab
         }
         private void OnChangeGender(CharacterGenderType characterGender)
         {
-            CharacterCustomisationManager.Instance.ChangeGender(characterGender);
+            CharacterCustomisationManager.Instance.ChangeGenderAndBodyParts(characterGender);
             UpdateGenderButtonsState(characterGender);
         }
         private void UpdateGenderButtonsState(CharacterGenderType characterGender)
@@ -71,7 +78,6 @@ namespace UI.Screen.Tab
                 characterPartButtonsList[i].Initialize((CharacterPartUIType)i, OnSelectBodyPart);
             }
         }
-
         private void OnSelectBodyPart(CharacterPartUIType characterPartUIType)
         {
             characterPartUI.SetPart(characterPartUIType);

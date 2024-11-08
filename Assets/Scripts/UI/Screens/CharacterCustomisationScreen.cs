@@ -15,12 +15,15 @@ namespace UI.Screen
         private void OnEnableScreen()
         {
             //If player name is empty then open player name tab
-            if (string.IsNullOrEmpty(UGSManager.Instance.PlayerData.playerName))
+            bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
+            if (isPlayerNameEmpty)
             {
                 OpenTab(ScreenTabType.PlayerName);
             }
             else
             {
+                UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.CharacterCustomize);
+
                 //If player is host then open host screen
                 if (UGSManager.Instance.IsHost)
                 {

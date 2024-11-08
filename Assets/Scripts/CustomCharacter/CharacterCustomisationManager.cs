@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using UI;
 using UnityEngine;
 
 namespace CharacterCustomisation
@@ -6,29 +8,20 @@ namespace CharacterCustomisation
     public class CharacterCustomisationManager : MonoBehaviour
     {
         public static CharacterCustomisationManager Instance { get; private set; }
+
+        #region Inspector Variables
+
         [SerializeField] private CharacterPartsCollectionSO[] characterPartCollections;
         [SerializeField] private CharacterGenderType currentCharacterGender;
         [SerializeField] private Character myCharacter;
         [SerializeField] private CharacterPartUIType currentCharacterPartUIType;
+        [SerializeField] private int[] characterPartsIndexes;
+        [SerializeField] private string[] characterPartColorIndexes;
+        #endregion
 
-        private int hatIndex = 0;
-        private int hairIndex;
-        private int eyesBrowsIndex;
-        private int facialHairIndex = 0;
-        private int headIndex;
-        private int torsoIndex;
-        private int maskIndex = 0;
-        private int rightUpperArmIndex;
-        private int rightLowerArmIndex;
-        private int rightHandIndex;
-        private int leftUpperArmIndex;
-        private int leftLowerArmIndex;
-        private int leftHandIndex;
-        private int hipsIndex;
-        private int rightLegIndex;
-        private int leftLegIndex;
-
+        #region Property
         public CharacterGenderType CurrentCharacterGender { get => currentCharacterGender; }
+        #endregion
 
         private void Awake()
         {
@@ -43,58 +36,111 @@ namespace CharacterCustomisation
         }
         private void Start()
         {
-            LoadCharacterMesh();
+            characterPartsIndexes = new int[Enum.GetValues(typeof(CharacterPartType)).Length];
+            characterPartColorIndexes = new string[Enum.GetValues(typeof(CharacterPartUIType)).Length];
+            InitializeData();
         }
-        public void InitializeData()
+
+        private async void InitializeData()
         {
+            SaveCharacterData saveCharacterData = await UGSManager.Instance.CloudSave.GetCharacterDataAsync("CharacterData");
+            if (saveCharacterData != null)
+            {
+                //Set Gender
+                currentCharacterGender = (CharacterGenderType)saveCharacterData.characterGenderIndex;
+                ChangeGender(currentCharacterGender);
 
+                //Set Body Parts
+                for (int i = 0; i < characterPartsIndexes.Length; i++)
+                {
+                    characterPartsIndexes[i] = saveCharacterData.characterPartIndexes[i];
+                    ChangeBodyPart((CharacterPartType)i);
+                }
+
+                //Set Body Part Color
+                for (int i = 0; i < characterPartColorIndexes.Length; i++)
+                {
+                    characterPartColorIndexes[i] = saveCharacterData.characterPartColorIndexes[i];
+                    if (!StringUtils.IsStringEmpty(characterPartColorIndexes[i]))
+                    {
+                        ChangeBodyPartColor(FromHex(characterPartColorIndexes[i]));
+                    }
+                }
+            }
+            else
+            {
+                ChangeGender(currentCharacterGender);
+
+                //Set Body Parts
+                for (int i = 0; i < characterPartsIndexes.Length; i++)
+                {
+                    ChangeBodyPart((CharacterPartType)i, characterPartsIndexes[i]);
+                }
+
+                //Set Body Part Color
+                for (int i = 0; i < characterPartColorIndexes.Length; i++)
+                {
+                    if (!StringUtils.IsStringEmpty(characterPartColorIndexes[i]))
+                    {
+                        ChangeBodyPartColor(FromHex(characterPartColorIndexes[i]));
+                    }
+                }
+            }
         }
 
+        public void ChangeGenderAndBodyParts(CharacterGenderType characterGenderType)
+        {
+            ChangeGender(characterGenderType);
+
+            //Set Body Parts
+            for (int i = 0; i < characterPartsIndexes.Length; i++)
+            {
+                ChangeBodyPart((CharacterPartType)i);
+            }
+        }
+
+        public string ToHex(Color color)
+        {
+            Color32 color32 = color;
+            return $"{color32.r:X2}{color32.g:X2}{color32.b:X2}{color32.a:X2}";
+        }
+
+        public Color FromHex(string hex)
+        {
+            if (hex.Length != 8)
+            {
+                return Color.white;
+            }
+
+            byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            byte a = byte.Parse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
+
+            return new Color32(r, g, b, a);
+        }
         public void ChangeBodyPartColor(Color color)
         {
+            characterPartColorIndexes[(int)currentCharacterPartUIType] = ToHex(color);
             myCharacter.SetPartColor(currentCharacterPartUIType, color);
-
         }
 
-
-        public void LoadCharacterMesh()
+        public async void SaveCharacterData()
         {
-            ChangeBodyPart(CharacterPartType.Head, ref headIndex, headIndex);
-            ChangeBodyPart(CharacterPartType.Hair, ref hairIndex, hairIndex);
-            ChangeBodyPart(CharacterPartType.Eyebrows, ref eyesBrowsIndex, eyesBrowsIndex);
-            ChangeBodyPart(CharacterPartType.FacialHair, ref facialHairIndex, facialHairIndex);
-            ChangeBodyPart(CharacterPartType.Hat, ref hatIndex, hatIndex);
-            ChangeBodyPart(CharacterPartType.Mask, ref maskIndex, maskIndex);
-            ChangeBodyPart(CharacterPartType.Torso, ref torsoIndex, torsoIndex);
-            ChangeBodyPart(CharacterPartType.RightUpperArm, ref rightUpperArmIndex, rightUpperArmIndex);
-            ChangeBodyPart(CharacterPartType.LeftUpperArm, ref leftUpperArmIndex, leftUpperArmIndex);
-            ChangeBodyPart(CharacterPartType.RightHand, ref rightHandIndex, rightHandIndex);
-            ChangeBodyPart(CharacterPartType.LeftHand, ref leftHandIndex, leftHandIndex);
-            ChangeBodyPart(CharacterPartType.Hips, ref hipsIndex, hipsIndex);
-            ChangeBodyPart(CharacterPartType.RightLeg, ref rightLegIndex, rightLegIndex);
-            ChangeBodyPart(CharacterPartType.LeftLeg, ref leftLegIndex, leftLegIndex);
+            SaveCharacterData saveCharacterData = new SaveCharacterData();
+            saveCharacterData.SetCharacterPartsList((int)currentCharacterGender, characterPartsIndexes, characterPartColorIndexes);
+            Func<Task> method = async () => await UGSManager.Instance.CloudSave.SetCharacterDataAsync("CharacterData", saveCharacterData);
+            await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
         }
 
-        public void ChangeGender(CharacterGenderType _characterGenderType)
+        private void ChangeGender(CharacterGenderType _characterGenderType)
         {
             currentCharacterGender = _characterGenderType;
-            ChangeBodyPart(CharacterPartType.Head, ref headIndex, 0);
-            ChangeBodyPart(CharacterPartType.Hair, ref hairIndex, 0);
-            ChangeBodyPart(CharacterPartType.Eyebrows, ref eyesBrowsIndex, 0);
-            ChangeBodyPart(CharacterPartType.FacialHair, ref facialHairIndex, 0);
-            ChangeBodyPart(CharacterPartType.Hat, ref hatIndex, 0);
-            ChangeBodyPart(CharacterPartType.Mask, ref maskIndex, 0);
-            ChangeBodyPart(CharacterPartType.Torso, ref torsoIndex, 0);
-            ChangeBodyPart(CharacterPartType.RightUpperArm, ref rightUpperArmIndex, 0);
-            ChangeBodyPart(CharacterPartType.LeftUpperArm, ref leftUpperArmIndex, 0);
-            ChangeBodyPart(CharacterPartType.RightHand, ref rightHandIndex, 0);
-            ChangeBodyPart(CharacterPartType.LeftHand, ref leftHandIndex, 0);
-            ChangeBodyPart(CharacterPartType.Hips, ref hipsIndex, 0);
-            ChangeBodyPart(CharacterPartType.RightLeg, ref rightLegIndex, 0);
-            ChangeBodyPart(CharacterPartType.LeftLeg, ref leftLegIndex, 0);
         }
 
-        public void SetCharacterPartType(CharacterPartUIType characterPartType)
+        public void SetCurrentSelectedPart(CharacterPartUIType characterPartType)
         {
             currentCharacterPartUIType = characterPartType;
         }
@@ -104,49 +150,50 @@ namespace CharacterCustomisation
             switch (characterPartUIType)
             {
                 case CharacterPartUIType.FACE:
-                    ChangeBodyPart(CharacterPartType.Head, ref headIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Head, changeDirection);
                     break;
                 case CharacterPartUIType.HAIR:
-                    ChangeBodyPart(CharacterPartType.Hair, ref hairIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Hair, changeDirection);
                     break;
                 case CharacterPartUIType.EYEBROWS:
-                    ChangeBodyPart(CharacterPartType.Eyebrows, ref eyesBrowsIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Eyebrows, changeDirection);
                     break;
                 case CharacterPartUIType.BEARD:
-                    ChangeBodyPart(CharacterPartType.FacialHair, ref facialHairIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.FacialHair, changeDirection);
                     break;
                 case CharacterPartUIType.HAT:
-                    ChangeBodyPart(CharacterPartType.Hat, ref hatIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Hat, changeDirection);
                     break;
                 case CharacterPartUIType.MASK:
-                    ChangeBodyPart(CharacterPartType.Mask, ref maskIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Mask, changeDirection);
                     break;
                 case CharacterPartUIType.TORSO:
-                    ChangeBodyPart(CharacterPartType.Torso, ref torsoIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Torso, changeDirection);
                     break;
                 case CharacterPartUIType.ARMS:
-                    ChangeBodyPart(CharacterPartType.RightUpperArm, ref rightUpperArmIndex, changeDirection);
-                    ChangeBodyPart(CharacterPartType.LeftUpperArm, ref leftUpperArmIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.RightUpperArm, changeDirection);
+                    ChangeBodyPart(CharacterPartType.LeftUpperArm, changeDirection);
                     break;
                 case CharacterPartUIType.HANDS:
-                    ChangeBodyPart(CharacterPartType.RightHand, ref rightHandIndex, changeDirection);
-                    ChangeBodyPart(CharacterPartType.LeftHand, ref leftHandIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.RightHand, changeDirection);
+                    ChangeBodyPart(CharacterPartType.LeftHand, changeDirection);
                     break;
                 case CharacterPartUIType.LEGS:
-                    ChangeBodyPart(CharacterPartType.Hips, ref hipsIndex, changeDirection);
-                    ChangeBodyPart(CharacterPartType.RightLeg, ref rightLegIndex, changeDirection);
-                    ChangeBodyPart(CharacterPartType.LeftLeg, ref leftLegIndex, changeDirection);
+                    ChangeBodyPart(CharacterPartType.Hips, changeDirection);
+                    ChangeBodyPart(CharacterPartType.RightLeg, changeDirection);
+                    ChangeBodyPart(CharacterPartType.LeftLeg, changeDirection);
                     break;
                 default:
                     break;
             }
         }
 
-        private void ChangeBodyPart(CharacterPartType partType, ref int currentPartIndex, int changeDirection)
+        private void ChangeBodyPart(CharacterPartType partType, int changeDirection = 0)
         {
             int partVariancesCount = characterPartCollections[(int)currentCharacterGender].GetCharacterPartVariancesLength(partType);
+            int currentPartIndex = characterPartsIndexes[(int)partType];
 
-            //If there is no variance for the part, turn it off
+            //If there are no variances for the part, turn off the mesh
             if (partVariancesCount <= 0)
             {
                 myCharacter.TurnOffCharacterPart(partType);
@@ -154,14 +201,11 @@ namespace CharacterCustomisation
             }
 
             //Calculate the next part index
-            int nextPartIndex = (currentPartIndex + changeDirection) % partVariancesCount;
-            if (nextPartIndex < 0)
-            {
-                nextPartIndex = partVariancesCount - 1;
-            }
+            int nextPartIndex = (currentPartIndex + changeDirection + partVariancesCount) % partVariancesCount;
 
-            currentPartIndex = nextPartIndex;
-            myCharacter.ChangeCharacterPart(partType, characterPartCollections[(int)currentCharacterGender].GetMesh(partType, currentPartIndex));
+            //Set the part index and change mesh
+            characterPartsIndexes[(int)partType] = nextPartIndex;
+            myCharacter.ChangeCharacterPart(partType, characterPartCollections[(int)currentCharacterGender].GetMesh(partType, nextPartIndex));
         }
     }
 }

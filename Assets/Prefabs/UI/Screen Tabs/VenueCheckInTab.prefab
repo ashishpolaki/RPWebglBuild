@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 405, y: 77.5}
+  m_SizeDelta: {x: 669.658, y: 151.299}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4062572335896992461
 CanvasRenderer:
@@ -66,9 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Login
-
-'
+  m_text: Join the Match
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c7e86dec99fa78c418f91dbe14633c98, type: 2}
   m_sharedMaterial: {fileID: 1557670849054380990, guid: c7e86dec99fa78c418f91dbe14633c98, type: 2}
@@ -95,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 80.9
+  m_fontSizeBase: 80.9
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -105,7 +103,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: -2
+  m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1032,7 +1030,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 8b9a069e5e3806c45a042772122850cd, type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1040,7 +1038,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 1.9
 --- !u!114 &3240699694254566737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1093,7 +1091,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 32.51303}
-  m_SizeDelta: {x: 510, y: 240}
+  m_SizeDelta: {x: 760, y: 225}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1612477802341656819
 CanvasRenderer:
@@ -1124,7 +1122,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: c7718261ff236f24eb464df2840f4989, type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1132,7 +1130,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 1.9
 --- !u!114 &5777069136739003077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1877,7 +1875,7 @@ GameObject:
   m_Component:
   - component: {fileID: 487923731626323624}
   - component: {fileID: 5218728798533304942}
-  - component: {fileID: 280360568473519796}
+  - component: {fileID: 7063272546734390045}
   m_Layer: 5
   m_Name: VenueCheckInTab
   m_TagString: Untagged
@@ -1892,7 +1890,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3954738592471435975}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1915,7 +1913,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3954738592471435975}
   m_CullTransparentMesh: 1
---- !u!114 &280360568473519796
+--- !u!114 &7063272546734390045
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1924,10 +1922,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3954738592471435975}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c16f6d113c5167249827d30cc6a617fb, type: 3}
+  m_Script: {fileID: 11500000, guid: abc26dbdee1a6d041adfd0256fd78201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenTabType: 13
+  screenTabType: 0
   backButton: {fileID: 0}
   themeUI:
     textGroup: []
@@ -1938,8 +1936,6 @@ MonoBehaviour:
     inputFieldImageGroup: []
     characterImage: {fileID: 0}
     cloudCommentImage: {fileID: 0}
-  displayTxt: {fileID: 0}
-  raceCheckInBtn: {fileID: 0}
 --- !u!1 &4806123372627192538
 GameObject:
   m_ObjectHideFlags: 0

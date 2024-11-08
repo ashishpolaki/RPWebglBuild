@@ -65,7 +65,7 @@ namespace UI.Screen.Tab
             //Set Player Name
             Func<Task<string>> method = () => UGSManager.Instance.Authentication.SetPlayerNameAsync(playerName);
             errorMessageText.text = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
-            UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.CharacterCustomize);
         }
         private void SignOut()
         {
@@ -77,7 +77,7 @@ namespace UI.Screen.Tab
         private void OnSignedOutEvent()
         {
             UGSManager.Instance.ResetData();
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.Welcome);
             Close();
         }
         public bool CheckPlayerNameCriteria(string playerName)
