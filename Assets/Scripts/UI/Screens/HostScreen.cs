@@ -1,47 +1,51 @@
-using UnityEngine;
-using UnityEngine.UI;
+using UGS;
 
 namespace UI.Screen
 {
     public class HostScreen : BaseScreen
     {
-        #region Inspector Variables
-        [SerializeField] private Button startRaceBtn;
-        [SerializeField] private Button registerVenueBtn;
-        [SerializeField] private Button scheduleRaceBtn;
-        [SerializeField] private Button backButton;
-        #endregion
-
-        #region Unity Methods
-        private void OnEnable()
+        private async void OnEnable()
         {
-            startRaceBtn.onClick.AddListener(() => StartRace());
-            registerVenueBtn.onClick.AddListener(() => RegisterVenue());
-            scheduleRaceBtn.onClick.AddListener(() => ScheduleRace());
-            backButton.onClick.AddListener(() => OnScreenBack());
+            VenueRegistrationRequest venueRegistrationResponse = await UGSManager.Instance.CloudSave.GetVenueRegistrationDataAsync("HostVenue", UGSManager.Instance.PlayerData.playerID);
+            if (venueRegistrationResponse != null)
+            {
+                if(StringUtils.IsStringEmpty(venueRegistrationResponse.Name))
+                {
+                    OpenTab(ScreenTabType.SetVenueName);
+                }
+                else
+                {
+                    VenueRegistrationData venueRegistrationData = new VenueRegistrationData();
+                    venueRegistrationData.Name = venueRegistrationResponse.Name;
+                    venueRegistrationData.Latitude = venueRegistrationResponse.Latitude;
+                    venueRegistrationData.Longitude = venueRegistrationResponse.Longitude;
+                    UGSManager.Instance.SetVenueRegistrationData(venueRegistrationData);
+
+                    ScreenTabType screenTabType = venueRegistrationResponse.Latitude == 0 ? ScreenTabType.RegisterVenue : ScreenTabType.HostSetting;
+                    OpenTab(screenTabType);
+                }
+            }
+            else
+            {
+                OpenTab(ScreenTabType.SetVenueName);
+            }
+
+            UGSManager.Instance.Authentication.OnSignedOut += LogOutHandle;
         }
+
         private void OnDisable()
         {
-            startRaceBtn.onClick.RemoveAllListeners();
-            registerVenueBtn.onClick.RemoveAllListeners();
-            scheduleRaceBtn.onClick.RemoveAllListeners();
-            backButton.onClick.RemoveAllListeners();
+            if (UGSManager.Instance != null)
+            {
+                UGSManager.Instance.Authentication.OnSignedOut -= LogOutHandle;
+            }
         }
-        #endregion
 
         #region Private Methods
-        private void RegisterVenue()
+        private void LogOutHandle()
         {
-            OpenTab(ScreenTabType.RegisterVenue);
-        }
-        private async void StartRace()
-        {
-            await UGSManager.Instance.SetLobbyPlayers();
-            OpenTab(ScreenTabType.Lobby);
-        }
-        private void ScheduleRace()
-        {
-            OpenTab(ScreenTabType.RaceSchedule);
+            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Close);    
         }
         #endregion
 
@@ -49,7 +53,6 @@ namespace UI.Screen
         {
             if (CurrentOpenTab == ScreenTabType.None)
             {
-                UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Show);
                 Close();
             }
             base.OnScreenBack();

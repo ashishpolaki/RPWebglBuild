@@ -9,6 +9,28 @@ public class GameData
 }
 
 #region UGS GameData
+public class VenueRegistrationData : GameData, IDisposable
+{
+    public string Name { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public float Radius { get; set; }
+
+    public VenueRegistrationData()
+    {
+        Name = string.Empty;
+        Latitude = 0;
+        Longitude = 0;
+        Radius = 0;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
+}
+
+
 public class PlayerData : GameData, IDisposable
 {
     public string playerID;
@@ -20,21 +42,6 @@ public class PlayerData : GameData, IDisposable
         playerID = default;
         playerName = default;
         hostID = default;
-    }
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-    }
-}
-public class LocationData : GameData, IDisposable
-{
-    public double latitude;
-    public double longitude;
-
-    public LocationData() : base()
-    {
-        latitude = default;
-        longitude = default;
     }
     public void Dispose()
     {

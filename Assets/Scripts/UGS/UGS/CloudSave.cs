@@ -137,5 +137,16 @@ namespace UGS
             }
             return characterData;
         }
+
+        public async Task<VenueRegistrationRequest> GetVenueRegistrationDataAsync(string Id, string key)
+        {
+            var customItemData = await CloudSaveService.Instance.Data.Custom.LoadAsync(Id, new HashSet<string> { key });
+            if (customItemData.TryGetValue(key, out var item))
+            {
+                var result = item.Value.GetAs<VenueRegistrationRequest>();
+                return result;
+            }
+            return null;
+        }
     }
 }

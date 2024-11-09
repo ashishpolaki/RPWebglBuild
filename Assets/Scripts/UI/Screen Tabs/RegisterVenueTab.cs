@@ -15,15 +15,24 @@ namespace UI.Screen.Tab
         [SerializeField] private TextMeshProUGUI messageTxt;
         #endregion
 
+        private float latitude;
+        private float longitude;
+
         #region Unity Methods
         private void OnEnable()
         {
+            ResetFields();
             registerVenueBtn.onClick.AddListener(() => RegisterVenue());
             fetchCurrentLocationBtn.onClick.AddListener(() => FetchCurrentLocation());
             if (UGSManager.Instance != null)
             {
                 UGSManager.Instance.CloudCode.OnVenueRegistrationFailEvent += (message) => messageTxt.text = message;
-                UGSManager.Instance.CloudCode.OnVenueRegistrationSuccessEvent += () => Close();
+                UGSManager.Instance.CloudCode.OnVenueRegistrationSuccessEvent += () => OnVenueRegistrationSuccessful();
+            }
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.GPS.OnLocationResult += HandleLocationResult;
             }
         }
         private void OnDisable()
@@ -33,32 +42,55 @@ namespace UI.Screen.Tab
             if (UGSManager.Instance != null)
             {
                 UGSManager.Instance.CloudCode.OnVenueRegistrationFailEvent -= (message) => messageTxt.text = message;
-                UGSManager.Instance.CloudCode.OnVenueRegistrationSuccessEvent -= () => Close();
+                UGSManager.Instance.CloudCode.OnVenueRegistrationSuccessEvent -= () => OnVenueRegistrationSuccessful();
+            }
+
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.GPS.OnLocationResult -= HandleLocationResult;
             }
         }
         #endregion
 
-        #region Private Methods
-        private async void FetchCurrentLocation()
+        #region Subscribed Methods
+        private void HandleLocationResult(string message, float latitude, float longitude)
         {
-            Func<Task<bool>> method = () => GPS.TryGetLocationAsync();
-            bool islocationFound = await LoadingScreen.Instance.PerformAsyncWithLoading<bool>(method);
-            if (islocationFound)
-            {
-              //  locationLatitude.text = GPS.CurrentLocationLatitude.ToString();
-             //   locationLongitude.text = GPS.CurrentLocationLongitude.ToString();
-            }
+            messageTxt.text = message;
+            bool isLocationValid = latitude != 0 && longitude != 0;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            registerVenueBtn.interactable = isLocationValid;
+
+            //Set local values
+            VenueRegistrationData venueRegistrationData = new VenueRegistrationData();
+            venueRegistrationData.Latitude = latitude;
+            venueRegistrationData.Longitude = longitude;
+            UGSManager.Instance.SetVenueRegistrationData(venueRegistrationData);
+
+            LoadingScreen.Instance.Hide();
+        }
+        private void OnVenueRegistrationSuccessful()
+        {
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.HostSetting);
+        }
+        #endregion
+
+        #region Private Methods
+        private void ResetFields()
+        {
+            registerVenueBtn.interactable = false;
+            radiusInput.text = string.Empty;
+            latitude = 0;
+            longitude = 0;
+        }
+        private void FetchCurrentLocation()
+        {
+            LoadingScreen.Instance.Show();
+            GameManager.Instance.FetchLocation();
         }
         private async void RegisterVenue()
         {
             messageTxt.text = string.Empty;
-
-            //Check if Latitude and Longitude are empty
-            //if (StringUtils.IsStringEmpty(locationLatitude.text) || StringUtils.IsStringEmpty(locationLongitude.text))
-            //{
-            //    messageTxt.text = StringUtils.GPSLOCATIONFETCHERROR;
-            //    return;
-            //}
 
             //Check if Radius is empty
             if (StringUtils.IsStringEmpty(radiusInput.text))
@@ -68,11 +100,9 @@ namespace UI.Screen.Tab
             }
 
             //Register Host in Venue Cloud List.
-            //double latitude = double.Parse(locationLatitude.text);
-            //double longitude = double.Parse(locationLongitude.text);
-            //float radius = float.Parse(radiusInput.text);
-            //Func<Task> method = () => UGSManager.Instance.CloudCode.RegisterVenue(latitude, longitude, radius);
-            //await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            float radius = float.Parse(radiusInput.text);
+            Func<Task> method = () => UGSManager.Instance.CloudCode.RegisterVenue(latitude, longitude, radius);
+            await LoadingScreen.Instance.PerformAsyncWithLoading(method);
         }
         #endregion
     }

@@ -1,20 +1,28 @@
-using System;
-using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Android;
 
-public static class GPS 
+public class GPS
 {
-    public static double CurrentLocationLatitude
+    #region Properties
+    public float Latitude
     {
         get; private set;
     }
-    public static double CurrentLocationLongitude
+    public float Longitude
     {
         get; private set;
     }
+    public string Message
+    {
+        get; private set;
+    }
+    #endregion
 
-    public static void RequestPermission()
+    public delegate void LocationResultHandler(string message, float latitude, float longitude);
+    public event LocationResultHandler OnLocationResult;
+
+    public void RequestPermission()
     {
         if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
@@ -28,47 +36,58 @@ public static class GPS
         return latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180;
     }
 
-    public static async Task<bool> TryGetLocationAsync()
+    public IEnumerator IEGetLocation()
     {
-        RequestPermission();
+#if UNITY_EDITOR
+        OnLocationResult?.Invoke("Location Fetch Successful",15, 15);
+        yield break;
+#endif
 
-        // Start service before querying location
+        const int maxWaitSeconds = 10;
+        Message = string.Empty;
+        Latitude = 0;
+        Longitude = 0;
+
+        // Check if the user has location service enabled.
+        if (!Input.location.isEnabledByUser)
+        {
+            Message = "Location access denied or not enabled";
+            OnLocationResult?.Invoke(Message, Latitude, Longitude);
+            yield break;
+        }
+
+        // Starts the location service.
         Input.location.Start();
 
-        // Wait until service initializes
-        bool isInitialized = await WaitForLocationServiceToInitialize();
-        if (!isInitialized)
+        // Waits until the location service initializes
+        for (int waitTime = 0; Input.location.status == LocationServiceStatus.Initializing && waitTime < maxWaitSeconds; waitTime++)
         {
-            Debug.Log("Timed out");
-            return false;
+            yield return new WaitForSeconds(1);
         }
 
-        if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation) || !Permission.HasUserAuthorizedPermission(Permission.CoarseLocation))
+        // If the service didn't initialize in maxWait seconds this cancels location service use.
+        if (Input.location.status == LocationServiceStatus.Initializing)
         {
-            Debug.Log("Location Permission Denied");
-            return false;
+            Message = "Timed out";
+            OnLocationResult?.Invoke(Message, Latitude, Longitude);
+            yield break;
         }
 
-        // Access granted and location value could be retrieved
-        CurrentLocationLatitude = Input.location.lastData.latitude;
-        CurrentLocationLongitude = Input.location.lastData.longitude;
-        return true;
-    }
-
-    private static async Task<bool> WaitForLocationServiceToInitialize()
-    {
-        int maxWait = 10;
-        while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
+        // If the connection failed this cancels location service use.
+        if (Input.location.status == LocationServiceStatus.Failed)
         {
-            await Task.Delay(1000); // Wait for 1 second
-            maxWait--;
+            Message = "Unable to determine device location";
+            OnLocationResult?.Invoke(Message, Latitude, Longitude);
+            yield break;
         }
 
-        if (maxWait < 1 || Input.location.status == LocationServiceStatus.Failed)
-        {
-            return false;
-        }
+        // Successfully retrieved location
+        Latitude = Input.location.lastData.latitude;
+        Longitude = Input.location.lastData.longitude;
+        Message = (Latitude != 0 && Longitude != 0) ? "Location Fetch Successful" : "Unable to determine device location";
+        OnLocationResult?.Invoke(Message, Latitude, Longitude);
 
-        return true;
+        // Stops the location service if there is no need to query location updates continuously.
+        Input.location.Stop();
     }
 }

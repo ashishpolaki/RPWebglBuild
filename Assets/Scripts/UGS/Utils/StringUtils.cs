@@ -1,5 +1,3 @@
-using System.Text.RegularExpressions;
-
 public class StringUtils
 {
     #region UGS Method Names
@@ -14,6 +12,13 @@ public class StringUtils
     #region Time Format
     public const string HOUR_MINUTE_AMPM_TIME_FORMAT = "hh:mm tt";
     public const string HOUR_MINUTE_TIME_FORMAT = "HH:mm";
+    #endregion
+
+    #region Venue
+
+    public const string VENUE_NAME_EMPTY_ERROR = "Please enter the venue name";
+    public const string VENUE_NAME_LENGTH_ERROR = "Venue name should not be more than 15 characters";
+
     #endregion
 
     #region RACE SCHEDULE

@@ -6,7 +6,23 @@ namespace HorseRaceCloudCode
     internal class ClassUtils
     {
     }
-   
+
+    public class SetVenueNameResponse : IDisposable
+    {
+        public bool IsVenueNameSet;
+        public string Message;
+
+        public SetVenueNameResponse()
+        {
+            IsVenueNameSet = false;
+            Message = string.Empty;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+
     public class PlayerVenueCheckIn
     {
         public string Date { get; set; }
@@ -102,6 +118,7 @@ namespace HorseRaceCloudCode
     }
     public class VenueRegistrationRequest
     {
+        public string Name { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public float Radius { get; set; }

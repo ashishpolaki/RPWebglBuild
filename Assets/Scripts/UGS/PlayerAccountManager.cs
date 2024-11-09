@@ -9,10 +9,10 @@ public class PlayerAccountManager : MonoBehaviour
         UI.UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
 
         //Request GPS permission
-        GPS.RequestPermission();
+        GameManager.Instance.GPS.RequestPermission();
     }
     #endregion
-  
+
 
     //Create a method for inspector to signout
     [ContextMenu("SignOut")]

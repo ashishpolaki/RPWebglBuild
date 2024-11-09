@@ -46,13 +46,7 @@ namespace UI.Screen
         }
         public virtual void Close()
         {
-            foreach (var tab in Tabs)
-            {
-                if (tab.IsOpen)
-                {
-                    tab.Close();
-                }
-            }
+            CloseAllTabs();
             gameObject.SetActive(false);
         }
         public virtual void Show(ScreenTabType screenTabType)
@@ -111,7 +105,10 @@ namespace UI.Screen
         {
             for (int i = 0; i < Tabs.Count; i++)
             {
+                if (Tabs[i].IsOpen)
+                {
                 Tabs[i].Close();
+                }
             }
             currentOpenTab = ScreenTabType.None;
         }

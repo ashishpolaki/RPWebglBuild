@@ -101,12 +101,36 @@ namespace UGS
         }
     }
 
+    public class SetVenueNameResponse : IDisposable
+    {
+        public bool IsVenueNameSet;
+        public string Message;
+
+        public SetVenueNameResponse()
+        {
+            IsVenueNameSet = false;
+            Message = string.Empty;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
 
     public class VenueRegistrationRequest : IDisposable
     {
+        public string Name { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public float Radius { get; set; }
+
+        public VenueRegistrationRequest()
+        {
+            Name = string.Empty;
+            Latitude = 0;
+            Longitude = 0;
+            Radius = 0;
+        }
 
         public void Dispose()
         {

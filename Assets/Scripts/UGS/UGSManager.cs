@@ -10,13 +10,15 @@ public class UGSManager : MonoBehaviour
     #region Properties
     //Local Cloud Data Storage
     public PlayerData PlayerData { get => GameDataContainer.Instance.GetGameEvent<PlayerData>(); }
-    public LocationData LocationData { get => GameDataContainer.Instance.GetGameEvent<LocationData>(); }
     public RaceData RaceData { get => GameDataContainer.Instance.GetGameEvent<RaceData>(); }
+    public VenueRegistrationData VenueRegistrationData { get => GameDataContainer.Instance.GetGameEvent<VenueRegistrationData>(); }
 
     //UGS
     public Authentication Authentication { get; private set; }
     public CloudCode CloudCode { get; private set; }
     public CloudSave CloudSave { get; private set; }
+
+    public GPS GPS;
 
     public bool IsHost { get; private set; }
     #endregion
@@ -90,13 +92,13 @@ public class UGSManager : MonoBehaviour
     {
         GameDataContainer.Instance.SetGameEvent(playerData, _allowDefaultValues);
     }
-    public void SetLocationData(LocationData locationData, bool canSetDefaultValues = false)
-    {
-        GameDataContainer.Instance.SetGameEvent(locationData, canSetDefaultValues);
-    }
     public void SetRaceData(RaceData raceData, bool canSetDefaultValues = false)
     {
         GameDataContainer.Instance.SetGameEvent(raceData, canSetDefaultValues);
+    }
+    public void SetVenueRegistrationData(VenueRegistrationData venueRegistrationData, bool canSetDefaultValues = false)
+    {
+        GameDataContainer.Instance.SetGameEvent(venueRegistrationData, canSetDefaultValues);
     }
     #endregion
 
@@ -124,23 +126,6 @@ public class UGSManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Fetch the current location of the player.
-    /// </summary>
-    /// <returns></returns>
-    public async Task FetchCurrentLocation()
-    {
-        bool gpsLocationFound = await GPS.TryGetLocationAsync();
-        if (gpsLocationFound)
-        {
-            LocationData locationData = new LocationData();
-            locationData.latitude = GPS.CurrentLocationLatitude;
-            locationData.longitude = GPS.CurrentLocationLongitude;
-            SetLocationData(locationData);
-            locationData.Dispose();
-        }
-    }
-
-    /// <summary>
     /// If host id already exists, return the host id. Else, get the host id from the cloud and return it.
     /// </summary>
     /// <returns></returns>
@@ -148,8 +133,8 @@ public class UGSManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(PlayerData.hostID))
         {
-            double latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : LocationData.latitude;
-            double longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : LocationData.longitude;
+            double latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : VenueRegistrationData.Latitude;
+            double longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : VenueRegistrationData.Longitude;
             string hostID = await CloudSave.GetHostID(StringUtils.HOSTVENUE, latitude, longitude);
             using (PlayerData playerData = new PlayerData())
             {
@@ -170,10 +155,11 @@ public class UGSManager : MonoBehaviour
     public void ResetData()
     {
         SetPlayerData(new PlayerData(), true);
-        SetLocationData(new LocationData(), true);
+        SetVenueRegistrationData(new VenueRegistrationData(), true);
         SetRaceData(new RaceData(), true);
         Authentication.ResetData();
     }
     #endregion
+
 }
 

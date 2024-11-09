@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     #region Properties
     public CameraController CameraController { get; private set; }
     public RaceManager RaceManager { get; private set; }
+    public GPS GPS; 
 
     public RaceStats CurrentRaceData { get; private set; }
     public List<int> HorsesInRaceOrderList { get; private set; }
@@ -52,7 +53,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-         LoadHorsesInRaceOrder();
+        GPS = new GPS();
+        LoadHorsesInRaceOrder();
          HorsesToSpawnList = new List<int>(HorsesInPreRaceOrderList);
         // HorsesToSpawnList = new List<int>() { HorsesInPreRaceOrderList[0], HorsesInPreRaceOrderList[1], HorsesInPreRaceOrderList[2] };
     }
@@ -89,5 +91,10 @@ public class GameManager : MonoBehaviour
             }
         }
         return new List<int>(HorsesInPreRaceOrderList);
+    }
+
+    public void FetchLocation()
+    {
+        StartCoroutine(GPS.IEGetLocation());
     }
 }

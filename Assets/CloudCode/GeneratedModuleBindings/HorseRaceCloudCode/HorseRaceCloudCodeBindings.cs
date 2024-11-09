@@ -16,6 +16,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings
         public const string VENUE_CHECKIN = "CheckedInVenue";
         public const string JOIN_RACE_REQUEST = "RaceJoinRequest";
         public const string CONFIRM_RACE_CHECKIN = "ConfirmRaceCheckIn";
+        public const string SET_VENUE_NAME = "SetVenueName";
         public const string STARTRACE = "StartRace";
         public const string RACE_RESULTS = "RaceResults";
         #endregion
@@ -62,6 +63,12 @@ namespace Unity.Services.CloudCode.GeneratedBindings
         {
             await k_Service.CallModuleEndpointAsync(MODULE, RACE_RESULTS,
                  new Dictionary<string, object>() { { "raceResultData", raceResultData } });
+        }
+
+        public async Task<SetVenueNameResponse> SetVenueName(VenueRegistrationRequest _venueData)
+        {
+           return await k_Service.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
+                                new Dictionary<string, object>() { { "venueData", _venueData } });
         }
     }
 }

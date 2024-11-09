@@ -110,7 +110,7 @@ namespace UGS
         }
 
         //Methods
-        public async Task RegisterVenue(double _latitude, double _longitude, float _radius)
+        public async Task RegisterVenue(float _latitude, float _longitude, float _radius)
         {
             // GPS Validation
             if (IsGPSValid(_latitude, _longitude) == false)
@@ -135,11 +135,12 @@ namespace UGS
             VenueRegistrationRequest venueRegistrationRequest = new VenueRegistrationRequest();
             try
             {
+                venueRegistrationRequest.Name = UGSManager.Instance.VenueRegistrationData.Name;
                 venueRegistrationRequest.Latitude = _latitude;
                 venueRegistrationRequest.Longitude = _longitude;
                 venueRegistrationRequest.Radius = _radius;
-                var response = await module.RegisterVenue(venueRegistrationRequest);
-                if(response.IsRegistered)
+                VenueRegistrationResponse response = await module.RegisterVenue(venueRegistrationRequest);
+                if (response.IsRegistered)
                 {
                     OnVenueRegistrationSuccessEvent?.Invoke();
                 }
@@ -158,6 +159,21 @@ namespace UGS
             }
         }
 
+        public async Task<SetVenueNameResponse> SetVenueName(VenueRegistrationRequest venueRegistrationData)
+        {
+            SetVenueNameResponse setVenueNameResponse = new SetVenueNameResponse();
+            try
+            {
+                setVenueNameResponse = await module.SetVenueName(venueRegistrationData);
+                if (venueRegistrationData != null)
+                    venueRegistrationData.Dispose();
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            return setVenueNameResponse;
+        }
 
         public async Task ScheduleRaceTime(string scheduleStart, string scheduleEnd, int raceInterval, int preRaceWaitTime)
         {

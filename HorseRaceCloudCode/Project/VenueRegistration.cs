@@ -16,6 +16,55 @@ namespace HorseRaceCloudCode
             this.gameApiClient = _gameApiClient;
         }
 
+        [CloudCodeFunction("SetVenueName")] 
+        public async Task<SetVenueNameResponse> SetVenueName(IExecutionContext context, VenueRegistrationRequest venueData)
+        {
+            SetVenueNameResponse response = new SetVenueNameResponse();
+            response.IsVenueNameSet = false;
+
+            if (venueData == null)
+            {
+                response.Message = "Invalid Venue Data";
+                return response;
+            }
+
+            if (StringUtils.IsEmpty(venueData.Name))
+            {
+                response.Message = "Invalid Venue Name";
+                return response;
+            }
+
+            if (context.PlayerId == null)
+            {
+                response.Message = "Invalid Player ID";
+                return response;
+            }
+
+            var nameResponse = await gameApiClient.CloudSaveData.GetCustomItemsAsync(context, context.ServiceToken, context.ProjectId, venueData.Name);
+            if (nameResponse.Data != null && nameResponse.Data.Results != null && nameResponse.Data.Results.Count > 0)
+            {
+                response.Message = "Venue Name already exists";
+                return response;
+            }
+
+            await gameApiClient.CloudSaveData.SetCustomItemAsync(context, context.ServiceToken, context.ProjectId,
+                                                 StringUtils.HOSTVENUEKEY, new SetItemBody(context.PlayerId, venueData));
+
+            //Venue GameData
+            await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, venueData.Name,
+            new SetItemBatchBody(new List<SetItemBody>()
+               {
+                           new (StringUtils.RACELOBBYKEY, ""),
+                           new (StringUtils.RACESCHEDULEKEY,""),
+                           new (StringUtils.RACERESULTSKEY,"")
+               }));
+
+            response.Message = "Venue Name Set";
+            response.IsVenueNameSet = true;
+            return response;
+        }
+
+
         [CloudCodeFunction("RegisterVenue")]
         public async Task<VenueRegistrationResponse> SetVenue(IExecutionContext context, VenueRegistrationRequest venueData)
         {
@@ -51,21 +100,6 @@ namespace HorseRaceCloudCode
                                   StringUtils.HOSTVENUEKEY, new SetItemBody(context.PlayerId, venueData));
             response.Message = "Venue Registered";
             response.IsRegistered = true;
-
-            //If any data is not present, set default data.
-            var playerResponse = await gameApiClient.CloudSaveData.GetCustomItemsAsync(context, context.ServiceToken, context.ProjectId, context.PlayerId);
-            if (playerResponse.Data.Results.Count <= 0)
-            {
-                //Venue GameData
-                await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, context.PlayerId,
-                new SetItemBatchBody(new List<SetItemBody>()
-                   {
-                           new (StringUtils.RACELOBBYKEY, ""),
-                           new (StringUtils.RACESCHEDULEKEY,""),
-                           new (StringUtils.RACECHECKINKEY, ""),
-                           new (StringUtils.RACERESULTSKEY,"")
-                   }));
-            }
             return response;
         }
 
