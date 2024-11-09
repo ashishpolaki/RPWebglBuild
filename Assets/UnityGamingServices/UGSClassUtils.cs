@@ -24,19 +24,36 @@ namespace UGS
             GC.SuppressFinalize(this);
         }
     }
-    public class HostScheduleRace : IDisposable
+    public class RaceScheduleRequest : IDisposable
     {
         public string ScheduleStart { get; set; }
         public string ScheduleEnd { get; set; }
-        public int TimeGap { get; set; }
-        public int PreRaceWaitTime { get; set; }
+        public int RaceInterval { get; set; }
+        public int RaceTimings { get; set; }
+
+        public RaceScheduleRequest()
+        {
+            ScheduleStart = string.Empty;
+            ScheduleEnd = string.Empty;
+        }
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
         }
     }
-   
+    public class RaceScheduleResponse
+    {
+        public bool IsScheduled { get; set; }
+        public string Message { get; set; }
+
+        public RaceScheduleResponse()
+        {
+            IsScheduled = false;
+            Message = string.Empty;
+        }
+    }
+
     public class CurrentRacePlayerCheckIn
     {
         public string PlayerID { get; set; }

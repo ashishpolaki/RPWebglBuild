@@ -24,12 +24,12 @@ public class StringUtils
     #region RACE SCHEDULE
     public const string INVALID_DATETIME_FORMAT = "Invalid date time format";
     public const string START_AND_END_RACESCHEDULE_EQUAL = "Start and End time cannot be the same";
-    public const string ENTER_RACEINTERVAL = "Please enter the time gap";
-    public const string RACE_INTERVAL_GREATERTHANZERO = "The duration between races should be greater than zero";
-    public const string INVALID_RACEINTERVAL_LIMIT = "The duration between races should be less than the race schedule.";
-    public const string ENTER_LOBBYWAITTIME = "Please enter the Lobby wait Time";
-    public const string LOBBY_WAITTIME_GREATERTHANZERO = "Lobby wait time should be greater than zero";
-    public const string LOBBYWAITTIME_LESSTHAN_RACEINTERVAL = "Lobby wait time should be less than the RaceInterval";
+    public const string ENTER_RACETIMINGS = "Please enter the Race Timings";
+    public const string RACE_TIMINGS_GREATERTHANZERO = "The Race Timings should be greater than zero";
+    public const string INVALID_RACEINTERVAL_LIMIT = "The Race Interval should be less than the race schedule.";
+    public const string ENTER_RACEINTERVAL = "Please enter the Race Interval";
+    public const string RACEINTERVAL_GREATERTHANZERO = "Race Interval should be greater than zero";
+    public const string RACEINTERVAL_LESSTHAN_RACETIMINGS = "Race Interval should be less than the Race Timings";
     #endregion
 
     #region GPS 

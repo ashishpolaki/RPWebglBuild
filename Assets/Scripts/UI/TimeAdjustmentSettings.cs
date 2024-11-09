@@ -10,10 +10,10 @@ public class TimeAdjustmentSettings : MonoBehaviour
     [SerializeField] private Button minutesUpBtn;
     [SerializeField] private Button minutesDownBtn;
     [SerializeField] private Button meridiemBtn;
-    [SerializeField] private InputField hourInput;
-    [SerializeField] private InputField minutesInput;
-    [SerializeField] private Text hourText;
-    [SerializeField] private Text minutesText;
+    [SerializeField] private TMP_InputField hourInput;
+    [SerializeField] private TMP_InputField minutesInput;
+    [SerializeField] private TextMeshProUGUI hourText;
+    [SerializeField] private TextMeshProUGUI minutesText;
     [SerializeField] private TextMeshProUGUI meridiemText;
 
     [SerializeField] private int hourChangeStep = 1;
@@ -69,7 +69,7 @@ public class TimeAdjustmentSettings : MonoBehaviour
     }
     private void OnInputFieldEndEdit(string input)
     {
-        InputField currentInputField = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<InputField>();
+        TMP_InputField currentInputField = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
         if (currentInputField == hourInput)
         {
             AdjustTime(hourInput, 0, hourMinLimit, hourMaxLimit);
@@ -79,7 +79,7 @@ public class TimeAdjustmentSettings : MonoBehaviour
             AdjustTime(minutesInput, 0, minuteMinLimit, minuteMaxLimit);
         }
     }
-    private void AdjustTime(InputField timeInput, int adjustment, int min, int max)
+    private void AdjustTime(TMP_InputField timeInput, int adjustment, int min, int max)
     {
         timeInput.text = GetTime(timeInput.text, adjustment, min, max);
     }
@@ -99,13 +99,15 @@ public class TimeAdjustmentSettings : MonoBehaviour
                 timeValue = min;
             }
             // Formats the number to have at least two digits
-            return timeValue.ToString("D2");
+            return timeValue.ToString("00");
         }
         return string.Empty;
     }
     public string ReturnTime()
     {
-        return $"{hourText.text}:{minutesText.text} {meridiemText.text}";
+        string meridiem = meridiemBtn.GetComponentInChildren<TextMeshProUGUI>().text.ToString();
+        string format = $"{hourInput.text}:{minutesInput.text} {meridiem}";
+        return format;
     }
     public void SetTime(DateTime dateTime)
     {

@@ -143,7 +143,7 @@ namespace HorseRaceCloudCode
         public string ScheduleStart { get; set; }
         public string ScheduleEnd { get; set; }
         public int RaceInterval { get; set; }
-        public int LobbyWaitTime { get; set; }
+        public int RaceTimings { get; set; }
 
         public RaceScheduleRequest()
         {

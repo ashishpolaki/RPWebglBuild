@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -10,8 +9,8 @@ namespace UI.Screen.Tab
     public class RaceScheduleTab : BaseTab
     {
         #region Inspector Variables
-        [SerializeField] private InputField timeGap_Input;
-        [SerializeField] private InputField preRaceWaitTime_Input;
+        [SerializeField] private TMP_InputField raceTimingsInput;
+        [SerializeField] private TMP_InputField raceIntervalInput;
         [SerializeField] private Button setScheduleBtn;
         [SerializeField] private TextMeshProUGUI errorMessageTxt;
 
@@ -21,7 +20,7 @@ namespace UI.Screen.Tab
 
         #region Private Variables
         private int raceInterval;
-        private int lobbyWaitTime;
+        private int raceTimings;
         #endregion
 
         #region Unity Methods
@@ -53,57 +52,58 @@ namespace UI.Screen.Tab
 
         private void RaceScheduleSuccessHandle()
         {
-            Close();
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.HostSetting);
         }
         #endregion
 
         #region Private Methods
         private async void SetSchedule()
         {
-            if (!IsRaceIntervalValid() || !IsLobbyWaitTimeValid())
+            errorMessageTxt.text = string.Empty;
+            if (!IsRaceIntervalValid() || !IsRaceTimingsValid())
             {
                 return;
             }
 
-            Func<Task> method = () => UGSManager.Instance.CloudCode.ScheduleRaceTime(startSchedule.ReturnTime(), endSchedule.ReturnTime(), raceInterval, lobbyWaitTime);
+            Func<Task> method = () => UGSManager.Instance.CloudCode.ScheduleRaceTime(startSchedule.ReturnTime(), endSchedule.ReturnTime(), raceTimings, raceInterval);
             await LoadingScreen.Instance.PerformAsyncWithLoading(method);
         }
 
         private bool IsRaceIntervalValid()
         {
-            if (StringUtils.IsStringEmpty(timeGap_Input.text))
+            if (StringUtils.IsStringEmpty(raceIntervalInput.text))
             {
                 errorMessageTxt.text = StringUtils.ENTER_RACEINTERVAL;
+
                 return false;
             }
-            raceInterval = int.Parse(timeGap_Input.text);
+            raceInterval = int.Parse(raceIntervalInput.text);
             if (raceInterval <= 0)
             {
-                errorMessageTxt.text = StringUtils.RACE_INTERVAL_GREATERTHANZERO;
+                errorMessageTxt.text = StringUtils.RACEINTERVAL_GREATERTHANZERO;
                 return false;
             }
             return true;
         }
        
-        private bool IsLobbyWaitTimeValid()
+        private bool IsRaceTimingsValid()
         {
-            if (StringUtils.IsStringEmpty(preRaceWaitTime_Input.text))
+            if (StringUtils.IsStringEmpty(raceTimingsInput.text))
             {
-                errorMessageTxt.text = StringUtils.ENTER_LOBBYWAITTIME;
+                errorMessageTxt.text = StringUtils.ENTER_RACETIMINGS;
                 return false;
             }
 
-            lobbyWaitTime = int.Parse(preRaceWaitTime_Input.text);
-            if (lobbyWaitTime <= 0)
+            raceTimings = int.Parse(raceTimingsInput.text);
+            if (raceTimings <= 0)
             {
-
-                errorMessageTxt.text = StringUtils.LOBBY_WAITTIME_GREATERTHANZERO;
+                errorMessageTxt.text = StringUtils.RACE_TIMINGS_GREATERTHANZERO;
                 return false;
             }
 
-            if (lobbyWaitTime >= raceInterval)
+            if (raceInterval >= raceTimings)
             {
-                errorMessageTxt.text = StringUtils.LOBBYWAITTIME_LESSTHAN_RACEINTERVAL;
+                errorMessageTxt.text = StringUtils.RACEINTERVAL_LESSTHAN_RACETIMINGS;
                 return false;
             }
 

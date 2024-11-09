@@ -51,10 +51,11 @@ namespace UGS
         {
             return _radius <= HostConfig.radiusMax;
         }
-        private bool IsRaceScheduleValid(string scheduleStart, string scheduleEnd, int raceInterval)
+        private bool IsRaceScheduleValid(string scheduleStart, string scheduleEnd, int raceTimings)
         {
             if (!DateTimeUtils.IsValidDateTimeFormat(scheduleStart) || !DateTimeUtils.IsValidDateTimeFormat(scheduleEnd))
             {
+                Debug.Log($"scheduleStart: {scheduleStart}, scheduleEnd: {scheduleEnd}, raceTimings: {raceTimings}");
                 OnRaceScheduleFailEvent?.Invoke(StringUtils.INVALID_DATETIME_FORMAT);
                 return false;
             }
@@ -75,9 +76,9 @@ namespace UGS
                 endSchedule = endSchedule.AddDays(1);
             }
 
-            //Check if raceInterval is greater than raceTime
+            //Check if raceTimingsInput is greater than raceTime
             TimeSpan raceTimeSpan = endSchedule - startSchedule;
-            TimeSpan raceIntervalSpan = TimeSpan.FromMinutes(raceInterval);
+            TimeSpan raceIntervalSpan = TimeSpan.FromMinutes(raceTimings);
             if (raceTimeSpan < raceIntervalSpan)
             {
                 OnRaceScheduleFailEvent?.Invoke(StringUtils.INVALID_RACEINTERVAL_LIMIT);
@@ -175,22 +176,29 @@ namespace UGS
             return setVenueNameResponse;
         }
 
-        public async Task ScheduleRaceTime(string scheduleStart, string scheduleEnd, int raceInterval, int preRaceWaitTime)
+        public async Task ScheduleRaceTime(string scheduleStart, string scheduleEnd, int raceTimings, int _raceInterval)
         {
-            if (IsRaceScheduleValid(scheduleStart, scheduleEnd, raceInterval) == false)
+            if (IsRaceScheduleValid(scheduleStart, scheduleEnd, raceTimings) == false)
             {
                 return;
             }
-            HostScheduleRace hostScheduleRace = new HostScheduleRace();
+            RaceScheduleRequest hostScheduleRace = new RaceScheduleRequest();
             try
             {
                 hostScheduleRace.ScheduleStart = DateTimeUtils.ConvertToUTCTime(scheduleStart, StringUtils.HOUR_MINUTE_AMPM_TIME_FORMAT).ToString(StringUtils.HOUR_MINUTE_TIME_FORMAT);
                 hostScheduleRace.ScheduleEnd = DateTimeUtils.ConvertToUTCTime(scheduleEnd, StringUtils.HOUR_MINUTE_AMPM_TIME_FORMAT).ToString(StringUtils.HOUR_MINUTE_TIME_FORMAT);
-                hostScheduleRace.TimeGap = raceInterval;
-                hostScheduleRace.PreRaceWaitTime = preRaceWaitTime;
+                hostScheduleRace.RaceTimings = raceTimings;
+                hostScheduleRace.RaceInterval = _raceInterval;
 
-                string jsonData = JsonConvert.SerializeObject(hostScheduleRace);
-                await module.ScheduleRaceTimings(jsonData);
+                RaceScheduleResponse raceScheduleResponse = await module.ScheduleRaceTimings(UGSManager.Instance.VenueRegistrationData.Name,hostScheduleRace);
+                if(raceScheduleResponse.IsScheduled)
+                {
+                    OnRaceScheduleSuccessEvent?.Invoke();
+                }
+                else
+                {
+                    OnRaceScheduleFailEvent?.Invoke(raceScheduleResponse.Message);
+                }
             }
             catch (CloudCodeException exception)
             {
@@ -202,7 +210,6 @@ namespace UGS
                 {
                     hostScheduleRace.Dispose();
                 }
-                OnRaceScheduleSuccessEvent?.Invoke();
             }
         }
 
@@ -233,6 +240,7 @@ namespace UGS
             }
             return joinRaceResponse;
         }
+
         public async Task<bool> ConfirmRaceCheckIn(string hostID, string playerName)
         {
             try
@@ -245,6 +253,7 @@ namespace UGS
             }
             return false;
         }
+
         public async Task StartRace(Dictionary<string, (string, int)> lobbyQualifiedPlayers, List<string> notQualifiedPlayersList)
         {
             List<RaceLobbyParticipant> raceLobbyParticipants = new List<RaceLobbyParticipant>();
@@ -304,6 +313,7 @@ namespace UGS
                 startRaceRequest.Dispose();
             }
         }
+
         public async Task SendRaceResults(RaceResult raceResultsData)
         {
             try

@@ -32,10 +32,10 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             return await k_Service.CallModuleEndpointAsync<VenueRegistrationResponse>(MODULE, REGISTER_VENUE,
                  new Dictionary<string, object>() { { "venueData", _venueData } });
         }
-        public async Task ScheduleRaceTimings(string _raceData)
+        public async Task<RaceScheduleResponse> ScheduleRaceTimings(string venueName, RaceScheduleRequest _raceData)
         {
-            await k_Service.CallModuleEndpointAsync(MODULE, SCHEDULE_RACE,
-               new Dictionary<string, object>() { { "raceData", _raceData } });
+          return  await k_Service.CallModuleEndpointAsync<RaceScheduleResponse>(MODULE, SCHEDULE_RACE,
+               new Dictionary<string, object>() { { "venueName", venueName }, { "raceScheduleRequest", _raceData } });
         }
         public async Task<VenueCheckInResponse> VenueCheckIn(string hostID, string dateTime)
         {

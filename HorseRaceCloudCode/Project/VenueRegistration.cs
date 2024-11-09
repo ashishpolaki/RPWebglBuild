@@ -104,7 +104,7 @@ namespace HorseRaceCloudCode
         }
 
         [CloudCodeFunction("RaceScheduleTimings")]
-        public async Task<RaceScheduleResponse> ScheduleRaceTimings(IExecutionContext context, RaceScheduleRequest raceScheduleRequest)
+        public async Task<RaceScheduleResponse> ScheduleRaceTimings(IExecutionContext context,string venueName, RaceScheduleRequest raceScheduleRequest)
         {
             RaceScheduleResponse response = new RaceScheduleResponse();
             response.IsScheduled = false;
@@ -134,19 +134,19 @@ namespace HorseRaceCloudCode
                 response.Message = _dateTimeEqualMessage;
                 return response;
             }
-            if (IsRaceIntervalValid(raceScheduleRequest.RaceInterval, raceScheduleRequest.ScheduleStart, raceScheduleRequest.ScheduleEnd, out string raceIntervalMessage) == false)
+            if (IsRaceTimingsValid(raceScheduleRequest.RaceTimings, raceScheduleRequest.ScheduleStart, raceScheduleRequest.ScheduleEnd, out string raceIntervalMessage) == false)
             {
                 response.Message = raceIntervalMessage;
                 return response;
             }
-            if (IsLobbyWaitTimeValid(raceScheduleRequest.LobbyWaitTime, raceScheduleRequest.RaceInterval, out string lobbyWaitMessage) == false)
+            if (IsRaceIntervalValid(raceScheduleRequest.RaceInterval, raceScheduleRequest.RaceTimings, out string lobbyWaitMessage) == false)
             {
                 response.Message = lobbyWaitMessage;
                 return response;
             }
 
             await gameApiClient.CloudSaveData.SetCustomItemAsync(context, context.ServiceToken, context.ProjectId,
-                                       context.PlayerId, new SetItemBody(StringUtils.RACESCHEDULEKEY, raceScheduleRequest));
+                                      venueName, new SetItemBody(StringUtils.RACESCHEDULEKEY, raceScheduleRequest));
             response.Message = "Race Scheduled Successfully.";
             response.IsScheduled = true;
             return response;
@@ -165,11 +165,11 @@ namespace HorseRaceCloudCode
             return false;
         }
 
-        private bool IsRaceIntervalValid(int _raceInterval, string startTime, string endTime, out string message)
+        private bool IsRaceTimingsValid(int _raceTimings, string startTime, string endTime, out string message)
         {
-            if (_raceInterval <= 0)
+            if (_raceTimings <= 0)
             {
-                message = "Race Interval should be greater than zero.";
+                message = "Race Timings should be greater than zero.";
                 return false;
             }
 
@@ -182,10 +182,10 @@ namespace HorseRaceCloudCode
             }
             //Check if raceInterval is greater than raceTime
             TimeSpan raceTimeSpan = endScheduleTime - startScheduleTime;
-            TimeSpan raceIntervalSpan = TimeSpan.FromMinutes(_raceInterval);
+            TimeSpan raceIntervalSpan = TimeSpan.FromMinutes(_raceTimings);
             if (raceTimeSpan < raceIntervalSpan)
             {
-                message = "The Race Interval should be less than the race schedule.";
+                message = "The Race Timings should be less than the race schedule.";
                 return false;
             }
 
@@ -200,7 +200,7 @@ namespace HorseRaceCloudCode
                 message = "Race Schedule Start Time is Empty";
                 return false;
             }
-            if (DateTimeUtils.IsValidDateTimeFormat(_raceTime,StringUtils.HOUR_MINUTE_FORMAT) == false)
+            if (DateTimeUtils.IsValidDateTime(_raceTime) == false)
             {
                 message = "Invalid Schedule Start Time";
                 return false;
@@ -216,7 +216,7 @@ namespace HorseRaceCloudCode
                 message = "Race Schedule End Time is Empty";
                 return false;
             }
-            if (DateTimeUtils.IsValidDateTimeFormat(_raceTime,StringUtils.HOUR_MINUTE_FORMAT) == false)
+            if (DateTimeUtils.IsValidDateTime(_raceTime) == false)
             {
                 message = "Invalid Schedule End Time";
                 return false;
@@ -225,14 +225,14 @@ namespace HorseRaceCloudCode
             return true;
         }
 
-        private bool IsLobbyWaitTimeValid(int _lobbyWaitTime, int _raceInterval, out string message)
+        private bool IsRaceIntervalValid(int _raceInterval, int _raceTimings, out string message)
         {
-            if (_lobbyWaitTime <= 0)
+            if (_raceInterval <= 0)
             {
                 message = "Lobby Wait Time should be greater than zero.";
                 return false;
             }
-            if (_lobbyWaitTime >= _raceInterval)
+            if (_raceInterval >= _raceTimings)
             {
                 message = "Lobby Wait Time should be less than Race Interval";
                 return false;

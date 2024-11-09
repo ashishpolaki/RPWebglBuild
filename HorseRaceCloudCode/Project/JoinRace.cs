@@ -71,7 +71,7 @@ namespace HorseRaceCloudCode
             }
 
             //Check if the player can wait in the lobby
-            bool canWaitInLobby = CanPlayerWaitInLobby(getRaceDateTime.Value, currentDateTime, hostRaceScheduleData.LobbyWaitTime);
+            bool canWaitInLobby = CanPlayerWaitInLobby(getRaceDateTime.Value, currentDateTime, hostRaceScheduleData.RaceInterval);
 
             if (canWaitInLobby)
             {
@@ -81,7 +81,7 @@ namespace HorseRaceCloudCode
             else
             {
                 //Show the time the player can join the lobby
-                TimeSpan timeUntilLobbyOpen = (getRaceDateTime.Value - currentDateTime) + new TimeSpan(0, -hostRaceScheduleData.LobbyWaitTime, 0);
+                TimeSpan timeUntilLobbyOpen = (getRaceDateTime.Value - currentDateTime) + new TimeSpan(0, -hostRaceScheduleData.RaceInterval, 0);
                 joinRaceResponse.Message = $"Player can join the lobby after {timeUntilLobbyOpen.Hours.ToString("D2")}:{timeUntilLobbyOpen.Minutes.ToString("D2")}:{timeUntilLobbyOpen.Seconds.ToString("D2")}";
             }
 

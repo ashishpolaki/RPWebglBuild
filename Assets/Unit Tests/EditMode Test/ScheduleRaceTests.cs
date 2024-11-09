@@ -94,19 +94,19 @@ public class ScheduleRaceTests
         [TestCaseSource(nameof(RaceIntervalDigitTestCases))]
         public void RaceInterval_GreaterThanZero(int raceInterval)
         {
-            Assert.Greater(raceInterval, 0, StringUtils.RACE_INTERVAL_GREATERTHANZERO);
+            Assert.Greater(raceInterval, 0, StringUtils.RACE_TIMINGS_GREATERTHANZERO);
         }
 
         [TestCaseSource(nameof(LobbyWaitTimeDigitTestCases))]
         public void LobbyWaitTime_GreaterThanZero(int lobbyWaitTime)
         {
-            Assert.Greater(lobbyWaitTime, 0, StringUtils.LOBBY_WAITTIME_GREATERTHANZERO);
+            Assert.Greater(lobbyWaitTime, 0, StringUtils.RACEINTERVAL_GREATERTHANZERO);
         }
 
         [TestCaseSource((nameof(LobbyWaitTimeLessThanRaceIntervalTestCases)))]
         public void LobbyWaitTime_ShouldBeLessThan_RaceInterval(int lobbyWaitTime, int raceInterval)
         {
-            Assert.LessOrEqual(lobbyWaitTime, raceInterval, StringUtils.LOBBYWAITTIME_LESSTHAN_RACEINTERVAL);
+            Assert.LessOrEqual(lobbyWaitTime, raceInterval, StringUtils.RACEINTERVAL_LESSTHAN_RACETIMINGS);
         }
 
         [TestCaseSource(nameof(StartAndEndRaceScheduleTestCases))]
@@ -239,7 +239,7 @@ public class ScheduleRaceTests
         [TestCaseSource((nameof(LobbyWaitTimeGreaterThanRaceIntervalTestCases)))]
         public void LobbyWaitTime_GreaterThanRaceInterval(int lobbyWaitTime, int raceInterval)
         {
-            Assert.Greater(lobbyWaitTime, raceInterval, StringUtils.LOBBYWAITTIME_LESSTHAN_RACEINTERVAL);
+            Assert.Greater(lobbyWaitTime, raceInterval, StringUtils.RACEINTERVAL_LESSTHAN_RACETIMINGS);
         }
 
         [TestCaseSource(nameof(StartAndEndRaceScheduleTestCases))]
