@@ -28,25 +28,25 @@ namespace UI.Screen
         #region Unity Methods
         private void OnEnable()
         {
-            checkedInBtn.onClick.AddListener(async () => await LoadingScreen.Instance.PerformAsyncWithLoading(VenueCheckIn));
-            joinRaceBtn.onClick.AddListener(async () => await LoadingScreen.Instance.PerformAsyncWithLoading(EnterRace));
-            backButton.onClick.AddListener(() => OnScreenBack());
-            raceStatusButton.onClick.AddListener(() => OnRaceStatusHandle());
-            UGSManager.Instance.CloudCode.OnRaceStarted += OnRaceStart;
-            UGSManager.Instance.CloudCode.OnRaceResult += OnRaceResult;
-            PlayerRaceStatus();
+            //checkedInBtn.onClick.AddListener(async () => await LoadingScreen.Instance.PerformAsyncWithLoading(VenueCheckIn));
+            //joinRaceBtn.onClick.AddListener(async () => await LoadingScreen.Instance.PerformAsyncWithLoading(EnterRace));
+            //backButton.onClick.AddListener(() => OnScreenBack());
+            //raceStatusButton.onClick.AddListener(() => OnRaceStatusHandle());
+            //UGSManager.Instance.CloudCode.OnRaceStarted += OnRaceStart;
+            //UGSManager.Instance.CloudCode.OnRaceResult += OnRaceResult;
+            // PlayerRaceStatus();
         }
         private void OnDisable()
         {
-            checkedInBtn.onClick.RemoveAllListeners();
-            joinRaceBtn.onClick.RemoveAllListeners();
-            backButton.onClick.RemoveAllListeners();
-            raceStatusButton.onClick.RemoveAllListeners();
-            if (UGSManager.Instance != null)
-            {
-                UGSManager.Instance.CloudCode.OnRaceStarted -= OnRaceStart;
-                UGSManager.Instance.CloudCode.OnRaceResult -= OnRaceResult;
-            }
+            //checkedInBtn.onClick.RemoveAllListeners();
+            //joinRaceBtn.onClick.RemoveAllListeners();
+            //backButton.onClick.RemoveAllListeners();
+            //raceStatusButton.onClick.RemoveAllListeners();
+            //if (UGSManager.Instance != null)
+            //{
+            //    UGSManager.Instance.CloudCode.OnRaceStarted -= OnRaceStart;
+            //    UGSManager.Instance.CloudCode.OnRaceResult -= OnRaceResult;
+            //}
         }
         #endregion
 
@@ -56,7 +56,7 @@ namespace UI.Screen
             //If no tab is opened and the back button is pressed, then close this screen.
             if (CurrentOpenTab == ScreenTabType.None)
             {
-                UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Show);
+                //  UIController.Instance.ScreenEvent(ScreenType.CharacterCustomization, UIScreenEvent.Show);
                 Close();
                 return;
             }
@@ -76,9 +76,8 @@ namespace UI.Screen
             LoadingScreen.Instance.Show();
             ResetData();
             //Fetch Current Location
-            await UGSManager.Instance.FetchCurrentLocation();
             //Get host ID from the currentlocation
-            string hostID = await UGSManager.Instance.GetHostID();
+            string hostID = await UGSManager.Instance.GetHostID(1, 1);
             if (!string.IsNullOrEmpty(hostID))
             {
                 //Check if the player has previous Race Data.
@@ -212,7 +211,6 @@ namespace UI.Screen
         /// </summary>
         private async Task VenueCheckIn()
         {
-            await UGSManager.Instance.FetchCurrentLocation();
             //If cheat is enabled, pass cheat datetime to the cloud code.
             string dateTime = string.Empty;
             if (CheatCode.Instance.IsCheatEnabled)
@@ -220,31 +218,10 @@ namespace UI.Screen
                 dateTime = CheatCode.Instance.CheatDateTime;
             }
 
-            //Get host ID from the currentRaceCheckins location
-            string hostID = await UGSManager.Instance.GetHostID();
-            if (StringUtils.IsStringEmpty(hostID))
-            {
-                messageText.text = "No venue found at this location";
-                return;
-            }
-
-            //Check if the host is trying to checkin in its own venue.
-            if (hostID == UGSManager.Instance.PlayerData.playerID)
-            {
-                messageText.text = "Host can't checkin its own venue";
-                return;
-            }
-
-            //Check if the date time format is valid.
-            if (DateTimeUtils.IsValidDateTimeFormat(dateTime) == false)
-            {
-                messageText.text = "Invalid Date Time Format";
-                return;
-            }
+            messageText.text = "Host can't checkin its own venue";
 
             //Send VenueCheckIn Request to the Host.
-            string checkInMessage = await UGSManager.Instance.CloudCode.VenueCheckIn(hostID, dateTime);
-            messageText.text = checkInMessage;
+            // string checkInMessage = await UGSManager.Instance.CloudCode.VenueCheckIn(hostID, dateTime);
         }
 
         /// <summary>
@@ -253,7 +230,6 @@ namespace UI.Screen
         private async Task EnterRace()
         {
             //Get Current Location
-            await UGSManager.Instance.FetchCurrentLocation();
 
             //If cheat is enabled, pass cheat datetime to the cloud code.
             string dateTime = string.Empty;
@@ -263,7 +239,7 @@ namespace UI.Screen
             }
 
             //Get host ID from the current location.
-            string hostID = await UGSManager.Instance.GetHostID();
+            string hostID = await UGSManager.Instance.GetHostID(1, 1);
             if (string.IsNullOrEmpty(hostID) || string.IsNullOrWhiteSpace(hostID))
             {
                 messageText.text = "No venue found at this location";

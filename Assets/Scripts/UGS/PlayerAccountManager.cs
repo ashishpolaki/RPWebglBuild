@@ -8,8 +8,11 @@ public class PlayerAccountManager : MonoBehaviour
     {
         UI.UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
 
-        //Request GPS permission
-        GameManager.Instance.GPS.RequestPermission();
+        if (!GPS.IsLocationPermissionGranted())
+        {
+            //Request GPS permission
+            GPS.RequestPermission();
+        }
     }
     #endregion
 

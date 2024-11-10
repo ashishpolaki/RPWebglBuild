@@ -34,7 +34,7 @@ namespace UGS
         }
         public async void InitializeBindings()
         {
-            await Task.Delay(1000);
+            await Task.Delay(10);
             module = new HorseRaceCloudCodeBindings(CloudCodeService.Instance);
         }
 
@@ -110,6 +110,7 @@ namespace UGS
             return CloudCodeService.Instance.SubscribeToPlayerMessagesAsync(callbacks);
         }
 
+        #region Register Venue
         //Methods
         public async Task RegisterVenue(float _latitude, float _longitude, float _radius)
         {
@@ -176,6 +177,9 @@ namespace UGS
             return setVenueNameResponse;
         }
 
+        #endregion
+
+        #region Race Schedule
         public async Task ScheduleRaceTime(string scheduleStart, string scheduleEnd, int raceTimings, int _raceInterval)
         {
             if (IsRaceScheduleValid(scheduleStart, scheduleEnd, raceTimings) == false)
@@ -190,8 +194,8 @@ namespace UGS
                 hostScheduleRace.RaceTimings = raceTimings;
                 hostScheduleRace.RaceInterval = _raceInterval;
 
-                RaceScheduleResponse raceScheduleResponse = await module.ScheduleRaceTimings(UGSManager.Instance.VenueRegistrationData.Name,hostScheduleRace);
-                if(raceScheduleResponse.IsScheduled)
+                RaceScheduleResponse raceScheduleResponse = await module.ScheduleRaceTimings(UGSManager.Instance.VenueRegistrationData.Name, hostScheduleRace);
+                if (raceScheduleResponse.IsScheduled)
                 {
                     OnRaceScheduleSuccessEvent?.Invoke();
                 }
@@ -212,20 +216,71 @@ namespace UGS
                 }
             }
         }
+        #endregion
 
-        public async Task<string> VenueCheckIn(string hostID, string dateTime)
+        #region Venue CheckIn
+
+        public async Task<VenueCheckInResponse> SetVenueCheckIn(string venueName)
         {
+            VenueCheckInResponse venueCheckInResponse = new VenueCheckInResponse();
             try
             {
-                var result = await module.VenueCheckIn(hostID, dateTime);
-                return result.Message;
+                venueCheckInResponse = await module.SetVenueCheckIn(venueName);
             }
             catch (CloudCodeException exception)
             {
                 Debug.LogException(exception);
             }
-            return string.Empty;
+            return venueCheckInResponse;
         }
+
+        public async Task<VenueCheckInResponse> VenueCheckIn(string venueName)
+        {
+            VenueCheckInResponse venueCheckInResponse = new VenueCheckInResponse();
+            try
+            {
+                venueCheckInResponse = await module.VenueCheckIn(venueName);
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            return venueCheckInResponse;
+        }
+
+        #endregion
+
+        #region Enter Race
+        public async Task<EnterRaceResponse> EnterRaceRequest(string venueName)
+        {
+            EnterRaceResponse enterRaceResponse = new EnterRaceResponse();
+            try
+            {
+                enterRaceResponse = await module.EnterRaceRequest(venueName);
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            return enterRaceResponse;
+        }
+        #endregion
+
+        #region Confirm Race CheckIn
+        public async Task<RaceCheckInResponse> RaceCheckInRequest(string venueName)
+        {
+            RaceCheckInResponse raceCheckInResponse = new RaceCheckInResponse();
+            try
+            {
+                raceCheckInResponse = await module.RaceCheckInRequest(venueName);
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            return raceCheckInResponse;
+        }
+        #endregion
 
         public async Task<JoinRaceResponse> RequestRaceJoin(string hostID, string dateTime)
         {

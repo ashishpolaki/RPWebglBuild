@@ -22,7 +22,8 @@ public class GPS
     public delegate void LocationResultHandler(string message, float latitude, float longitude);
     public event LocationResultHandler OnLocationResult;
 
-    public void RequestPermission()
+    #region Static Methods
+    public static void RequestPermission()
     {
         if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
@@ -31,10 +32,17 @@ public class GPS
         }
     }
 
+    public static bool IsLocationPermissionGranted()
+    {
+        return Permission.HasUserAuthorizedPermission(Permission.FineLocation);
+    }
+
     public static bool IsValidGpsLocation(double latitude, double longitude)
     {
         return latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180;
     }
+    #endregion
+
 
     public IEnumerator IEGetLocation()
     {

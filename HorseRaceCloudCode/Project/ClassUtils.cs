@@ -164,11 +164,46 @@ namespace HorseRaceCloudCode
     }
     public class VenueCheckInResponse
     {
+        public int CheckInCount { get; set; }
+        public string NextCheckInTime { get; set; }
         public string Message { get; set; }
+        public bool CanCheckIn { get; set; }
+        public bool IsSuccess { get; set; }
 
         public VenueCheckInResponse()
         {
             Message = string.Empty;
+            NextCheckInTime = string.Empty;
+            CanCheckIn = false;
+            IsSuccess = false;
+        }
+    }
+    public class EnterRaceResponse
+    {
+        public string Message { get; set; }
+        public string UpcomingRaceTime { get; set; }
+        public bool IsFoundUpcomingRace { get; set; }
+        public int RaceInterval { get; set; }
+
+        public EnterRaceResponse()
+        {
+            UpcomingRaceTime = string.Empty;
+            Message = string.Empty;
+            IsFoundUpcomingRace = false;
+            RaceInterval = 0;
+        }
+    }
+
+
+    public class RaceCheckInResponse 
+    {
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+
+        public RaceCheckInResponse()
+        {
+            Message = string.Empty;
+            IsSuccess = false;
         }
     }
 

@@ -14,8 +14,11 @@ namespace Unity.Services.CloudCode.GeneratedBindings
         public const string REGISTER_VENUE = "RegisterVenue";
         public const string SCHEDULE_RACE = "RaceScheduleTimings";
         public const string VENUE_CHECKIN = "CheckedInVenue";
+        public const string SET_VENUE_CHECKIN = "SetVenueCheckIn";
         public const string JOIN_RACE_REQUEST = "RaceJoinRequest";
+        public const string ENTER_RACE_REQUEST = "EnterRaceRequest";
         public const string CONFIRM_RACE_CHECKIN = "ConfirmRaceCheckIn";
+        public const string RACE_CHECKIN_REQUEST = "RaceCheckInRequest";
         public const string SET_VENUE_NAME = "SetVenueName";
         public const string STARTRACE = "StartRace";
         public const string RACE_RESULTS = "RaceResults";
@@ -27,6 +30,8 @@ namespace Unity.Services.CloudCode.GeneratedBindings
         {
             k_Service = service;
         }
+
+        #region Host
         public async Task<VenueRegistrationResponse> RegisterVenue(VenueRegistrationRequest _venueData)
         {
             return await k_Service.CallModuleEndpointAsync<VenueRegistrationResponse>(MODULE, REGISTER_VENUE,
@@ -34,14 +39,44 @@ namespace Unity.Services.CloudCode.GeneratedBindings
         }
         public async Task<RaceScheduleResponse> ScheduleRaceTimings(string venueName, RaceScheduleRequest _raceData)
         {
-          return  await k_Service.CallModuleEndpointAsync<RaceScheduleResponse>(MODULE, SCHEDULE_RACE,
-               new Dictionary<string, object>() { { "venueName", venueName }, { "raceScheduleRequest", _raceData } });
+            return await k_Service.CallModuleEndpointAsync<RaceScheduleResponse>(MODULE, SCHEDULE_RACE,
+                 new Dictionary<string, object>() { { "venueName", venueName }, { "raceScheduleRequest", _raceData } });
         }
-        public async Task<VenueCheckInResponse> VenueCheckIn(string hostID, string dateTime)
+        public async Task<SetVenueNameResponse> SetVenueName(VenueRegistrationRequest _venueData)
+        {
+            return await k_Service.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
+                                 new Dictionary<string, object>() { { "venueData", _venueData } });
+        }
+        #endregion
+
+        #region Player
+        public async Task<VenueCheckInResponse> VenueCheckIn(string venueName)
         {
             return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, VENUE_CHECKIN,
-                 new Dictionary<string, object>() { { "hostId", hostID }, { "dateTimeString", dateTime } });
+                 new Dictionary<string, object>() { { "venueName", venueName } });
         }
+        public async Task<VenueCheckInResponse> SetVenueCheckIn(string venueName)
+        {
+            return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, SET_VENUE_CHECKIN,
+                 new Dictionary<string, object>() { { "venueName", venueName } });
+        }
+
+        public async Task<EnterRaceResponse> EnterRaceRequest(string venueName)
+        {
+            return await k_Service.CallModuleEndpointAsync<EnterRaceResponse>(MODULE, ENTER_RACE_REQUEST,
+                 new Dictionary<string, object>() { { "venueName", venueName } });
+        }
+
+        public async Task<RaceCheckInResponse> RaceCheckInRequest(string venueName)
+        {
+            return await k_Service.CallModuleEndpointAsync<RaceCheckInResponse>(MODULE, RACE_CHECKIN_REQUEST,
+                  new Dictionary<string, object>() { { "venueName", venueName } });
+        }
+        #endregion
+
+        #region Common
+
+        #endregion
 
         public async Task<JoinRaceResponse> RequestRaceJoin(string hostID, string dateTime)
         {
@@ -65,10 +100,5 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                  new Dictionary<string, object>() { { "raceResultData", raceResultData } });
         }
 
-        public async Task<SetVenueNameResponse> SetVenueName(VenueRegistrationRequest _venueData)
-        {
-           return await k_Service.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
-                                new Dictionary<string, object>() { { "venueData", _venueData } });
-        }
     }
 }

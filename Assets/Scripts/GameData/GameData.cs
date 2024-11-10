@@ -36,18 +36,37 @@ public class PlayerData : GameData, IDisposable
     public string playerID;
     public string playerName;
     public string hostID;
+    public string hostVenueName;
 
     public PlayerData() : base()
     {
         playerID = default;
         playerName = default;
         hostID = default;
+        hostVenueName = default;
     }
     public void Dispose()
     {
         GC.SuppressFinalize(this);
     }
 }
+
+public class PlayerRaceData : GameData, IDisposable
+{
+    public int horseNumber;
+    public DateTime upcomingRaceTime;
+
+    public PlayerRaceData() : base()
+    {
+        horseNumber = -1;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
+}
+
 public class RaceData : GameData, IDisposable
 {
     //Dictionary of playerID, (playerName, currentDayCheckIns)

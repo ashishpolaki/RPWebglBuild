@@ -129,12 +129,12 @@ public class UGSManager : MonoBehaviour
     /// If host id already exists, return the host id. Else, get the host id from the cloud and return it.
     /// </summary>
     /// <returns></returns>
-    public async Task<string> GetHostID()
+    public async Task<string> GetHostID(float _latitude,float _longitude)
     {
         if (string.IsNullOrEmpty(PlayerData.hostID))
         {
-            double latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : VenueRegistrationData.Latitude;
-            double longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : VenueRegistrationData.Longitude;
+            float latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
+            float longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
             string hostID = await CloudSave.GetHostID(StringUtils.HOSTVENUE, latitude, longitude);
             using (PlayerData playerData = new PlayerData())
             {
@@ -142,6 +142,26 @@ public class UGSManager : MonoBehaviour
                 SetPlayerData(playerData);
             }
             return hostID;
+        }
+        else
+        {
+            return PlayerData.hostID;
+        }
+    }
+
+    public async Task<string> GetHostVenueName(float _latitude, float _longitude)
+    {
+        if (string.IsNullOrEmpty(PlayerData.hostID))
+        {
+            float latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
+            float longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
+            string hostVenueName = await CloudSave.GetHostVenueName(StringUtils.HOSTVENUE, latitude, longitude);
+            using (PlayerData playerData = new PlayerData())
+            {
+                playerData.hostVenueName = hostVenueName;
+                SetPlayerData(playerData);
+            }
+            return hostVenueName;
         }
         else
         {

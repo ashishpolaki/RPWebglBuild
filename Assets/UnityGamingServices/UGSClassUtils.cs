@@ -170,17 +170,60 @@ namespace UGS
             Message = string.Empty;
         }
     }
-    public class VenueCheckInResponse
+    public class VenueCheckInResponse : IDisposable
     {
+        public int CheckInCount { get; set; }
+        public string NextCheckInTime { get; set; }
         public string Message { get; set; }
+        public bool CanCheckIn { get; set; }
+        public bool IsSuccess { get; set; }
 
         public VenueCheckInResponse()
         {
             Message = string.Empty;
+            NextCheckInTime = string.Empty;
+            CanCheckIn = false;
+            IsSuccess = false;
         }
         public void Dispose()
         {
             GC.SuppressFinalize(this);
         }
     }
+    public class EnterRaceResponse : IDisposable
+    {
+        public string Message { get; set; }
+        public string UpcomingRaceTime { get; set; }
+        public bool IsFoundUpcomingRace { get; set; }
+        public int RaceInterval { get; set; }
+
+        public EnterRaceResponse()
+        {
+            UpcomingRaceTime = string.Empty;
+            Message = string.Empty;
+            IsFoundUpcomingRace = false;
+            RaceInterval = 0;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+
+    public class RaceCheckInResponse : IDisposable
+    {
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+
+        public RaceCheckInResponse()
+        {
+            Message = string.Empty;
+            IsSuccess = false;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+
 }

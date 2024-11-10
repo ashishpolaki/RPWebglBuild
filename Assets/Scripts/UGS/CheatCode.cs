@@ -19,8 +19,8 @@ public class CheatCode : MonoBehaviour
     public bool IsCheatEnabled;
 
     public string CheatDateTime { get; private set; }
-    public double Latitude { get; private set; }
-    public double Longitude { get; private set; }
+    public float Latitude { get; private set; }
+    public float Longitude { get; private set; }
 
     [SerializeField] private TimeAdjustmentSettings cheatTime;
     [SerializeField] private DateSelectorUI dateSelectorUI;
@@ -60,8 +60,8 @@ public class CheatCode : MonoBehaviour
     private void Save()
     {
         CheatDateTime = ConvertDateTimeToUTC(cheatTime.ReturnTime(), dateSelectorUI.ReturnDate());
-        Latitude = !string.IsNullOrEmpty(latitudeInput.text) ? double.Parse(latitudeInput.text) : 0;
-        Longitude = !string.IsNullOrEmpty(longitudeInput.text) ? double.Parse(longitudeInput.text) : 0;
+        Latitude = !string.IsNullOrEmpty(latitudeInput.text) ? float.Parse(latitudeInput.text) : 0;
+        Longitude = !string.IsNullOrEmpty(longitudeInput.text) ? float.Parse(longitudeInput.text) : 0;
     }
     private string ConvertDateTimeToUTC(string timeString, string dateString)
     {

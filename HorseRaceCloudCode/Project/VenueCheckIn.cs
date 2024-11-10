@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
@@ -20,58 +21,138 @@ namespace HorseRaceCloudCode
             this.gameApiClient = _gameApiClient;
             this._logger = logger;
         }
-
-        [CloudCodeFunction("CheckedInVenue")]
-        public async Task<VenueRegistrationResponse> CheckInVenue(IExecutionContext context, string hostId, string dateTimeString)
+        #region CheatCode Cloud Methods
+        [CloudCodeFunction("CheatCodeVenueCheckIn")]
+        public async Task<VenueCheckInResponse> CheatCodeCheckInVenue(IExecutionContext context, string venueName, string dateTimeString)
         {
-            VenueRegistrationResponse venueRegistrationResponse = new VenueRegistrationResponse();
-            DateTime dateTime = DateTimeUtils.ConvertStringToUTCTime(dateTimeString);
+            VenueCheckInResponse response = new VenueCheckInResponse();
+            DateTime currentDateTime = DateTimeUtils.ConvertStringToUTCTime(dateTimeString);
 
             if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
             {
-                venueRegistrationResponse.Message = "Invalid Player ID";
-                return venueRegistrationResponse;
+                response.Message = "Invalid Player ID";
+                return response;
             }
 
-            if (StringUtils.IsEmpty(hostId))
+            if (StringUtils.IsEmpty(venueName))
             {
-                venueRegistrationResponse.Message = "Invalid Host ID";
-                return venueRegistrationResponse;
+                response.Message = "Invalid Host Venue";
+                return response;
             }
-
-            if(DateTimeUtils.IsValidDateTime(dateTimeString) == false)
-            {
-                venueRegistrationResponse.Message = "Invalid DateTime Format";
-                return venueRegistrationResponse;
-            };
 
             //Get the player checkin records from the cloud
-            string playerCheckinsKey = $"{hostId}{dateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
+            string playerCheckinsKey = $"{venueName}{currentDateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
             List<PlayerVenueCheckIn>? currentVenueCheckInsList = await Utils.GetProtectedDataWithKey<List<PlayerVenueCheckIn>>(context, gameApiClient, context.PlayerId, playerCheckinsKey);
 
-            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, dateTime, out int index))
+            //Check if Player has already checked in today
+            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime, out int lastCheckInIndex))
             {
-                if (IsAlreadyCheckedInCurrentInterval(currentVenueCheckInsList[index].LastCheckInTime, dateTime))
+                //Get Todays Checkin Count
+                response.CheckInCount = currentVenueCheckInsList[lastCheckInIndex].Count;
+
+                //If the player has already checked in the current interval, then return the next check-in time.
+                if (IsAlreadyCheckedInCurrentInterval(currentVenueCheckInsList[lastCheckInIndex].LastCheckInTime, currentDateTime))
                 {
                     // Tell the player when they can check in next.
-                    TimeSpan timeSpan = GetNextCheckInTime(dateTime, HostConfig.venueCheckInInterval);
-                    venueRegistrationResponse.Message = $"Next check-in is after {timeSpan.Hours} hours and {timeSpan.Minutes} minutes and {timeSpan.Seconds} seconds.";
-                    return venueRegistrationResponse;
+                    DateTime nextCheckInTime = GetNextCheckInTime(currentDateTime, HostConfig.venueCheckInInterval);
+                    response.NextCheckInTime = nextCheckInTime.ToString();
+                    return response;
                 }
+            }
 
+            response.CanCheckIn = true;
+            response.Message = "Click to Check-In";
+            return response;
+        }
+
+        #endregion
+
+        [CloudCodeFunction("SetVenueCheckIn")]
+        public async Task<VenueCheckInResponse> SetVenueCheckIn(IExecutionContext context, string venueName)
+        {
+            VenueCheckInResponse response = new VenueCheckInResponse();
+            DateTime currentDateTime = DateTime.UtcNow;
+
+            if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
+            {
+                response.Message = "Invalid Player ID";
+                return response;
+            }
+
+            if (StringUtils.IsEmpty(venueName))
+            {
+                response.Message = "Invalid Host Venue";
+                return response;
+            }
+
+            //Get the player checkin records from the cloud
+            string playerCheckinsKey = $"{venueName}{currentDateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
+            List<PlayerVenueCheckIn>? currentVenueCheckInsList = await Utils.GetProtectedDataWithKey<List<PlayerVenueCheckIn>>(context, gameApiClient, context.PlayerId, playerCheckinsKey);
+
+            //Check if Player has already checked in today
+            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime, out int dayIndex))
+            {
                 //Update today's venue checkin record.
-                UpdatePlayerCheckIn(currentVenueCheckInsList[index], dateTime);
+                UpdatePlayerCheckIn(currentVenueCheckInsList[dayIndex], currentDateTime);
             }
             else
             {
                 //Player has not checked in today, so add the player's today first checkin.
-                AddPlayerCheckInToList(currentVenueCheckInsList, dateTime);
+                AddPlayerCheckInToList(currentVenueCheckInsList, currentDateTime);
             }
 
+            response.CheckInCount = currentVenueCheckInsList[dayIndex].Count;
+            response.NextCheckInTime = GetNextCheckInTime(currentDateTime, HostConfig.venueCheckInInterval).ToString();
+            response.IsSuccess = true;
+
             await gameApiClient.CloudSaveData.SetProtectedItemAsync(context, context.ServiceToken, context.ProjectId,
-                               context.PlayerId, new SetItemBody(playerCheckinsKey, JsonConvert.SerializeObject(currentVenueCheckInsList)));
-            venueRegistrationResponse.Message = "Successfully Checked In";
-            return venueRegistrationResponse;
+                          context.PlayerId, new SetItemBody(playerCheckinsKey, JsonConvert.SerializeObject(currentVenueCheckInsList)));
+
+            return response;
+        }
+
+
+        [CloudCodeFunction("CheckedInVenue")]
+        public async Task<VenueCheckInResponse> CheckInVenue(IExecutionContext context, string venueName)
+        {
+            VenueCheckInResponse response = new VenueCheckInResponse();
+            DateTime currentDateTime = DateTime.UtcNow;
+
+            if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
+            {
+                response.Message = "Invalid Player ID";
+                return response;
+            }
+
+            if (StringUtils.IsEmpty(venueName))
+            {
+                response.Message = "Invalid Host Venue";
+                return response;
+            }
+
+            //Get the player checkin records from the cloud
+            string playerCheckinsKey = $"{venueName}{currentDateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
+            List<PlayerVenueCheckIn>? currentVenueCheckInsList = await Utils.GetProtectedDataWithKey<List<PlayerVenueCheckIn>>(context, gameApiClient, context.PlayerId, playerCheckinsKey);
+
+            //Check if Player has already checked in today
+            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime, out int lastCheckInIndex))
+            {
+                //Get Todays Checkin Count
+                response.CheckInCount = currentVenueCheckInsList[lastCheckInIndex].Count;
+
+                //If the player has already checked in the current interval, then return the next check-in time.
+                if (IsAlreadyCheckedInCurrentInterval(currentVenueCheckInsList[lastCheckInIndex].LastCheckInTime, currentDateTime))
+                {
+                    // Tell the player when they can check in next.
+                    DateTime nextCheckInTime = GetNextCheckInTime(currentDateTime, HostConfig.venueCheckInInterval);
+                    response.NextCheckInTime = nextCheckInTime.ToString();
+                    return response;
+                }
+            }
+
+            response.CanCheckIn = true;
+            response.Message = "Click to Check-In";
+            return response;
         }
 
         public void UpdatePlayerCheckIn(PlayerVenueCheckIn playerCheckIn, DateTime dateTime)
@@ -91,7 +172,7 @@ namespace HorseRaceCloudCode
             venueCheckInsList.Add(checkInAttendance);
         }
 
-        public TimeSpan GetNextCheckInTime(DateTime dateTime,int checkInInterval)
+        public DateTime GetNextCheckInTime(DateTime dateTime, int checkInInterval)
         {
             // Calculate the next check-in time based on the interval within the hour
             int minutesPastHour = dateTime.Minute % checkInInterval;
@@ -99,20 +180,20 @@ namespace HorseRaceCloudCode
             DateTime nextCheckInTime = dateTime.AddMinutes(minutesToAdd).AddSeconds(-dateTime.Second);
 
             // Calculate the time until the next check-in
-            TimeSpan timeUntilNextCheckIn = nextCheckInTime - dateTime;
-            return timeUntilNextCheckIn;
+            // TimeSpan timeUntilNextCheckIn = nextCheckInTime - currentDateTime;
+            return nextCheckInTime;
         }
 
-        public bool IsAlreadyCheckedInToday(List<PlayerVenueCheckIn> venueCheckInsList, DateTime currentDateTime, out int index)
+        public bool IsAlreadyCheckedInToday(List<PlayerVenueCheckIn> venueCheckInsList, DateTime currentDateTime, out int dayIndex)
         {
-            index = -1;
+            dayIndex = 0;
             if (venueCheckInsList.Count > 0)
             {
                 for (int i = 0; i < venueCheckInsList.Count; i++)
                 {
                     if (venueCheckInsList[i].Date == currentDateTime.Date.ToString(StringUtils.DAY_FORMAT))
                     {
-                        index = i;
+                        dayIndex = i;
                         return true;
                     }
                 }

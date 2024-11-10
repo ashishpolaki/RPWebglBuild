@@ -8,7 +8,7 @@ namespace UGS
 {
     public class CloudSave
     {
-        public async Task<string> GetHostID(string customID, double latitude, double longitude)
+        public async Task<string> GetHostID(string customID, float latitude, float longitude)
         {
             var customItemData = await CloudSaveService.Instance.Data.Custom.LoadAllAsync(customID);
             foreach (var customItem in customItemData)
@@ -21,6 +21,25 @@ namespace UGS
                     if (distance <= venueRegistrationRequest.Radius)
                     {
                         return customItem.Key;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
+        public async Task<string> GetHostVenueName(string customID, float latitude, float longitude)
+        {
+            var customItemData = await CloudSaveService.Instance.Data.Custom.LoadAllAsync(customID);
+            foreach (var customItem in customItemData)
+            {
+                string customItemValue = customItem.Value.Value.GetAsString();
+                if (!string.IsNullOrEmpty(customItemValue) && !string.IsNullOrWhiteSpace(customItemValue))
+                {
+                    VenueRegistrationRequest venueRegistrationRequest = JsonConvert.DeserializeObject<VenueRegistrationRequest>(customItemValue);
+                    float distance = DistanceCalculator.CalculateHaversineDistance(venueRegistrationRequest.Latitude, venueRegistrationRequest.Longitude, latitude, longitude);
+                    if (distance <= venueRegistrationRequest.Radius)
+                    {
+                        return venueRegistrationRequest.Name;
                     }
                 }
             }

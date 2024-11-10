@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using HorseRaceCloudCode;
+using Microsoft.Extensions.DependencyInjection;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
 
@@ -8,5 +9,6 @@ public class ModuleConfig : ICloudCodeSetup
     {
         config.Dependencies.AddSingleton(GameApiClient.Create());
         config.Dependencies.AddSingleton<IPushClient, PushClient>(_ => PushClient.Create());
+        config.Dependencies.AddSingleton<IRaceController, RaceController>();
     }
 }

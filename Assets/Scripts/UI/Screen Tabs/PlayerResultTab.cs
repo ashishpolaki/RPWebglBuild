@@ -12,8 +12,13 @@ namespace UI.Screen.Tab
         #region Unity Methods
         private void OnEnable()
         {
-            resultText.text = $"Your race position is {UGSManager.Instance.RaceData.racePosition}";
+            resultText.text = $"Your are place \n #{UGSManager.Instance.RaceData.racePosition} in the race";
         }
         #endregion
+
+        protected override void OnTabBack()
+        {
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.VenueCheckIn);
+        }
     }
 }
