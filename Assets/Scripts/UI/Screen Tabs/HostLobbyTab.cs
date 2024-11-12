@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
+using UGS;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,22 +13,21 @@ namespace UI.Screen.Tab
     {
         #region Inspector Variables
         [SerializeField] private Button startRace_btn;
-        [SerializeField] private TextMeshProUGUI messageTxt;
         [SerializeField] private LobbyPlayerUI lobbyPlayerUIPrefab;
         [SerializeField] private Transform playersUIContent;
+        [SerializeField] private GameObject lobbyPlayersScrollObject;
+        [SerializeField] private TextMeshProUGUI messageTxt;
         #endregion
 
         #region Private Variables
         private List<LobbyPlayerUI> lobbyPlayerUIList = new List<LobbyPlayerUI>();
-        [Tooltip("Key: PlayerID, Value: (PlayerName, HorseNumber) ")]
-        private Dictionary<string, (string, int)> lobbyPlayers = new Dictionary<string, (string, int)>();
         #endregion
 
         #region Unity Methods
         private void OnEnable()
         {
             startRace_btn.onClick.AddListener(() => StartRace());
-            if(UGSManager.Instance != null)
+            if (UGSManager.Instance != null)
             {
                 UGSManager.Instance.CloudCode.OnRaceStartSuccessEvent += OnStartRaceSuccess;
                 UGSManager.Instance.CloudCode.OnRaceStartFailEvent += OnStartRaceFail;
@@ -45,12 +45,11 @@ namespace UI.Screen.Tab
         }
         #endregion
 
-
         #region Subscribe Event Methods
         public void OnStartRaceSuccess()
         {
             UnityEngine.Screen.orientation = ScreenOrientation.LandscapeLeft;
-            GameManager.Instance.HorsesToSpawnList = lobbyPlayers.Select(x => x.Value.Item2).ToList();
+            GameManager.Instance.HorsesToSpawnList = UGSManager.Instance.HostRaceData.qualifiedPlayers.Select(x => x.HorseNumber).ToList();
             LoadingScreen.Instance.LoadSceneAdditiveAsync((int)Scene.Race);
         }
         public void OnStartRaceFail(string message)
@@ -59,78 +58,61 @@ namespace UI.Screen.Tab
         }
         #endregion
 
-        #region Lobby Players
-        private void DisplayLobbyPlayers()
+        private async Task GetRaceCheckInPlayersAsync()
         {
-            if (lobbyPlayers.Count > 0)
+            LoadingScreen.Instance.Show();
+            List<CurrentRacePlayerCheckIn> racePlayerCheckIns = await UGSManager.Instance.CloudCode.GetRaceCheckIns();
+
+            //no players checked in
+            if (racePlayerCheckIns.Count == 0)
             {
-                foreach (var lobbyPlayer in lobbyPlayers)
-                {
-                    var lobbyPlayerUI = Instantiate(lobbyPlayerUIPrefab, playersUIContent);
-                    lobbyPlayerUI.SetData($" Horse #{lobbyPlayer.Value.Item2}", lobbyPlayer.Value.Item1);
-                    lobbyPlayerUIList.Add(lobbyPlayerUI);
-                }
+                messageTxt.text = "No Players Checked In";
             }
+
+            //Check Min 2 players to start a race
+            else if (racePlayerCheckIns.Count > 1)
+            {
+                lobbyPlayersScrollObject.gameObject.SetActive(true);
+                startRace_btn.interactable = true;
+                RaceLobbyHandler raceLobbyHandler = new RaceLobbyHandler(racePlayerCheckIns);
+                DisplayRaceCheckins(racePlayerCheckIns);
+                List<RaceLobbyParticipant> raceLobbyParticipants = await raceLobbyHandler.GetQualifiedPlayers();
+                List<CurrentRacePlayerCheckIn> currentRacePlayerCheckIns = await raceLobbyHandler.GetUnQualifiedPlayers();
+
+                HostRaceData hostRaceData = new HostRaceData();
+                hostRaceData.qualifiedPlayers = raceLobbyParticipants;
+                hostRaceData.unQualifiedPlayersList = currentRacePlayerCheckIns;
+                UGSManager.Instance.SetHostRaceData(hostRaceData);
+            }
+            LoadingScreen.Instance.Hide();
         }
 
-        private void ShuffleLobbyPlayersList()
+        private void DisplayRaceCheckins(List<CurrentRacePlayerCheckIn> currentRacePlayerCheckIns)
         {
-            System.Random random = new System.Random();
-
-            // Get the keys and shuffle them
-            var keys = new List<string>(lobbyPlayers.Keys);
-            int n = keys.Count;
-            while (n > 1)
+            foreach (var lobbyPlayer in currentRacePlayerCheckIns)
             {
-                n--;
-                int k = random.Next(n + 1);
-                var temp = keys[k];
-                keys[k] = keys[n];
-                keys[n] = temp;
+                var lobbyPlayerUI = Instantiate(lobbyPlayerUIPrefab, playersUIContent);
+                lobbyPlayerUI.SetData(lobbyPlayer.PlayerName);
+                lobbyPlayerUIList.Add(lobbyPlayerUI);
             }
-
-            // Rebuild the dictionary with shuffled keys
-            var shuffledDictionary = new Dictionary<string, (string, int)>();
-            foreach (var key in keys)
-            {
-                shuffledDictionary[key] = lobbyPlayers[key];
-            }
-
-            // Assign the shuffled dictionary back to lobbyPlayers
-            lobbyPlayers = shuffledDictionary;
         }
-        #endregion
 
         #region Private Methods
-        private void RaceStatus()
+        private async void RaceStatus()
         {
             ResetData();
+            ResetFields();
 
-            //Check Race Checkins
-            lobbyPlayers = UGSManager.Instance.RaceData.lobbyQualifiedPlayers;
-            int lobbyPlayersCount = lobbyPlayers.Count;
-            if (lobbyPlayersCount == 0)
-            {
-                //If no players are checked in, display message and return.
-                messageTxt.text = "No Players Checked In";
-                startRace_btn.interactable = false;
-                return;
-            }
-
-            //Display Lobby Players
-            ShuffleLobbyPlayersList();
-            DisplayLobbyPlayers();
-
-            //Enable PlayerLobbyStatus button if minimum 2 players are checked in.
-            startRace_btn.interactable = (lobbyPlayersCount > 1);
+            await GetRaceCheckInPlayersAsync();
         }
-
         private async void StartRace()
         {
-            Func<Task> response = () => UGSManager.Instance.CloudCode.StartRace(UGSManager.Instance.RaceData.lobbyQualifiedPlayers, UGSManager.Instance.RaceData.unQualifiedPlayers);
+            Func<Task> response = () => UGSManager.Instance.CloudCode.StartRace(UGSManager.Instance.HostRaceData.qualifiedPlayers, UGSManager.Instance.HostRaceData.unQualifiedPlayersList);
             await LoadingScreen.Instance.PerformAsyncWithLoading(response);
+            UnityEngine.Screen.orientation = ScreenOrientation.LandscapeLeft;
+            GameManager.Instance.HorsesToSpawnList = UGSManager.Instance.HostRaceData.qualifiedPlayers.Select(x => x.HorseNumber).ToList();
+            LoadingScreen.Instance.LoadSceneAdditiveAsync((int)Scene.Race);
         }
-
         private void ResetData()
         {
             //Clear Data
@@ -139,7 +121,11 @@ namespace UI.Screen.Tab
                 Destroy(lobbyPlayerUIList[i].gameObject);
             }
             lobbyPlayerUIList.Clear();
-            lobbyPlayers.Clear();
+        }
+        private void ResetFields()
+        {
+            startRace_btn.interactable = false;
+            lobbyPlayersScrollObject.gameObject.SetActive(false);
             messageTxt.text = string.Empty;
         }
         #endregion

@@ -30,11 +30,11 @@ namespace UI.Screen
             if (GameManager.Instance.HorsesInRaceOrderList != null)
             {
                 int firstPlaceHorseNumber = GameManager.Instance.HorsesInRaceOrderList[0];
-                foreach (var playerValue in UGSManager.Instance.RaceData.lobbyQualifiedPlayers.Values)
+                foreach (var playerValue in UGSManager.Instance.HostRaceData.qualifiedPlayers)
                 {
-                    if (playerValue.Item2 == firstPlaceHorseNumber)
+                    if (playerValue.HorseNumber == firstPlaceHorseNumber)
                     {
-                        horseJockeyNameTxt.text = $"Winner \n {playerValue.Item1} - Horse #{playerValue.Item2}";
+                        horseJockeyNameTxt.text = $"Winner \n {playerValue.PlayerName} - Horse #{playerValue.HorseNumber}";
                         break;
                     }
                 }

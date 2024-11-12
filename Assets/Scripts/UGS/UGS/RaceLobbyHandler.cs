@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace UGS
 {
     public class RaceLobbyHandler : IDisposable
     {
         #region Private Variables
-        private int maxLobbyPlayers = 12;
-        private Dictionary<string, (string, int)> qualifiedPlayers;
-        private List<string> unQualifiedPlayersList;
+        private const int maxLobbyPlayers = 12;
+        private List<RaceLobbyParticipant> qualifiedPlayers;
+        private List<CurrentRacePlayerCheckIn> unQualifiedPlayersList;
         private List<CurrentRacePlayerCheckIn> checkInPlayersList;
         private List<int> horsesInRaceOrderList;
         #endregion
@@ -19,9 +20,8 @@ namespace UGS
         public RaceLobbyHandler(List<CurrentRacePlayerCheckIn> _checkInPlayersList)
         {
             //Set Default Values
-            qualifiedPlayers = new Dictionary<string, (string, int)>();
-            unQualifiedPlayersList = new List<string>();
-
+            qualifiedPlayers = new List<RaceLobbyParticipant>();
+            unQualifiedPlayersList = new List<CurrentRacePlayerCheckIn>();
             checkInPlayersList = _checkInPlayersList;
             horsesInRaceOrderList = new List<int>(GameManager.Instance.LoadHorsesInRaceOrder());
         }
@@ -55,7 +55,7 @@ namespace UGS
         /// Get the Qualified Players in the race.
         /// </summary>
         /// <returns></returns>
-        public async Task<Dictionary<string, (string, int)>> GetQualifiedPlayers()
+        public async Task<List<RaceLobbyParticipant>> GetQualifiedPlayers()
         {
             await SetRaceWinner();
             await ChooseRemainingLobbyPlayers();
@@ -67,13 +67,13 @@ namespace UGS
         /// Get the Un Qualified Players in the race.
         /// </summary>
         /// <returns></returns>
-        public async Task<List<string>> GetUnQualifiedPlayers()
+        public async Task<List<CurrentRacePlayerCheckIn>> GetUnQualifiedPlayers()
         {
             await Task.Run(() =>
             {
                 foreach (var player in checkInPlayersList)
                 {
-                    unQualifiedPlayersList.Add(player.PlayerID);
+                    unQualifiedPlayersList.Add(player);
                 }
             });
             return unQualifiedPlayersList;
@@ -98,7 +98,9 @@ namespace UGS
                 cumulative += checkInPlayersList[i].CurrentDayCheckIns;
                 if (randomNumber < cumulative)
                 {
-                    AddPlayerToLobby(i);
+                    int index = i;
+                    AddPlayerToLobby(checkInPlayersList[index], index);
+                    break;
                 }
             }
         }
@@ -109,7 +111,7 @@ namespace UGS
         private async Task ChooseRemainingLobbyPlayers()
         {
             //Adjust maxLobbyPlayersCount to match checkInPlayersCount, if maxLobbyPlayersCount is less than checkInPlayersCount.
-            int lobbyPlayersCount = maxLobbyPlayers;
+            int lobbyPlayersCount = maxLobbyPlayers - 1;
             if (checkInPlayersList.Count < lobbyPlayersCount)
             {
                 lobbyPlayersCount = checkInPlayersList.Count;
@@ -122,7 +124,7 @@ namespace UGS
                 {
                     System.Random random = new System.Random();
                     int randomPlayerIndex = random.Next(checkInPlayersList.Count);
-                    AddPlayerToLobby(randomPlayerIndex);
+                    AddPlayerToLobby(checkInPlayersList[randomPlayerIndex], randomPlayerIndex);
                 }
             });
         }
@@ -131,10 +133,14 @@ namespace UGS
         /// Add the player to the Host Lobby.
         /// </summary>
         /// <param name="index"></param>
-        private void AddPlayerToLobby(int index)
+        private void AddPlayerToLobby(CurrentRacePlayerCheckIn currentRacePlayerCheckIn, int index)
         {
+            RaceLobbyParticipant raceLobbyParticipant = new RaceLobbyParticipant();
+            raceLobbyParticipant.PlayerID = currentRacePlayerCheckIn.PlayerID;
+            raceLobbyParticipant.PlayerName = currentRacePlayerCheckIn.PlayerName;
+            raceLobbyParticipant.HorseNumber = horsesInRaceOrderList[0];
             //After Assign Horse Number to qualified members. Remove the checkinplayers,horseNumbers to avoid conflicts.
-            qualifiedPlayers[checkInPlayersList[index].PlayerID] = (checkInPlayersList[index].PlayerName, horsesInRaceOrderList[0]);
+            qualifiedPlayers.Add(raceLobbyParticipant);
             checkInPlayersList.RemoveAt(index);
             horsesInRaceOrderList.RemoveAt(0);
         }

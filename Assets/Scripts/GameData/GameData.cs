@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UGS;
 
 public class GameData
 {
@@ -55,10 +56,13 @@ public class PlayerRaceData : GameData, IDisposable
 {
     public int horseNumber;
     public DateTime upcomingRaceTime;
+    public int raceInterval;
+    public int racePosition;
 
     public PlayerRaceData() : base()
     {
         horseNumber = -1;
+        racePosition = -1;
     }
 
     public void Dispose()
@@ -67,42 +71,19 @@ public class PlayerRaceData : GameData, IDisposable
     }
 }
 
-public class RaceData : GameData, IDisposable
+public class HostRaceData : GameData, IDisposable
 {
-    //Dictionary of playerID, (playerName, currentDayCheckIns)
-    public Dictionary<string, (string,int)> lobbyQualifiedPlayers;
-    public List<string> unQualifiedPlayers;
+    public List<RaceLobbyParticipant> qualifiedPlayers;
+    public List<CurrentRacePlayerCheckIn> unQualifiedPlayersList;
 
-    public DateTime raceTime;
-    public int horseNumber;
-    public int racePosition;
+    public HostRaceData() : base()
+    {
+        qualifiedPlayers = new List<RaceLobbyParticipant>();
+        unQualifiedPlayersList = new List<CurrentRacePlayerCheckIn>();
+    }   
 
-    public struct CheckInPlayers
-    {
-        public string playerID;
-        public string playerName;
-        public int currentDayCheckIns;
-    }
-    public RaceData() : base()
-    {
-        lobbyQualifiedPlayers = new Dictionary<string, (string,int)>();
-        unQualifiedPlayers = new List<string>();
-        raceTime = default;
-        horseNumber = 0;
-        racePosition = 0;
-    }
     public void Dispose()
     {
-        if (lobbyQualifiedPlayers != null)
-        {
-            lobbyQualifiedPlayers.Clear();
-            lobbyQualifiedPlayers = null;
-        }
-        if (unQualifiedPlayers != null)
-        {
-            unQualifiedPlayers.Clear();
-            unQualifiedPlayers = null;
-        }
         GC.SuppressFinalize(this);
     }
 }
