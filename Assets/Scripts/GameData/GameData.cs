@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UGS;
 
 public class GameData
@@ -38,12 +39,14 @@ public class PlayerData : GameData, IDisposable
     public string playerName;
     public string hostID;
     public string hostVenueName;
+    public bool isHost;
 
     public PlayerData() : base()
     {
         playerID = default;
         playerName = default;
         hostID = default;
+        isHost = false;
         hostVenueName = default;
     }
     public void Dispose()

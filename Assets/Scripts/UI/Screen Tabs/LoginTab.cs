@@ -59,9 +59,13 @@ namespace UI.Screen.Tab
         {
             //Check if the user is a host
             bool isHost = await UGSManager.Instance.CloudSave.IsUserHostAsync();
-            UGSManager.Instance.SetHost(isHost);
+            using (PlayerData playerData = new PlayerData())
+            {
+                playerData.isHost = isHost;
+                UGSManager.Instance.SetPlayerData(playerData);
+            }
 
-            if (UGSManager.Instance.IsHost)
+            if (isHost)
             {
                 UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Open);
                 UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);

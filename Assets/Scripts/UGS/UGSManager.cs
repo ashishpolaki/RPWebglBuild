@@ -19,8 +19,6 @@ public class UGSManager : MonoBehaviour
     public CloudSave CloudSave { get; private set; }
 
     public GPS GPS;
-
-    public bool IsHost { get; private set; }
     #endregion
 
     #region Unity Methods
@@ -107,12 +105,6 @@ public class UGSManager : MonoBehaviour
     #endregion
 
     #region Public Methods
-
-    public void SetHost(bool _val)
-    {
-        IsHost = _val;
-    }
-
     public async Task<string> GetHostVenueName(float _latitude, float _longitude)
     {
         if (string.IsNullOrEmpty(PlayerData.hostID))

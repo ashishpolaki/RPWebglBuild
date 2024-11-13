@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -68,7 +69,11 @@ namespace UI.Screen.Tab
 
         private void OnHostToggleHandle(bool val)
         {
-            UGSManager.Instance.SetHost(val);
+            using (PlayerData playerData = new PlayerData())
+            {
+                playerData.isHost = val;
+                UGSManager.Instance.SetPlayerData(playerData);
+            }
         }
 
         /// <summary>
@@ -76,7 +81,7 @@ namespace UI.Screen.Tab
         /// </summary>
         private void SignInSuccessful()
         {
-            bool isHost = UGSManager.Instance.IsHost;
+            bool isHost = UGSManager.Instance.PlayerData.isHost;
             UGSManager.Instance.CloudSave.SetUserHostAsync(isHost);
             if (isHost)
             {
