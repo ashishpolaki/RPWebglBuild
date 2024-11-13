@@ -47,10 +47,24 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             return await k_Service.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
                                  new Dictionary<string, object>() { { "venueData", _venueData } });
         }
+        public async Task<List<CurrentRacePlayerCheckIn>> GetRaceCheckIns()
+        {
+            return await k_Service.CallModuleEndpointAsync<List<CurrentRacePlayerCheckIn>>(MODULE, "GetVenueRaceCheckIns");
+        }
+        public async Task<StartRaceResponse> StartRace(StartRaceRequest startRaceRequest)
+        {
+            return await k_Service.CallModuleEndpointAsync<StartRaceResponse>(MODULE, STARTRACE,
+                   new Dictionary<string, object>() { { "startRaceRequest", startRaceRequest } });
+        }
+        public async Task SendRaceResults(RaceResult raceResultData)
+        {
+            await k_Service.CallModuleEndpointAsync(MODULE, RACE_RESULTS,
+                 new Dictionary<string, object>() { { "raceResultData", raceResultData } });
+        }
         #endregion
 
         #region Player
-        public async Task<VenueCheckInResponse> VenueCheckIn(string venueName)
+        public async Task<VenueCheckInResponse> GetVenueCheckInData(string venueName)
         {
             return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, VENUE_CHECKIN,
                  new Dictionary<string, object>() { { "venueName", venueName } });
@@ -72,33 +86,17 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             return await k_Service.CallModuleEndpointAsync<RaceCheckInResponse>(MODULE, RACE_CHECKIN_REQUEST,
                   new Dictionary<string, object>() { { "venueName", venueName } });
         }
+        public async Task<RaceLobbyParticipant> TryGetRaceLobbyPlayer(string venueName)
+        {
+            return await k_Service.CallModuleEndpointAsync<RaceLobbyParticipant>(MODULE, "TryGetRaceLobbyPlayer",
+                  new Dictionary<string, object>() { { "venueName", venueName } });
+        }
+
+        public async Task<PlayerRaceResult> PreviousRaceResultRequest(string venueName)
+        {
+            return await k_Service.CallModuleEndpointAsync<PlayerRaceResult>(MODULE, "PreviousRaceResult",
+                  new Dictionary<string, object>() { { "venueName", venueName } });
+        }
         #endregion
-
-        #region Common
-
-        #endregion
-
-        public async Task<JoinRaceResponse> RequestRaceJoin(string hostID, string dateTime)
-        {
-            return await k_Service.CallModuleEndpointAsync<JoinRaceResponse>(MODULE, JOIN_RACE_REQUEST,
-                                 new Dictionary<string, object>() { { "hostID", hostID }, { "dateTimeString", dateTime } });
-        }
-
-        public async Task<bool> ConfirmRaceCheckIn(string hostID, string playerName)
-        {
-            return await k_Service.CallModuleEndpointAsync<bool>(MODULE, CONFIRM_RACE_CHECKIN,
-                                 new Dictionary<string, object>() { { "hostID", hostID }, { "playerName", playerName } });
-        }
-        public async Task<StartRaceResponse> StartRace(StartRaceRequest startRaceRequest)
-        {
-            return await k_Service.CallModuleEndpointAsync<StartRaceResponse>(MODULE, STARTRACE,
-                   new Dictionary<string, object>() { { "startRaceRequest", startRaceRequest } });
-        }
-        public async Task SendRaceResults(RaceResult raceResultData)
-        {
-            await k_Service.CallModuleEndpointAsync(MODULE, RACE_RESULTS,
-                 new Dictionary<string, object>() { { "raceResultData", raceResultData } });
-        }
-
     }
 }

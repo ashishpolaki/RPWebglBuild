@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UGS;
 using System.Threading.Tasks;
@@ -10,7 +9,8 @@ public class UGSManager : MonoBehaviour
     #region Properties
     //Local Cloud Data Storage
     public PlayerData PlayerData { get => GameDataContainer.Instance.GetGameEvent<PlayerData>(); }
-    public RaceData RaceData { get => GameDataContainer.Instance.GetGameEvent<RaceData>(); }
+    public PlayerRaceData PlayerRaceData { get => GameDataContainer.Instance.GetGameEvent<PlayerRaceData>(); }
+    public HostRaceData HostRaceData { get => GameDataContainer.Instance.GetGameEvent<HostRaceData>(); }
     public VenueRegistrationData VenueRegistrationData { get => GameDataContainer.Instance.GetGameEvent<VenueRegistrationData>(); }
 
     //UGS
@@ -92,9 +92,13 @@ public class UGSManager : MonoBehaviour
     {
         GameDataContainer.Instance.SetGameEvent(playerData, _allowDefaultValues);
     }
-    public void SetRaceData(RaceData raceData, bool canSetDefaultValues = false)
+    public void SetPlayerRaceData(PlayerRaceData playerRaceData, bool _allowDefaultValues = false)
     {
-        GameDataContainer.Instance.SetGameEvent(raceData, canSetDefaultValues);
+        GameDataContainer.Instance.SetGameEvent(playerRaceData, _allowDefaultValues);
+    } 
+    public void SetHostRaceData(HostRaceData hostRaceData, bool _allowDefaultValues = false)
+    {
+        GameDataContainer.Instance.SetGameEvent(hostRaceData, _allowDefaultValues);
     }
     public void SetVenueRegistrationData(VenueRegistrationData venueRegistrationData, bool canSetDefaultValues = false)
     {
@@ -107,46 +111,6 @@ public class UGSManager : MonoBehaviour
     public void SetHost(bool _val)
     {
         IsHost = _val;
-    }
-
-    public async Task SetLobbyPlayers()
-    {
-        LoadingScreen.Instance.Show();
-        List<CurrentRacePlayerCheckIn> racePlayerCheckIns = await CloudSave.GetRaceCheckinParticipants(PlayerData.playerID, StringUtils.RACECHECKIN);
-        if (racePlayerCheckIns != null && racePlayerCheckIns.Count > 0)
-        {
-            RaceLobbyHandler raceLobbyHandler = new RaceLobbyHandler(racePlayerCheckIns);
-            RaceData raceData = new RaceData();
-            raceData.lobbyQualifiedPlayers = new Dictionary<string, (string, int)>(await raceLobbyHandler.GetQualifiedPlayers());
-            raceData.unQualifiedPlayers = new List<string>(await raceLobbyHandler.GetUnQualifiedPlayers());
-            SetRaceData(raceData);
-            raceLobbyHandler.Dispose(); //Dispose the RaceLobbyHandler after usage
-        }
-        LoadingScreen.Instance.Hide();
-    }
-
-    /// <summary>
-    /// If host id already exists, return the host id. Else, get the host id from the cloud and return it.
-    /// </summary>
-    /// <returns></returns>
-    public async Task<string> GetHostID(float _latitude,float _longitude)
-    {
-        if (string.IsNullOrEmpty(PlayerData.hostID))
-        {
-            float latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
-            float longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
-            string hostID = await CloudSave.GetHostID(StringUtils.HOSTVENUE, latitude, longitude);
-            using (PlayerData playerData = new PlayerData())
-            {
-                playerData.hostID = hostID;
-                SetPlayerData(playerData);
-            }
-            return hostID;
-        }
-        else
-        {
-            return PlayerData.hostID;
-        }
     }
 
     public async Task<string> GetHostVenueName(float _latitude, float _longitude)
@@ -176,7 +140,7 @@ public class UGSManager : MonoBehaviour
     {
         SetPlayerData(new PlayerData(), true);
         SetVenueRegistrationData(new VenueRegistrationData(), true);
-        SetRaceData(new RaceData(), true);
+        SetPlayerRaceData(new PlayerRaceData(), true);
         Authentication.ResetData();
     }
     #endregion

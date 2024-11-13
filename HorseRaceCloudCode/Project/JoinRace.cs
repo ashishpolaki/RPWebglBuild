@@ -22,7 +22,7 @@ namespace HorseRaceCloudCode
         }
 
         [CloudCodeFunction("EnterRaceRequest")]
-        public async Task<EnterRaceResponse> EnterRaceRequest(IExecutionContext context, string venueName)
+        public async Task<EnterRaceResponse> EnterRaceRequest(IExecutionContext context, IRaceController raceController, string venueName)
         {
             EnterRaceResponse enterRaceResponse = new EnterRaceResponse();
             DateTime currentDateTime = DateTime.UtcNow;
@@ -66,18 +66,7 @@ namespace HorseRaceCloudCode
                 return enterRaceResponse;
             }
 
-            //Check if the player can do raceCheckin
-            // bool canRaceCheckIn = CanPlayerRaceCheckIn(upcomingRaceTime, currentDateTime, hostRaceScheduleData.RaceInterval);
-            //if (canRaceCheckIn)
-            //{
-            //}
-            //else
-            //{
-            //    //Show the time the player can join the lobby
-            //    TimeSpan timeUntilLobbyOpen = (upcomingRaceTime - currentDateTime) + new TimeSpan(0, -hostRaceScheduleData.RaceInterval, 0);
-            //    joinRaceResponse.Message = $"Player can join the lobby after {timeUntilLobbyOpen.Hours.ToString("D2")}:{timeUntilLobbyOpen.Minutes.ToString("D2")}:{timeUntilLobbyOpen.Seconds.ToString("D2")}";
-            //}
-
+            enterRaceResponse.IsConfirmRaceCheckIn = raceController.IsPlayerCheckedIn(context.PlayerId, venueName);
             enterRaceResponse.UpcomingRaceTime = upcomingRaceTime.ToString();
             enterRaceResponse.IsFoundUpcomingRace = isUpcomingRaceFound;
             enterRaceResponse.RaceInterval = hostRaceScheduleData.RaceInterval;
@@ -85,7 +74,7 @@ namespace HorseRaceCloudCode
         }
 
         [CloudCodeFunction("RaceCheckInRequest")]
-        public async Task<RaceCheckInResponse> RaceCheckInRequest(IExecutionContext context, IRaceController iController, string venueName,string playerName)
+        public async Task<RaceCheckInResponse> RaceCheckInRequest(IExecutionContext context, IRaceController iController, string venueName, string playerName)
         {
             RaceCheckInResponse raceCheckInResponse = new RaceCheckInResponse();
 
@@ -126,6 +115,48 @@ namespace HorseRaceCloudCode
 
             raceCheckInResponse.IsSuccess = true;
             return raceCheckInResponse;
+        }
+
+        [CloudCodeFunction("TryGetRaceLobbyPlayer")]
+        public async Task<RaceLobbyParticipant> TryGetRaceLobbyPlayer(IExecutionContext context, IRaceController controller, string venueName)
+        {
+            if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
+            {
+                return new RaceLobbyParticipant();
+            }
+
+            if (StringUtils.IsEmpty(venueName))
+            {
+                return new RaceLobbyParticipant();
+            }
+
+            await Task.Run(() =>
+            {
+                return controller.GetRaceLobbyParticipant(context.PlayerId, venueName);
+            });
+            return new RaceLobbyParticipant();
+        }
+
+        [CloudCodeFunction("PreviousRaceResult")]
+        public async Task<PlayerRaceResult> GetPlayerRaceResult(IExecutionContext context, IRaceController controller, string venueName)
+        {
+            if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
+            {
+                return new PlayerRaceResult();
+            }
+
+            if (StringUtils.IsEmpty(venueName))
+            {
+                return new PlayerRaceResult();
+            }
+
+            await Task.Run(() =>
+            {
+                PlayerRaceResult playerRaceResult = controller.GetPlayerRaceResult(context.PlayerId, venueName);
+                return;
+            });
+
+            return new PlayerRaceResult();
         }
 
 

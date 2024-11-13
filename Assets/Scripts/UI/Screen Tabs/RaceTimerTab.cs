@@ -19,13 +19,13 @@ namespace UI.Screen.Tab
         {
             StartTimer();
         }
-
         private void OnDisable()
         {
-            StopCoroutine(IEStartTimer());
+            StopAllCoroutines();
         }
         private void StartTimer()
         {
+            raceTime = UGSManager.Instance.PlayerRaceData.upcomingRaceTime;
             raceStartTimeLeft = raceTime - DateTime.UtcNow;
             waitForSeconds = new WaitForSecondsRealtime(1);
             StartCoroutine(IEStartTimer());
@@ -37,7 +37,7 @@ namespace UI.Screen.Tab
             while (raceStartTimeLeft.TotalSeconds >= 0)
             {
                 sb.Clear();
-                sb.Append("Next Race check-In : \n ")
+                sb.Append("Race Starts in : \n ")
                   .Append(raceStartTimeLeft.Hours.ToString("D2")).Append(" Hours ")
                   .Append(raceStartTimeLeft.Minutes.ToString("D2")).Append(" Minutes ")
                   .Append(raceStartTimeLeft.Seconds.ToString("D2")).Append(" Seconds ");
@@ -51,7 +51,7 @@ namespace UI.Screen.Tab
 
         protected override void OnTabBack()
         {
-            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceCheckIn);
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.VenueCheckIn);
         }
     }
 }

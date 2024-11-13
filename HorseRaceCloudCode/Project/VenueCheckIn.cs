@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
@@ -102,7 +101,8 @@ namespace HorseRaceCloudCode
             }
 
             response.CheckInCount = currentVenueCheckInsList[dayIndex].Count;
-            response.NextCheckInTime = GetNextCheckInTime(currentDateTime, HostConfig.venueCheckInInterval).ToString();
+            DateTime nextCheckInTime = GetNextCheckInTime(currentDateTime, HostConfig.venueCheckInInterval);
+            response.NextCheckInTime = nextCheckInTime.ToString();
             response.IsSuccess = true;
 
             await gameApiClient.CloudSaveData.SetProtectedItemAsync(context, context.ServiceToken, context.ProjectId,

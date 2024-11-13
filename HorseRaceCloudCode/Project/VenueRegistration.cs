@@ -54,9 +54,7 @@ namespace HorseRaceCloudCode
             await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, venueData.Name,
             new SetItemBatchBody(new List<SetItemBody>()
                {
-                           new (StringUtils.RACELOBBYKEY, ""),
                            new (StringUtils.RACESCHEDULEKEY,""),
-                           new (StringUtils.RACERESULTSKEY,"")
                }));
 
             response.Message = "Venue Name Set";

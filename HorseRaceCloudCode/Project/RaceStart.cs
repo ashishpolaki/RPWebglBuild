@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
@@ -22,8 +21,9 @@ namespace HorseRaceCloudCode
             this._logger = logger;
         }
 
+        #region Start Race
         [CloudCodeFunction("StartRace")]
-        public async Task<StartRaceResponse> StartRace(IExecutionContext context, StartRaceRequest startRaceRequest)
+        public async Task<StartRaceResponse> StartRace(IExecutionContext context, IRaceController raceController, StartRaceRequest startRaceRequest)
         {
             StartRaceResponse response = new StartRaceResponse();
 
@@ -45,9 +45,12 @@ namespace HorseRaceCloudCode
                 return response;
             }
 
+            VenueRegistrationRequest venueRegistrationRequest = await Utils.GetCustomDataWithKey<VenueRegistrationRequest>(context, gameApiClient, StringUtils.HOSTVENUEKEY, context.PlayerId);
+
             //Start Race
-            await SetLobbyPlayers(context, startRaceRequest.RaceLobbyParticipants);
+            await SetLobbyPlayers(context, raceController, venueRegistrationRequest.Name, startRaceRequest.RaceLobbyParticipants);
             SetUnQualifiedPlayers(context, startRaceRequest.UnQualifiedPlayerIDs);
+            raceController.DeleteRaceCheckIns(venueRegistrationRequest.Name);
             response.IsRaceStart = true;
             return response;
         }
@@ -68,51 +71,64 @@ namespace HorseRaceCloudCode
             return true;
         }
 
-        private async Task SetLobbyPlayers(IExecutionContext context, List<RaceLobbyParticipant> lobbyPlayers)
+        private async Task SetLobbyPlayers(IExecutionContext context, IRaceController raceController, string venueName, List<RaceLobbyParticipant> lobbyPlayers)
         {
             for (int i = 0; i < lobbyPlayers.Count; i++)
             {
                 await pushClient.SendPlayerMessageAsync(context, $"{lobbyPlayers[i].HorseNumber}", "RaceStart", lobbyPlayers[i].PlayerID);
+                raceController.AddRaceLobbyParticipant(lobbyPlayers[i], venueName);
             }
-            //Set Race Lobby players in Cloud and reset RaceResults
-            await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, context.PlayerId,
-               new SetItemBatchBody(new List<SetItemBody>()
-                  {
-                           new SetItemBody("RaceLobby", JsonConvert.SerializeObject(lobbyPlayers)),
-                           new (StringUtils.RACERESULTSKEY,"")
-                  }));
         }
 
-        private async void SetUnQualifiedPlayers(IExecutionContext context, List<string> notQualifiedPlayersList)
+        private async void SetUnQualifiedPlayers(IExecutionContext context, List<CurrentRacePlayerCheckIn> notQualifiedPlayersList)
         {
             //For unqualified players send zero as horse number
-            foreach (var unQualifiedPlayerID in notQualifiedPlayersList)
+            foreach (var unQualifiedPlayer in notQualifiedPlayersList)
             {
-                await pushClient.SendPlayerMessageAsync(context, $"{0}", "RaceStart", unQualifiedPlayerID);
+                await pushClient.SendPlayerMessageAsync(context, $"{-1}", "RaceStart", unQualifiedPlayer.PlayerID);
             }
         }
+        #endregion
 
 
-        [CloudCodeFunction("RaceResults")]
-        public async Task SendRaceResultToPlayers(IExecutionContext context, RaceResult raceResultData)
+        [CloudCodeFunction("GetVenueRaceCheckIns")]
+        public async Task<List<CurrentRacePlayerCheckIn>> GetVenueRaceCheckIns(IExecutionContext context, IRaceController controller)
         {
-            if (raceResultData != null)
+            VenueRegistrationRequest venueRegistrationRequest = await Utils.GetCustomDataWithKey<VenueRegistrationRequest>(context, gameApiClient, StringUtils.HOSTVENUEKEY, context.PlayerId);
+
+            if (venueRegistrationRequest != null)
             {
-                for (int i = 0; i < raceResultData.playerRaceResults.Count; i++)
-                {
-                    //Send Message to the players for Race Results
-                    await pushClient.SendPlayerMessageAsync(context, $"{JsonConvert.SerializeObject(raceResultData.playerRaceResults[i])}", "RaceResult", raceResultData.playerRaceResults[i].PlayerID);
-                }
+                return controller.GetRaceCheckInPlayers(venueRegistrationRequest.Name);
             }
 
-            //Update RaceResults, Clear Lobby Data and Current Race Checkins
-            await gameApiClient.CloudSaveData.SetCustomItemBatchAsync(context, context.ServiceToken, context.ProjectId, context.PlayerId,
-                new SetItemBatchBody(new List<SetItemBody>()
-                   {
-                           new ("RaceLobby", ""),
-                           new ("RaceCheckIn", ""),
-                           new SetItemBody("RaceResults", JsonConvert.SerializeObject(raceResultData))
-                   }));
+            return new List<CurrentRacePlayerCheckIn>();
+        }
+
+        [CloudCodeFunction("SendRaceResults")]
+        public async Task SendRaceResultToPlayers(IExecutionContext context, IRaceController controller, RaceResult raceResultData)
+        {
+            VenueRegistrationRequest venueRegistrationRequest = await Utils.GetCustomDataWithKey<VenueRegistrationRequest>(context, gameApiClient, StringUtils.HOSTVENUEKEY, context.PlayerId);
+
+            for (int i = 0; i < raceResultData.playerRaceResults.Count; i++)
+            {
+                //Send Message to the players for Race Results
+                await pushClient.SendPlayerMessageAsync(context, $"{JsonConvert.SerializeObject(raceResultData.playerRaceResults[i])}", "RaceResult", raceResultData.playerRaceResults[i].PlayerID);
+                controller.AddRaceResult(raceResultData.playerRaceResults[i], raceResultData.playerRaceResults[i].PlayerID);
+
+                //Set Race Wins Count
+                if (raceResultData.playerRaceResults[i].RacePosition == 1)
+                {
+                    int raceWinsCount = 0;
+                    var response = await gameApiClient.CloudSaveData.GetProtectedItemsAsync(context, context.ServiceToken, context.ProjectId, raceResultData.playerRaceResults[i].PlayerID, new List<string> { "TotalRaceWins" });
+                    if (response.Data != null && response.Data.Results != null && response.Data.Results.Count > 0)
+                    {
+                        raceWinsCount = (int)response.Data.Results[0].Value;
+                    }
+                    raceWinsCount++;
+                    await gameApiClient.CloudSaveData.SetProtectedItemAsync(context, context.ServiceToken, context.ProjectId, raceResultData.playerRaceResults[i].PlayerID, new SetItemBody("TotalRaceWins", raceWinsCount));
+                }
+            }
+            controller.DeleteRaceLobby(venueRegistrationRequest.Name);
         }
     }
 }

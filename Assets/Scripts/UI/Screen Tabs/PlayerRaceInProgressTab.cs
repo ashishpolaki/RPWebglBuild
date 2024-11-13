@@ -12,7 +12,7 @@ namespace UI.Screen.Tab
         #region Unity Methods
         private void OnEnable()
         {
-            horseNumberTxt.text = $"Horse Number : {UGSManager.Instance.RaceData.horseNumber}";
+            horseNumberTxt.text = $"Horse Number : {UGSManager.Instance.PlayerRaceData.horseNumber}";
         }
         #endregion
 

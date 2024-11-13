@@ -28,7 +28,8 @@ namespace HorseRace
             List<int> racePositionHorseNumbers = GameManager.Instance.HorsesInRaceOrderList;
 
             //Get the lobby players
-            List<UGS.RaceLobbyParticipant> raceLobbyParticipants = await UGSManager.Instance.CloudSave.TryGetRaceLobby(UGSManager.Instance.PlayerData.playerID, StringUtils.RACELOBBY);
+            List<UGS.RaceLobbyParticipant> raceLobbyParticipants = null;
+            //await UGSManager.Instance.CloudSave.TryGetRaceLobby(UGSManager.Instance.PlayerData.playerID, StringUtils.RACELOBBY);
 
             //Create race result data.
             UGS.RaceResult raceResult = new UGS.RaceResult();

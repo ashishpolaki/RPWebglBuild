@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HorseRaceCloudCode")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+674fdc15553e2c86289cc0f51b9470f6b08f8098")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d13cee1e9ba420585077ab2b31ee91f643de8aae")]
 [assembly: System.Reflection.AssemblyProductAttribute("HorseRaceCloudCode")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HorseRaceCloudCode")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

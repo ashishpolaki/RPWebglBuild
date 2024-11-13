@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -88,7 +87,7 @@ namespace UGS
         }
         #endregion
 
-        #region Public Methods
+        #region Cloud Trigger
         public Task SubscribeToPlayerMessages()
         {
             var callbacks = new SubscriptionEventCallbacks();
@@ -109,6 +108,7 @@ namespace UGS
             };
             return CloudCodeService.Instance.SubscribeToPlayerMessagesAsync(callbacks);
         }
+        #endregion
 
         #region Register Venue
         //Methods
@@ -176,7 +176,6 @@ namespace UGS
             }
             return setVenueNameResponse;
         }
-
         #endregion
 
         #region Race Schedule
@@ -219,7 +218,6 @@ namespace UGS
         #endregion
 
         #region Venue CheckIn
-
         public async Task<VenueCheckInResponse> SetVenueCheckIn(string venueName)
         {
             VenueCheckInResponse venueCheckInResponse = new VenueCheckInResponse();
@@ -234,12 +232,12 @@ namespace UGS
             return venueCheckInResponse;
         }
 
-        public async Task<VenueCheckInResponse> VenueCheckIn(string venueName)
+        public async Task<VenueCheckInResponse> GetVenueCheckInData(string venueName)
         {
             VenueCheckInResponse venueCheckInResponse = new VenueCheckInResponse();
             try
             {
-                venueCheckInResponse = await module.VenueCheckIn(venueName);
+                venueCheckInResponse = await module.GetVenueCheckInData(venueName);
             }
             catch (CloudCodeException exception)
             {
@@ -280,61 +278,85 @@ namespace UGS
             }
             return raceCheckInResponse;
         }
+        public async Task<List<CurrentRacePlayerCheckIn>> GetRaceCheckIns()
+        {
+            List<CurrentRacePlayerCheckIn> playerRaceCheckinsList = new List<CurrentRacePlayerCheckIn>();
+            try
+            {
+                playerRaceCheckinsList = await module.GetRaceCheckIns();
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            return playerRaceCheckinsList;
+        }
         #endregion
 
-        public async Task<JoinRaceResponse> RequestRaceJoin(string hostID, string dateTime)
+        #region Venue Race Lobby
+        public async Task<RaceLobbyParticipant> TryGetRaceLobbyPlayer(string venueName)
         {
-            JoinRaceResponse joinRaceResponse = new JoinRaceResponse();
+            RaceLobbyParticipant raceLobbyParticipant = new RaceLobbyParticipant();
             try
             {
-                joinRaceResponse = await module.RequestRaceJoin(hostID, dateTime);
+                raceLobbyParticipant = await module.TryGetRaceLobbyPlayer(venueName);
             }
             catch (CloudCodeException exception)
             {
                 Debug.LogException(exception);
             }
-            return joinRaceResponse;
+            return raceLobbyParticipant;
         }
+        #endregion
 
-        public async Task<bool> ConfirmRaceCheckIn(string hostID, string playerName)
+        #region Race Result
+        public async Task SendRaceResults(RaceResult raceResultsData)
         {
             try
             {
-                return await module.ConfirmRaceCheckIn(hostID, playerName);
+                await module.SendRaceResults(raceResultsData);
             }
             catch (CloudCodeException exception)
             {
                 Debug.LogException(exception);
             }
-            return false;
         }
 
-        public async Task StartRace(Dictionary<string, (string, int)> lobbyQualifiedPlayers, List<string> notQualifiedPlayersList)
+        public async Task<PlayerRaceResult> GetPreviousRaceResult(string venueName)
         {
-            List<RaceLobbyParticipant> raceLobbyParticipants = new List<RaceLobbyParticipant>();
-            foreach (var lobbyPlayer in lobbyQualifiedPlayers)
+            PlayerRaceResult playerRaceResult = new PlayerRaceResult();
+            try
             {
-                if (StringUtils.IsStringEmpty(lobbyPlayer.Key))
+                playerRaceResult = await module.PreviousRaceResultRequest(venueName);
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+            return playerRaceResult;
+        }
+        #endregion
+
+        #region Race Start
+        public async Task StartRace(List<RaceLobbyParticipant> raceLobbyParticipants, List<CurrentRacePlayerCheckIn> currentRacePlayerCheckIns)
+        {
+            foreach (var lobbyPlayer in raceLobbyParticipants)
+            {
+                if (StringUtils.IsStringEmpty(lobbyPlayer.PlayerID))
                 {
                     OnRaceStartFailEvent?.Invoke(StringUtils.PLAYERID_EMPTY);
                     return;
                 }
-                if (StringUtils.IsStringEmpty(lobbyPlayer.Value.Item1))
+                if (StringUtils.IsStringEmpty(lobbyPlayer.PlayerName))
                 {
                     OnRaceStartFailEvent?.Invoke(StringUtils.PLAYERNAME_EMPTY);
                     return;
                 }
-                if (lobbyPlayer.Value.Item2 <= 0)
+                if (lobbyPlayer.HorseNumber <= 0)
                 {
                     OnRaceStartFailEvent?.Invoke(StringUtils.HORSENUMBER_INVALID);
                     return;
                 }
-                raceLobbyParticipants.Add(new RaceLobbyParticipant
-                {
-                    PlayerID = lobbyPlayer.Key,
-                    PlayerName = lobbyPlayer.Value.Item1,
-                    HorseNumber = lobbyPlayer.Value.Item2
-                });
             }
 
             if (raceLobbyParticipants.Count > 12)
@@ -345,7 +367,7 @@ namespace UGS
 
             StartRaceRequest startRaceRequest = new StartRaceRequest();
             startRaceRequest.RaceLobbyParticipants = raceLobbyParticipants;
-            startRaceRequest.UnQualifiedPlayerIDs = notQualifiedPlayersList;
+            startRaceRequest.UnQualifiedPlayerIDs = currentRacePlayerCheckIns;
             try
             {
                 StartRaceResponse startRaceResponse = await module.StartRace(startRaceRequest);
@@ -365,22 +387,9 @@ namespace UGS
             finally
             {
                 raceLobbyParticipants.Clear();
-                startRaceRequest.Dispose();
             }
         }
 
-        public async Task SendRaceResults(RaceResult raceResultsData)
-        {
-            try
-            {
-                await module.SendRaceResults(raceResultsData);
-            }
-            catch (CloudCodeException exception)
-            {
-                Debug.LogException(exception);
-            }
-        }
         #endregion
     }
-
 }

@@ -7,45 +7,18 @@ namespace HorseRaceCloudCode
     {
     }
 
-    public class SetVenueNameResponse : IDisposable
-    {
-        public bool IsVenueNameSet;
-        public string Message;
 
-        public SetVenueNameResponse()
-        {
-            IsVenueNameSet = false;
-            Message = string.Empty;
-        }
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
+    #region Start Race
 
-    public class PlayerVenueCheckIn
-    {
-        public string Date { get; set; }
-        public string LastCheckInTime { get; set; }
-        public int Count { get; set; }
-
-        public PlayerVenueCheckIn()
-        {
-            Date = string.Empty;
-            LastCheckInTime = string.Empty;
-            Count = 0;
-        }
-    }
-  
     public class StartRaceRequest
     {
         public List<RaceLobbyParticipant> RaceLobbyParticipants { get; set; }
-        public List<string> UnQualifiedPlayerIDs { get; set; }
+        public List<CurrentRacePlayerCheckIn> UnQualifiedPlayerIDs { get; set; }
 
         public StartRaceRequest()
         {
             RaceLobbyParticipants = new List<RaceLobbyParticipant>();
-            UnQualifiedPlayerIDs = new List<string>();
+            UnQualifiedPlayerIDs = new List<CurrentRacePlayerCheckIn>();
         }
     }
     public class StartRaceResponse
@@ -59,27 +32,33 @@ namespace HorseRaceCloudCode
             IsRaceStart = false;
         }
     }
+    #endregion
 
-    public class RaceResult
+    #region Enter race
+    public class EnterRaceResponse : IDisposable
     {
-        public List<PlayerRaceResult> playerRaceResults { get; set; }
-        public RaceResult()
-        {
-            playerRaceResults = new List<PlayerRaceResult>();
-        }
-    }
-    public class JoinRaceResponse
-    {
-        public bool CanWaitInLobby { get; set; }
-        public DateTime RaceTime { get; set; }
         public string Message { get; set; }
+        public string UpcomingRaceTime { get; set; }
+        public bool IsFoundUpcomingRace { get; set; }
+        public bool IsConfirmRaceCheckIn { get; set; }
+        public int RaceInterval { get; set; }
 
-        public JoinRaceResponse()
+        public EnterRaceResponse()
         {
-            CanWaitInLobby = false;
+            UpcomingRaceTime = string.Empty;
             Message = string.Empty;
+            IsFoundUpcomingRace = false;
+            IsConfirmRaceCheckIn = false;
+            RaceInterval = 0;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
+    #endregion
+
+    #region Lobby
     public class RaceLobbyParticipant
     {
         public string PlayerID { get; set; }
@@ -90,8 +69,38 @@ namespace HorseRaceCloudCode
         {
             PlayerID = string.Empty;
             PlayerName = string.Empty;
+            HorseNumber = -1;
         }
     }
+    #endregion
+
+    #region Race Result
+
+    public class PlayerRaceResult
+    {
+        public string PlayerID { get; set; }
+        public int HorseNumber { get; set; }
+        public int RacePosition { get; set; }
+
+        public PlayerRaceResult()
+        {
+            PlayerID = string.Empty;
+            HorseNumber = -1;
+            RacePosition = -1;
+        }
+    }
+
+    public class RaceResult
+    {
+        public List<PlayerRaceResult> playerRaceResults { get; set; }
+        public RaceResult()
+        {
+            playerRaceResults = new List<PlayerRaceResult>();
+        }
+    }
+    #endregion
+
+    #region Race CheckIn
     public class CurrentRacePlayerCheckIn
     {
         public string PlayerID { get; set; }
@@ -102,20 +111,56 @@ namespace HorseRaceCloudCode
         {
             PlayerID = string.Empty;
             PlayerName = string.Empty;
+            CurrentDayCheckIns = 0;
         }
     }
- 
-    public class PlayerRaceResult
-    {
-        public string PlayerID { get; set; }
-        public int HorseNumber { get; set; }
-        public int RacePosition { get; set; }
 
-        public PlayerRaceResult()
+    public class RaceCheckInResponse
+    {
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+
+        public RaceCheckInResponse()
         {
-            PlayerID = string.Empty;
+            Message = string.Empty;
+            IsSuccess = false;
         }
     }
+    #endregion
+
+    #region Venue CheckIn
+    public class VenueCheckInResponse
+    {
+        public int CheckInCount { get; set; }
+        public string NextCheckInTime { get; set; }
+        public string Message { get; set; }
+        public bool CanCheckIn { get; set; }
+        public bool IsSuccess { get; set; }
+
+        public VenueCheckInResponse()
+        {
+            Message = string.Empty;
+            NextCheckInTime = string.Empty;
+            CanCheckIn = false;
+            IsSuccess = false;
+        }
+    }
+    public class PlayerVenueCheckIn
+    {
+        public string Date { get; set; }
+        public string LastCheckInTime { get; set; }
+        public int Count { get; set; }
+
+        public PlayerVenueCheckIn()
+        {
+            Date = string.Empty;
+            LastCheckInTime = string.Empty;
+            Count = 0;
+        }
+    }
+    #endregion
+
+    #region Host Schedule/Registration 
     public class VenueRegistrationRequest
     {
         public string Name { get; set; }
@@ -125,6 +170,10 @@ namespace HorseRaceCloudCode
 
         public VenueRegistrationRequest()
         {
+            Name = string.Empty;
+            Latitude = 0;
+            Longitude = 0;
+            Radius = 0;
         }
     }
     public class VenueRegistrationResponse
@@ -138,6 +187,7 @@ namespace HorseRaceCloudCode
             Message = string.Empty;
         }
     }
+
     public class RaceScheduleRequest
     {
         public string ScheduleStart { get; set; }
@@ -162,49 +212,22 @@ namespace HorseRaceCloudCode
             Message = string.Empty;
         }
     }
-    public class VenueCheckInResponse
+    public class SetVenueNameResponse : IDisposable
     {
-        public int CheckInCount { get; set; }
-        public string NextCheckInTime { get; set; }
-        public string Message { get; set; }
-        public bool CanCheckIn { get; set; }
-        public bool IsSuccess { get; set; }
+        public bool IsVenueNameSet;
+        public string Message;
 
-        public VenueCheckInResponse()
+        public SetVenueNameResponse()
         {
+            IsVenueNameSet = false;
             Message = string.Empty;
-            NextCheckInTime = string.Empty;
-            CanCheckIn = false;
-            IsSuccess = false;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
-    public class EnterRaceResponse
-    {
-        public string Message { get; set; }
-        public string UpcomingRaceTime { get; set; }
-        public bool IsFoundUpcomingRace { get; set; }
-        public int RaceInterval { get; set; }
+    #endregion
 
-        public EnterRaceResponse()
-        {
-            UpcomingRaceTime = string.Empty;
-            Message = string.Empty;
-            IsFoundUpcomingRace = false;
-            RaceInterval = 0;
-        }
-    }
-
-
-    public class RaceCheckInResponse 
-    {
-        public string Message { get; set; }
-        public bool IsSuccess { get; set; }
-
-        public RaceCheckInResponse()
-        {
-            Message = string.Empty;
-            IsSuccess = false;
-        }
-    }
 
 }

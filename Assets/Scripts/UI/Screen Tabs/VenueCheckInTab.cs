@@ -35,6 +35,7 @@ namespace UI.Screen.Tab
         [SerializeField] private GameObject previousRaceResultCloud;
         [SerializeField] private GameObject enterRaceBlackPanel;
         [SerializeField] private GameObject previousRaceResultInfoObject;
+        [SerializeField] private TextMeshProUGUI enterRaceTitleText;
         [SerializeField] private TextMeshProUGUI enterRaceMessageText;
         [SerializeField] private TextMeshProUGUI racesWinCountText;
         [SerializeField] private TextMeshProUGUI previousRaceResultText;
@@ -62,7 +63,6 @@ namespace UI.Screen.Tab
             logOutButton.onClick.AddListener(() => UGSManager.Instance.Authentication.Signout());
 
             venueCheckInButton.onClick.AddListener(() => OnVenueCheckIn());
-            enterRaceButton.onClick.AddListener(() => OnEnterRace());
 
             if (GameManager.Instance != null)
             {
@@ -89,9 +89,7 @@ namespace UI.Screen.Tab
             {
                 GameManager.Instance.GPS.OnLocationResult -= HandleLocationResult;
             }
-
-            StopCoroutine(IEStartCountDown());
-            StopCoroutine(IEStartEnterRaceTimer());
+            StopAllCoroutines();
         }
         #endregion
 
@@ -108,13 +106,29 @@ namespace UI.Screen.Tab
             }
             else
             {
-                //   await FetchVenueCheckInAsync();
-                //  await FetchRaceAsync();
-                //Fetch Ongoing Race
-                //Fetch Race Results
-                RaceCheckInResponse raceCheckInResponse = await UGSManager.Instance.CloudCode.RaceCheckInRequest(UGSManager.Instance.PlayerData.hostVenueName);
-                Debug.Log(raceCheckInResponse.Message);
-                Debug.Log(raceCheckInResponse.IsSuccess);
+                bool isPreviousRaceResult = false;
+                bool isRaceInProgress = false;
+                int totalWins = 0;
+
+                //Fetch Venue CheckIn
+                await FetchVenueCheckInAsync();
+
+                //Get Total Race Wins
+                totalWins = await UGSManager.Instance.CloudSave.GetTotalRaceWinsAsync("TotalRaceWins");
+                racesWinCountText.text = totalWins.ToString();
+
+                //If no previous race results are there, then check if there is any race in progress.
+                isPreviousRaceResult = await VerifyRaceResults();
+                if (!isPreviousRaceResult)
+                {
+                    isRaceInProgress = await VerifyRaceLobby();
+                }
+
+                //If no race is in progress, then Get NextRace Data
+                if (!isRaceInProgress)
+                {
+                    await FetchEnterRaceAsync();
+                }
             }
             LoadingScreen.Instance.Hide();
         }
@@ -123,7 +137,7 @@ namespace UI.Screen.Tab
         #region Venue CheckIn Methods
         private async Task FetchVenueCheckInAsync()
         {
-            VenueCheckInResponse venueCheckInResponse = await UGSManager.Instance.CloudCode.VenueCheckIn(UGSManager.Instance.PlayerData.hostVenueName);
+            VenueCheckInResponse venueCheckInResponse = await UGSManager.Instance.CloudCode.GetVenueCheckInData(UGSManager.Instance.PlayerData.hostVenueName);
             if (venueCheckInResponse.CanCheckIn)
             {
                 venueCheckInMessageText.text = venueCheckInResponse.Message;
@@ -177,8 +191,7 @@ namespace UI.Screen.Tab
 
             if (!StringUtils.IsStringEmpty(venueCheckInResponse.NextCheckInTime))
             {
-                DateTime nextCheckInTime = DateTime.Parse(venueCheckInResponse.NextCheckInTime);
-                venueTimeLeft = nextCheckInTime - DateTime.UtcNow;
+                nextVenueCheckInTime = DateTime.Parse(venueCheckInResponse.NextCheckInTime);
                 StartCountDownTimer();
             }
         }
@@ -192,10 +205,13 @@ namespace UI.Screen.Tab
             previousRaceResultInfoObject.SetActive(false);
             venueCheckInMessageText.text = string.Empty;
             enterRaceMessageText.text = string.Empty;
+            enterRaceTitleText.text = "Enter Race";
             raceInterval = 0;
         }
         private void Fetch()
         {
+            StopAllCoroutines();
+            ResetFields();
             if (GPS.IsLocationPermissionGranted())
             {
                 LoadingScreen.Instance.Show();
@@ -209,16 +225,46 @@ namespace UI.Screen.Tab
         #endregion
 
         #region Enter Race Methods
-        private async Task FetchRaceAsync()
+        private async Task FetchEnterRaceAsync()
         {
             EnterRaceResponse enterRaceResponse = await UGSManager.Instance.CloudCode.EnterRaceRequest(UGSManager.Instance.PlayerData.hostVenueName);
 
-            if (enterRaceResponse.IsFoundUpcomingRace)
+            //If already race CheckIn is confirmed, open timer tab
+            if (enterRaceResponse.IsConfirmRaceCheckIn)
+            {
+                enterRaceMessageText.text = "Click to Enter";
+                enterRaceBlackPanel.SetActive(false);
+
+                //Save Data
+                upcomingRaceTime = DateTime.Parse(enterRaceResponse.UpcomingRaceTime);
+                raceInterval = enterRaceResponse.RaceInterval;
+                using (PlayerRaceData playerRaceData = new PlayerRaceData())
+                {
+                    playerRaceData.upcomingRaceTime = upcomingRaceTime;
+                    playerRaceData.raceInterval = raceInterval;
+                    UGSManager.Instance.SetPlayerRaceData(playerRaceData);
+                }
+
+                enterRaceButton.onClick.RemoveAllListeners();
+                enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceTimer));
+            }
+            else if (enterRaceResponse.IsFoundUpcomingRace)
             {
                 if (!StringUtils.IsStringEmpty(enterRaceResponse.UpcomingRaceTime))
                 {
+                    enterRaceButton.onClick.RemoveAllListeners();
+                    enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceCheckIn));
+
+                    //Save Data
                     upcomingRaceTime = DateTime.Parse(enterRaceResponse.UpcomingRaceTime);
                     raceInterval = enterRaceResponse.RaceInterval;
+                    using (PlayerRaceData playerRaceData = new PlayerRaceData())
+                    {
+                        playerRaceData.upcomingRaceTime = upcomingRaceTime;
+                        playerRaceData.raceInterval = raceInterval;
+                        UGSManager.Instance.SetPlayerRaceData(playerRaceData);
+                    }
+
                     CheckRaceCheckIn();
                 }
             }
@@ -228,11 +274,45 @@ namespace UI.Screen.Tab
             }
         }
 
+        private async Task<bool> VerifyRaceLobby()
+        {
+            RaceLobbyParticipant raceLobbyParticipant = await UGSManager.Instance.CloudCode.TryGetRaceLobbyPlayer(UGSManager.Instance.PlayerData.hostVenueName);
+
+            if (raceLobbyParticipant.HorseNumber > 0)
+            {
+                using(PlayerRaceData playerRaceData = new PlayerRaceData())
+                {
+                    playerRaceData.horseNumber = raceLobbyParticipant.HorseNumber;
+                    UGSManager.Instance.SetPlayerRaceData(playerRaceData);
+                }
+
+                enterRaceTitleText.text = "Continue Race";
+                enterRaceButton.onClick.RemoveAllListeners();
+                enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceInProgress));
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task<bool> VerifyRaceResults()
+        {
+            PlayerRaceResult previousRaceResult = await UGSManager.Instance.CloudCode.GetPreviousRaceResult(UGSManager.Instance.PlayerData.hostVenueName);
+
+            if (previousRaceResult.RacePosition != -1)
+            {
+                previousRaceResultInfoObject.gameObject.SetActive(true);
+                previousRaceResultText.text = previousRaceResult.RacePosition.ToString();
+                return true;
+            }
+            return false;
+        }
+
         private void CheckRaceCheckIn()
         {
             TimeSpan timeUntilNextRace = upcomingRaceTime - DateTime.UtcNow;
-            bool canCheckInRace = timeUntilNextRace.TotalSeconds <= raceInterval;
-            if (canCheckInRace)
+            bool canConfirmCheckIn = timeUntilNextRace.TotalSeconds <= raceInterval;
+            if (canConfirmCheckIn)
             {
                 enterRaceMessageText.text = "Click to Enter";
                 enterRaceBlackPanel.SetActive(false);
@@ -269,11 +349,6 @@ namespace UI.Screen.Tab
             enterRaceMessageText.text = "Click to Enter";
             enterRaceBlackPanel.SetActive(false);
             yield return null;
-        }
-
-        private void OnEnterRace()
-        {
-            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceCheckIn);
         }
         #endregion
     }

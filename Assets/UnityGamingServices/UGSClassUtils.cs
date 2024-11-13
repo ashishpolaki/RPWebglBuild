@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +7,8 @@ namespace UGS
     public class UGSClassUtils : MonoBehaviour
     {
     }
+
+    #region Lobby
     public class RaceLobbyParticipant : IDisposable
     {
         public string PlayerID { get; set; }
@@ -18,12 +19,16 @@ namespace UGS
         {
             PlayerID = string.Empty;
             PlayerName = string.Empty;
+            HorseNumber = -1;
         }
         public void Dispose()
         {
             GC.SuppressFinalize(this);
         }
     }
+    #endregion
+
+    #region Host Schedule/Registration 
     public class RaceScheduleRequest : IDisposable
     {
         public string ScheduleStart { get; set; }
@@ -42,7 +47,7 @@ namespace UGS
             GC.SuppressFinalize(this);
         }
     }
-    public class RaceScheduleResponse
+    public class RaceScheduleResponse : IDisposable
     {
         public bool IsScheduled { get; set; }
         public string Message { get; set; }
@@ -52,69 +57,9 @@ namespace UGS
             IsScheduled = false;
             Message = string.Empty;
         }
-    }
-
-    public class CurrentRacePlayerCheckIn
-    {
-        public string PlayerID { get; set; }
-        public string PlayerName { get; set; }
-        public int CurrentDayCheckIns { get; set; }
-
-        public CurrentRacePlayerCheckIn()
-        {
-            PlayerID = string.Empty;
-            PlayerName = string.Empty;
-        }
-    }
-    public class RaceResult
-    {
-        public List<PlayerRaceResult> playerRaceResults { get; set; }
-        public RaceResult()
-        {
-            playerRaceResults = new List<PlayerRaceResult>();
-        }
-    }
-    public class PlayerRaceResult
-    {
-        public string PlayerID { get; set; }
-        public int HorseNumber { get; set; }
-        public int RacePosition { get; set; }
-    }
-    public class JoinRaceResponse : IDisposable
-    {
-        public bool CanWaitInLobby { get; set; }
-        public string RaceTime { get; set; }
-        public string Message { get; set; }
-
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-        }
-    }
-    public class StartRaceRequest
-    {
-        public List<RaceLobbyParticipant> RaceLobbyParticipants { get; set; }
-        public List<string> UnQualifiedPlayerIDs { get; set; }
-
-        public StartRaceRequest()
-        {
-            RaceLobbyParticipants = new List<RaceLobbyParticipant>();
-            UnQualifiedPlayerIDs = new List<string>();
-        }
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
-    public class StartRaceResponse
-    {
-        public string Message { get; set; }
-        public bool IsRaceStart { get; set; }
-
-        public StartRaceResponse()
-        {
-            Message = string.Empty;
-            IsRaceStart = false;
         }
     }
 
@@ -163,13 +108,123 @@ namespace UGS
         {
             GC.SuppressFinalize(this);
         }
-  
+
         public VenueRegistrationResponse()
         {
             IsRegistered = false;
             Message = string.Empty;
         }
     }
+
+    #endregion
+
+    #region Race Checkins
+    public class CurrentRacePlayerCheckIn
+    {
+        public string PlayerID { get; set; }
+        public string PlayerName { get; set; }
+        public int CurrentDayCheckIns { get; set; }
+
+        public CurrentRacePlayerCheckIn()
+        {
+            PlayerID = string.Empty;
+            PlayerName = string.Empty;
+            CurrentDayCheckIns = 0;
+        }
+    }
+
+    public class RaceCheckInResponse : IDisposable
+    {
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+
+        public RaceCheckInResponse()
+        {
+            Message = string.Empty;
+            IsSuccess = false;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+    #endregion
+
+    #region Race Result
+    public class RaceResult
+    {
+        public List<PlayerRaceResult> playerRaceResults { get; set; }
+        public RaceResult()
+        {
+            playerRaceResults = new List<PlayerRaceResult>();
+        }
+    }
+    public class PlayerRaceResult
+    {
+        public string PlayerID { get; set; }
+        public int HorseNumber { get; set; }
+        public int RacePosition { get; set; }
+
+        public PlayerRaceResult()
+        {
+            PlayerID = string.Empty;
+            HorseNumber = -1;
+            RacePosition = -1;
+        }
+    }
+    #endregion
+
+    #region Start Race
+    public class StartRaceRequest
+    {
+        public List<RaceLobbyParticipant> RaceLobbyParticipants { get; set; }
+        public List<CurrentRacePlayerCheckIn> UnQualifiedPlayerIDs { get; set; }
+
+        public StartRaceRequest()
+        {
+            RaceLobbyParticipants = new List<RaceLobbyParticipant>();
+            UnQualifiedPlayerIDs = new List<CurrentRacePlayerCheckIn>();
+        }
+    }
+    public class StartRaceResponse
+    {
+        public string Message { get; set; }
+        public bool IsRaceStart { get; set; }
+
+        public StartRaceResponse()
+        {
+            Message = string.Empty;
+            IsRaceStart = false;
+        }
+    }
+    #endregion
+
+    #region Enter race
+    public class EnterRaceResponse : IDisposable
+    {
+        public string Message { get; set; }
+        public string UpcomingRaceTime { get; set; }
+        public bool IsFoundUpcomingRace { get; set; }
+        public bool IsConfirmRaceCheckIn { get; set; }
+        public int RaceInterval { get; set; }
+
+        public EnterRaceResponse()
+        {
+            UpcomingRaceTime = string.Empty;
+            Message = string.Empty;
+            IsFoundUpcomingRace = false;
+            IsConfirmRaceCheckIn = false;
+            RaceInterval = 0;
+        }
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+    #endregion
+
+    #region Venue CheckIn
+
     public class VenueCheckInResponse : IDisposable
     {
         public int CheckInCount { get; set; }
@@ -190,40 +245,9 @@ namespace UGS
             GC.SuppressFinalize(this);
         }
     }
-    public class EnterRaceResponse : IDisposable
-    {
-        public string Message { get; set; }
-        public string UpcomingRaceTime { get; set; }
-        public bool IsFoundUpcomingRace { get; set; }
-        public int RaceInterval { get; set; }
+    #endregion
 
-        public EnterRaceResponse()
-        {
-            UpcomingRaceTime = string.Empty;
-            Message = string.Empty;
-            IsFoundUpcomingRace = false;
-            RaceInterval = 0;
-        }
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
 
-    public class RaceCheckInResponse : IDisposable
-    {
-        public string Message { get; set; }
-        public bool IsSuccess { get; set; }
 
-        public RaceCheckInResponse()
-        {
-            Message = string.Empty;
-            IsSuccess = false;
-        }
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
 
 }

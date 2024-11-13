@@ -1353,7 +1353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7575608124391274107
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1409,12 +1409,6 @@ MonoBehaviour:
   - {fileID: 3325945207923080646}
   - {fileID: 8737716608968676770}
   - {fileID: 5259105116326268799}
-  checkedInBtn: {fileID: 0}
-  joinRaceBtn: {fileID: 0}
-  backButton: {fileID: 0}
-  raceStatusButton: {fileID: 0}
-  raceStatusText: {fileID: 0}
-  messageText: {fileID: 0}
 --- !u!1 &1902742227470013402
 GameObject:
   m_ObjectHideFlags: 0
@@ -7849,15 +7843,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2085356716627502617, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 2421758663777163632}
     - target: {fileID: 3954738592471435975, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
       propertyPath: m_Name
       value: VenueCheckInTab
       objectReference: {fileID: 0}
+    - target: {fileID: 7063272546734390045, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
+      propertyPath: enterRaceTitleText
+      value: 
+      objectReference: {fileID: 4509906049773631868}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
+--- !u!114 &2421758663777163632 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7832182624408737587, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
+  m_PrefabInstance: {fileID: 5560344882028416579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3400104196407047518 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7063272546734390045, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
@@ -7867,6 +7880,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: abc26dbdee1a6d041adfd0256fd78201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4509906049773631868 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8339601760432912191, guid: 1b8ec237a0e05f14d849d1b88461ff4d, type: 3}
+  m_PrefabInstance: {fileID: 5560344882028416579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &5471631902410989803 stripped
