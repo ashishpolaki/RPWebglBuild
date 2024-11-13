@@ -1643,7 +1643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2424822787358014075
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1697,12 +1697,12 @@ MonoBehaviour:
     inputFieldImageGroup: []
     characterImage: {fileID: 0}
     cloudCommentImage: {fileID: 0}
-  raceTimingsInput: {fileID: 539345856190235019}
-  raceIntervalInput: {fileID: 8791573184519377213}
+  raceTimingsInput: {fileID: 8791573184519377213}
+  raceIntervalInput: {fileID: 539345856190235019}
   setScheduleBtn: {fileID: 1830491374618420532}
   errorMessageTxt: {fileID: 8534874494294915850}
   startSchedule: {fileID: 1407721005442215363}
-  endSchedule: {fileID: 0}
+  endSchedule: {fileID: 5779292671106418003}
 --- !u!1 &6334592909040862865
 GameObject:
   m_ObjectHideFlags: 0
@@ -3169,6 +3169,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6908075856222029293, guid: c0655de0c846318499f8f93f1c7aee73, type: 3}
   m_PrefabInstance: {fileID: 1359547172462293253}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5779292671106418003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4821728899808457814, guid: c0655de0c846318499f8f93f1c7aee73, type: 3}
+  m_PrefabInstance: {fileID: 1359547172462293253}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aee439022cddd64d80c47dfa088d668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5864533512944376213
 PrefabInstance:
   m_ObjectHideFlags: 0

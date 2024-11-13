@@ -2324,12 +2324,13 @@ MonoBehaviour:
   previousRaceResultCloud: {fileID: 2929216638384162566}
   enterRaceBlackPanel: {fileID: 722339632904160827}
   previousRaceResultInfoObject: {fileID: 2632489375001861585}
+  enterRaceTitleText: {fileID: 0}
   enterRaceMessageText: {fileID: 5115075927404667735}
   racesWinCountText: {fileID: 41763006483859150}
   previousRaceResultText: {fileID: 2712135220551483899}
+  raceCheckInTimeDecrement: -1
   logOutButton: {fileID: 5078074368794574892}
   fetchButton: {fileID: 8692797507345721875}
-  raceCheckInTimeDecrement: -1
 --- !u!1 &4806123372627192538
 GameObject:
   m_ObjectHideFlags: 0
