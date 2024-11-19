@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33753c085d03b84c8593169f61518cd, type: 3}
+  m_Name: EyeBrows
+  m_EditorClassIdentifier: 
+  partType: 1
+  partName: EyeBrows
+  colorPreset: {fileID: 11400000, guid: fb301bfe63288fa45a8dc7665d1a1d57, type: 2}
+  parts: 
+  blendPartData:
+    partData: []
