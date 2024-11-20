@@ -17,7 +17,6 @@ public struct Particle
 }
 #endregion
 
-
 #region Camera
 [System.Serializable]
 public struct SpecialCameraAngle
@@ -177,3 +176,24 @@ public struct ThemeUI
 }
 #endregion
 
+#region Character
+[System.Serializable]
+public struct CharacterData
+{
+    public SyntyCharacterPartType CharacterPartType;
+    public SkinnedMeshRenderer meshRenderer;
+}
+[System.Serializable]
+public struct BlendShapePart
+{
+    public BlendShapePartData[] partData;
+}
+
+[System.Serializable]
+public struct BlendShapePartData
+{
+    public string name;
+    public string[] blendShapeNames;
+    public SyntyCharacterPartType[] syntyCharacterPartTypes;
+}
+#endregion

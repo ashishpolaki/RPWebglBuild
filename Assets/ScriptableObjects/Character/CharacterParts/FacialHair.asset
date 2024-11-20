@@ -9,8 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1581fce36caa578489a3f2c750e6e71f, type: 3}
-  m_Name: InGameCharacterData
+  m_Script: {fileID: 11500000, guid: e33753c085d03b84c8593169f61518cd, type: 3}
+  m_Name: FacialHair
   m_EditorClassIdentifier: 
-  hair: {fileID: 0}
-  hat: {fileID: 0}
+  partType: 3
+  partName: Beard
+  colorPreset: {fileID: 11400000, guid: 423cb8f38ba9062458c49931774c7d47, type: 2}
+  parts: ffffffff000000000100000002000000
+  blendPartData:
+    partData: []

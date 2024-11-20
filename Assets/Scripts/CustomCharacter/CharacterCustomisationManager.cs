@@ -1,5 +1,4 @@
-using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using UI;
 using UnityEngine;
 
@@ -10,19 +9,31 @@ namespace CharacterCustomisation
         public static CharacterCustomisationManager Instance { get; private set; }
 
         #region Inspector Variables
-
-        [SerializeField] private CharacterPartsCollectionSO[] characterPartCollections;
-        [SerializeField] private CharacterGenderType currentCharacterGender;
+        [SerializeField] private CharacterPartsCollectionSO characterPartCollection;
         [SerializeField] private Character myCharacter;
-        [SerializeField] private CharacterPartUIType currentCharacterPartUIType;
-        [SerializeField] private int[] characterPartsIndexes;
-        [SerializeField] private string[] characterPartColorIndexes;
+        #endregion
+
+        #region Private Variables
+        [SerializeField] private FullBodyEconomy currentCharacterData = new FullBodyEconomy();
+        private int upperPartOutfitIndex;
+        private int lowerPartOutfitIndex;
+        private List<int> createdBlendShapeList = new List<int>();
+        private Dictionary<string, int> createdBlendShapeSubDictionary = new Dictionary<string, int>();
+        #endregion
+
+        #region Texture UV's Colors
+        private static readonly Vector2Int HairUV = new Vector2Int(6, 4);
+        private static readonly Vector2Int FacialHairUV = new Vector2Int(7, 4);
         #endregion
 
         #region Property
-        public CharacterGenderType CurrentCharacterGender { get => currentCharacterGender; }
+        public CharacterPartSO CurrentPartSO { get; private set; }
+        public int CharacterPartsLength { get => characterPartCollection.characterParts.Length; }
+        public int CurrentPartVariancesCount { get => CurrentPartSO.parts.Length; }
+        public int CurrentPartColorCount { get => CurrentPartSO.colorPreset.colors.Length; }
         #endregion
 
+        #region Unity Methods
         private void Awake()
         {
             if (Instance == null)
@@ -34,77 +45,53 @@ namespace CharacterCustomisation
                 Destroy(gameObject);
             }
         }
-        private void Start()
+        #endregion
+
+        #region Color 
+        public void ChangeSkinToneColor(Color color)
         {
-            characterPartsIndexes = new int[Enum.GetValues(typeof(CharacterPartType)).Length];
-            characterPartColorIndexes = new string[Enum.GetValues(typeof(CharacterPartUIType)).Length];
-            InitializeData();
+            currentCharacterData.skinToneColor = ToHex(color);
+            myCharacter.ChangeSkinToneColor(color);
         }
 
-        private async void InitializeData()
+        public void ChangePartColor(int value)
         {
-            SaveCharacterData saveCharacterData = await UGSManager.Instance.CloudSave.GetCharacterDataAsync("CharacterData");
-            if (saveCharacterData != null)
+            Color color = CurrentPartSO.colorPreset.colors[value];
+            Vector2Int textureUV = new Vector2Int(0, 0);
+
+            switch (CurrentPartSO.partType)
             {
-                //Set Gender
-                currentCharacterGender = (CharacterGenderType)saveCharacterData.characterGenderIndex;
-                ChangeGender(currentCharacterGender);
-
-                //Set Body Parts
-                for (int i = 0; i < characterPartsIndexes.Length; i++)
-                {
-                    characterPartsIndexes[i] = saveCharacterData.characterPartIndexes[i];
-                    ChangeBodyPart((CharacterPartType)i);
-                }
-
-                //Set Body Part Color
-                for (int i = 0; i < characterPartColorIndexes.Length; i++)
-                {
-                    characterPartColorIndexes[i] = saveCharacterData.characterPartColorIndexes[i];
-                    if (!StringUtils.IsStringEmpty(characterPartColorIndexes[i]))
-                    {
-                        ChangeBodyPartColor(FromHex(characterPartColorIndexes[i]));
-                    }
-                }
+                case BlendPartType.Nose:
+                    break;
+                case BlendPartType.Eyebrows:
+                    break;
+                case BlendPartType.Hair:
+                    textureUV = HairUV;
+                    break;
+                case BlendPartType.FacialHair:
+                    textureUV = FacialHairUV;
+                    break;
+                default:
+                    break;
             }
-            else
+
+            //Add partType in list if not exist
+            if (!createdBlendShapeList.Contains((int)CurrentPartSO.partType))
             {
-                ChangeGender(currentCharacterGender);
-
-                //Set Body Parts
-                for (int i = 0; i < characterPartsIndexes.Length; i++)
-                {
-                    ChangeBodyPart((CharacterPartType)i, characterPartsIndexes[i]);
-                }
-
-                //Set Body Part Color
-                for (int i = 0; i < characterPartColorIndexes.Length; i++)
-                {
-                    if (!StringUtils.IsStringEmpty(characterPartColorIndexes[i]))
-                    {
-                        ChangeBodyPartColor(FromHex(characterPartColorIndexes[i]));
-                    }
-                }
+                createdBlendShapeList.Add((int)CurrentPartSO.partType);
+                CustomPartEconomy customPartEconomy = new CustomPartEconomy();
+                customPartEconomy.type = (int)CurrentPartSO.partType;
+                currentCharacterData.customParts.Add(customPartEconomy);
             }
+            int currentpartIndex = createdBlendShapeList.IndexOf((int)CurrentPartSO.partType);
+            currentCharacterData.customParts[currentpartIndex].color = ToHex(color);
+            myCharacter.ChangePartColor(color, textureUV);
         }
-
-        public void ChangeGenderAndBodyParts(CharacterGenderType characterGenderType)
-        {
-            ChangeGender(characterGenderType);
-
-            //Set Body Parts
-            for (int i = 0; i < characterPartsIndexes.Length; i++)
-            {
-                ChangeBodyPart((CharacterPartType)i);
-            }
-        }
-
         public string ToHex(Color color)
         {
             Color32 color32 = color;
             return $"{color32.r:X2}{color32.g:X2}{color32.b:X2}{color32.a:X2}";
         }
-
         public Color FromHex(string hex)
         {
             if (hex.Length != 8)
@@ -119,93 +106,193 @@ namespace CharacterCustomisation
 
             return new Color32(r, g, b, a);
         }
-        public void ChangeBodyPartColor(Color color)
-        {
-            characterPartColorIndexes[(int)currentCharacterPartUIType] = ToHex(color);
-            myCharacter.SetPartColor(currentCharacterPartUIType, color);
-        }
+        #endregion
 
-        public async void SaveCharacterData()
+        #region BlendShape
+        public void OnBodySizeValueChange(float value)
         {
-            SaveCharacterData saveCharacterData = new SaveCharacterData();
-            saveCharacterData.SetCharacterPartsList((int)currentCharacterGender, characterPartsIndexes, characterPartColorIndexes);
-            Func<Task> method = async () => await UGSManager.Instance.CloudSave.SetCharacterDataAsync("CharacterData", saveCharacterData);
-            await LoadingScreen.Instance.PerformAsyncWithLoading(method);
-            UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
-            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
-        }
-
-        private void ChangeGender(CharacterGenderType _characterGenderType)
-        {
-            currentCharacterGender = _characterGenderType;
-        }
-
-        public void SetCurrentSelectedPart(CharacterPartUIType characterPartType)
-        {
-            currentCharacterPartUIType = characterPartType;
-        }
-
-        public void ChangeBodyPart(CharacterPartUIType characterPartUIType, int changeDirection)
-        {
-            switch (characterPartUIType)
+            currentCharacterData.bodyType = value;
+            float heavyBlendValue = 0;
+            float skinnyBlendValue = 0;
+            if (value < 50)
             {
-                case CharacterPartUIType.FACE:
-                    ChangeBodyPart(CharacterPartType.Head, changeDirection);
+                heavyBlendValue = 0;
+                skinnyBlendValue = (50 - value) * 2;
+            }
+            else if (value > 50)
+            {
+                skinnyBlendValue = 0;
+                heavyBlendValue = (value - 50) * 2;
+            }
+            UpdateBlendShape(heavyBlendValue, StringUtils.BLEND_SHAPE_HEAVY);
+            UpdateBlendShape(skinnyBlendValue, StringUtils.BLEND_SHAPE_SKINNY);
+        }
+
+        public void OnBodyTypeValueChange(float value)
+        {
+            currentCharacterData.bodyGenderType = value;
+            UpdateBlendShape(value, StringUtils.BLEND_GENDER);
+        }
+
+        public void OnMusculatureValueChange(float value)
+        {
+            currentCharacterData.bodyMuscleType = value;
+            UpdateBlendShape(value, StringUtils.BLEND_MUSCLE);
+        }
+
+        public void UpdateBlendShape(float value, string _blendPartName)
+        {
+            myCharacter.SetBlendShape(value, _blendPartName);
+        }
+
+        public void SetBlendShapes(BlendShapePartData blendShapePartData, float value)
+        {
+            //Add partType in list if not exist
+            if (!createdBlendShapeList.Contains((int)CurrentPartSO.partType))
+            {
+                createdBlendShapeList.Add((int)CurrentPartSO.partType);
+                CustomPartEconomy customPartEconomy = new CustomPartEconomy();
+                customPartEconomy.type = (int)CurrentPartSO.partType;
+                currentCharacterData.customParts.Add(customPartEconomy);
+            }
+
+            //Store name in dictionary if not exist
+            int currentpartIndex = createdBlendShapeList.IndexOf((int)CurrentPartSO.partType);
+            if (!createdBlendShapeSubDictionary.ContainsKey(blendShapePartData.name))
+            {
+                createdBlendShapeSubDictionary[blendShapePartData.name] = currentCharacterData.customParts[currentpartIndex].blendShapes.Count;
+                currentCharacterData.customParts[currentpartIndex].blendShapes.Add(new BlendShapeEconomy { name = blendShapePartData.name, value = 0 });
+                return;
+            }
+
+            //Update Value for saving it in cloud
+            int index = createdBlendShapeSubDictionary[blendShapePartData.name];
+            currentCharacterData.customParts[currentpartIndex].blendShapes[index].value = value;
+
+            //Update Mesh 
+            foreach (var blendShapeName in blendShapePartData.blendShapeNames)
+            {
+                foreach (var syntyCharacterPartType in blendShapePartData.syntyCharacterPartTypes)
+                {
+                    myCharacter.SetBlendShape(syntyCharacterPartType, value, blendShapeName);
+                }
+            }
+        }
+        #endregion
+
+        #region Transform
+        public void SetPosition(Vector3 position)
+        {
+            myCharacter.transform.position = position;
+        }
+        public void SetScale(Vector3 scale)
+        {
+            myCharacter.transform.localScale = scale;
+        }
+        #endregion
+
+        #region Change Part
+        public void ChangePart(int index)
+        {
+            int meshIndex = CurrentPartSO.parts[index];
+            string path = string.Empty;
+            SyntyCharacterPartType syntyCharacterPartType = SyntyCharacterPartType.None;
+            switch (CurrentPartSO.partType)
+            {
+                case BlendPartType.Nose:
                     break;
-                case CharacterPartUIType.HAIR:
-                    ChangeBodyPart(CharacterPartType.Hair, changeDirection);
+                case BlendPartType.Eyebrows:
                     break;
-                case CharacterPartUIType.EYEBROWS:
-                    ChangeBodyPart(CharacterPartType.Eyebrows, changeDirection);
+                case BlendPartType.Hair:
+                    path = $"CharacterParts/Hair/Hair_{meshIndex}";
+                    syntyCharacterPartType = SyntyCharacterPartType.Hair;
                     break;
-                case CharacterPartUIType.BEARD:
-                    ChangeBodyPart(CharacterPartType.FacialHair, changeDirection);
-                    break;
-                case CharacterPartUIType.HAT:
-                    ChangeBodyPart(CharacterPartType.Hat, changeDirection);
-                    break;
-                case CharacterPartUIType.MASK:
-                    ChangeBodyPart(CharacterPartType.Mask, changeDirection);
-                    break;
-                case CharacterPartUIType.TORSO:
-                    ChangeBodyPart(CharacterPartType.Torso, changeDirection);
-                    break;
-                case CharacterPartUIType.ARMS:
-                    ChangeBodyPart(CharacterPartType.RightUpperArm, changeDirection);
-                    ChangeBodyPart(CharacterPartType.LeftUpperArm, changeDirection);
-                    break;
-                case CharacterPartUIType.HANDS:
-                    ChangeBodyPart(CharacterPartType.RightHand, changeDirection);
-                    ChangeBodyPart(CharacterPartType.LeftHand, changeDirection);
-                    break;
-                case CharacterPartUIType.LEGS:
-                    ChangeBodyPart(CharacterPartType.Hips, changeDirection);
-                    ChangeBodyPart(CharacterPartType.RightLeg, changeDirection);
-                    ChangeBodyPart(CharacterPartType.LeftLeg, changeDirection);
+                case BlendPartType.FacialHair:
+                    path = $"CharacterParts/FacialHair/FacialHair_{meshIndex}";
+                    syntyCharacterPartType = SyntyCharacterPartType.FacialHair;
                     break;
                 default:
                     break;
             }
-        }
-
-        private void ChangeBodyPart(CharacterPartType partType, int changeDirection = 0)
-        {
-            int partVariancesCount = characterPartCollections[(int)currentCharacterGender].GetCharacterPartVariancesLength(partType);
-            int currentPartIndex = characterPartsIndexes[(int)partType];
-
-            //If there are no variances for the part, turn off the mesh
-            if (partVariancesCount <= 0)
+            //Add partType in list if not exist
+            if (!createdBlendShapeList.Contains((int)CurrentPartSO.partType))
             {
-                myCharacter.TurnOffCharacterPart(partType);
+                createdBlendShapeList.Add((int)CurrentPartSO.partType);
+                CustomPartEconomy customPartEconomy = new CustomPartEconomy();
+                customPartEconomy.type = (int)CurrentPartSO.partType;
+                currentCharacterData.customParts.Add(customPartEconomy);
+            }
+            int currentpartIndex = createdBlendShapeList.IndexOf((int)CurrentPartSO.partType);
+            currentCharacterData.customParts[currentpartIndex].styleNumber = meshIndex;
+            if (meshIndex == -1)
+            {
+                myCharacter.TurnOffPart(syntyCharacterPartType);
+            }
+            else
+            {
+                myCharacter.ChangePart(syntyCharacterPartType, path);
+            }
+        }
+        #endregion
+
+        #region Change Outfits
+        public void ChangeUpperOutfit(int index)
+        {
+            if (upperPartOutfitIndex + index < 0 || upperPartOutfitIndex + index > 2)
+            {
                 return;
             }
+            upperPartOutfitIndex += index;
 
-            //Calculate the next part index
-            int nextPartIndex = (currentPartIndex + changeDirection + partVariancesCount) % partVariancesCount;
+            currentCharacterData.upperOutfit.torso += index;
+            currentCharacterData.upperOutfit.rightUpperArm += index;
+            currentCharacterData.upperOutfit.leftUpperArm += index;
+            currentCharacterData.upperOutfit.rightHand += index;
+            currentCharacterData.upperOutfit.leftHand += index;
+            currentCharacterData.upperOutfit.rightLowerArm += index;
+            currentCharacterData.upperOutfit.leftLowerArm += index;
+            myCharacter.ChangeUpperPart(currentCharacterData.upperOutfit);
+        }
+        public void ChangeLowerOutfit(int index)
+        {
+            if (lowerPartOutfitIndex + index < 0 || lowerPartOutfitIndex + index > 2)
+            {
+                return;
+            }
+            lowerPartOutfitIndex += index;
 
-            //Set the part index and change mesh
-            characterPartsIndexes[(int)partType] = nextPartIndex;
-            myCharacter.ChangeCharacterPart(partType, characterPartCollections[(int)currentCharacterGender].GetMesh(partType, nextPartIndex));
+            currentCharacterData.lowerOutfit.hips += index;
+            currentCharacterData.lowerOutfit.rightLeg += index;
+            currentCharacterData.lowerOutfit.leftLeg += index;
+            currentCharacterData.lowerOutfit.rightFoot += index;
+            currentCharacterData.lowerOutfit.leftFoot += index;
+            myCharacter.ChangeLowerPart(currentCharacterData.lowerOutfit);
+        }
+        #endregion
+
+        public CharacterPartSO GetCharacterPart(int blendPartTypeIndex)
+        {
+            CurrentPartSO = characterPartCollection.GetCharacterPart((BlendPartType)blendPartTypeIndex);
+            return CurrentPartSO;
+        }
+
+        public void EnableFace()
+        {
+            myCharacter.EnableFace();
+        }
+
+        public void EnableFullBody()
+        {
+            myCharacter.EnableFullBody();
+        }
+
+        public async void SaveCharacterData()
+        {
+            //saveCharacterData.SetCharacterPartsList((int)currentCharacterGender, characterPartsIndexes, characterPartColorIndexes);
+            //Func<Task> method = async () => await UGSManager.Instance.CloudSave.SetCharacterDataAsync("CharacterData", saveCharacterData);
+            //await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
         }
     }
 }

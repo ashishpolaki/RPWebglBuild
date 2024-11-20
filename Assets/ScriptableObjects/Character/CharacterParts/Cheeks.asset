@@ -10,25 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e33753c085d03b84c8593169f61518cd, type: 3}
-  m_Name: EyeBrows
+  m_Name: Cheeks
   m_EditorClassIdentifier: 
-  partType: 1
-  partName: EyeBrow
+  partType: 5
+  partName: Cheeks
   colorPreset: {fileID: 0}
   parts: 
   blendPartData:
     partData:
-    - name: Raise
+    - name: Hollow
       blendShapeNames:
-      - browInnerUpLeft
-      - browOuterUpLeft
-      - browInnerUpRight
-      - browOuterUpRight
-      syntyCharacterPartTypes: 01000000030000000400000017000000
-    - name: Down
+      - cheekHollowLeft
+      - cheekHollowRight
+      syntyCharacterPartTypes: 0100000009000000
+    - name: Puff
       blendShapeNames:
-      - browInnerDownLeft
-      - browOuterDownLeft
-      - browInnerDownRight
-      - browOuterDownRight
-      syntyCharacterPartTypes: 01000000030000000400000017000000
+      - cheekPuffLeft
+      - cheekPuffRight
+      syntyCharacterPartTypes: 0100000009000000
+    - name: Squint
+      blendShapeNames:
+      - cheekSquintLeft
+      - cheekSquintRight
+      syntyCharacterPartTypes: 0100000009000000

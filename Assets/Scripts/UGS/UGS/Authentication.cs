@@ -28,7 +28,7 @@ namespace UGS
         }
 
         #region Initialize
-        public async void InitializeUnityServices()
+        public async Task InitializeUnityServices()
         {
             try
             {

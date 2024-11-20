@@ -3,7 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharacterPart",menuName = "ScriptableObjects/Character/CharacterPart")]
 public class CharacterPartSO : ScriptableObject
 {
-    public CharacterGenderType characterGender;
-    public CharacterPartType partType;
-    public Mesh mesh;
+    public BlendPartType partType;
+    public string partName;
+    public ColorPresetSO colorPreset;
+    public int[] parts;
+    public BlendShapePart blendPartData;
 }

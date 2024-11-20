@@ -15,10 +15,8 @@ public class StringUtils
     #endregion
 
     #region Venue
-
     public const string VENUE_NAME_EMPTY_ERROR = "Please enter the venue name";
     public const string VENUE_NAME_LENGTH_ERROR = "Venue name should not be more than 15 characters";
-
     #endregion
 
     #region RACE SCHEDULE
@@ -58,6 +56,14 @@ public class StringUtils
     public const string PLAYERFIRSTNAMEERROR  = "Please enter the first name";
     public const string PLAYERLASTNAMEERROR = "Please enter the last name";
     public const string PASSWORDMATCHERROR = "Passwords do not match";
+    #endregion
+
+    #region Character
+    public const string BLEND_GENDER = "masculineFeminine";
+    public const string BLEND_MUSCLE = "defaultBuff";
+    public const string BLEND_SHAPE_HEAVY = "defaultHeavy";
+    public const string BLEND_SHAPE_SKINNY = "defaultSkinny";
+
     #endregion
 
     public static bool IsStringEmpty(string value)

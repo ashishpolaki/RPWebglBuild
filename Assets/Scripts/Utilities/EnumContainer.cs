@@ -72,25 +72,53 @@ public enum ScreenType
 
 #region Character
 
-public enum CharacterPartType
+public enum CharacterBlendShapeType
 {
     None,
-    Head,
+    BodyType,
+    BodySize,
+    Musculature
+}
+//Cloud Data dont change
+public enum BlendPartType
+{
+    Nose,
     Eyebrows,
-    FacialHair,
     Hair,
-    Hat,
+    FacialHair,
+    Eyes,
+    Cheek,
+    Mouth
+}
+
+public enum SyntyCharacterPartType
+{
+    None,
+    Head = 1,
+    Hair,
+    EyebrowLeft,
+    EyebrowRight,
+    EyeLeft,
+    EyeRight,
+    EarLeft,
+    EarRight,
+    FacialHair,
+    Torso,
+    ArmUpperLeft,
+    ArmUpperRight,
+    ArmLowerLeft,
+    ArmLowerRight,
+    HandLeft,
+    HandRight,
     Hips,
-    LeftHand,
-    LeftLeg,
-    LeftLowerArm,
-    LeftUpperArm,
-    Mask,
-    RightHand,
-    RightLeg,
-    RightLowerArm,
-    RightUpperArm,
-    Torso
+    LegLeft,
+    LegRight,
+    FootLeft,
+    FootRight,
+    AttachmentHead,
+    Nose,
+    Teeth,
+    Tongue,
 }
 public enum CharacterGenderType
 {

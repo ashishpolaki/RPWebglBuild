@@ -18,16 +18,16 @@ MonoBehaviour:
   parts: 
   blendPartData:
     partData:
-    - blendShapeNames:
+    - name: NoseSneer
+      blendShapeNames:
       - noseSneerLeft
       - noseSneerRight
-      syntyCharacterPartTypes: 1700000001000000
-      name: NoseSneer
+      syntyCharacterPartTypes: 170000000100000009000000
       minBlendValue: 1
       maxBlendVaule: 100
-    - blendShapeNames:
+    - name: Shrink
+      blendShapeNames:
       - masculineFeminine
       syntyCharacterPartTypes: 17000000
-      name: Shrink
       minBlendValue: 1
       maxBlendVaule: 100

@@ -59,22 +59,21 @@ namespace UI.Screen.Tab
             }
             else
             {
-                bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
-                bool isCharacterNotCustomized = UGSManager.Instance.CloudSave.GetCharacterDataAsync("CharacterData") == null;
+                //bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
+                //bool isCharacterNotCustomized = UGSManager.Instance.CloudSave.GetCharacterDataAsync("CharacterData") == null;
 
-                if (isPlayerNameEmpty || isCharacterNotCustomized)
-                {
-                    ScreenTabType nextScreenTabType = isPlayerNameEmpty ? ScreenTabType.PlayerName : ScreenTabType.CharacterCustomize;
-                    UIController.Instance.ChangeCurrentScreenTab(nextScreenTabType);
-                }
-                else
-                {
-                    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
-                    UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
-                }
+                //if (isPlayerNameEmpty || isCharacterNotCustomized)
+                //{
+                //    ScreenTabType nextScreenTabType = isPlayerNameEmpty ? ScreenTabType.PlayerName : ScreenTabType.CharacterCustomize;
+                //    UIController.Instance.ChangeCurrentScreenTab(nextScreenTabType);
+                //}
+                //else
+                //{
+                //    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+                //    UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+                //}
             }
         }
-
         private void OnSignFailed(string message)
         {
             LoadingScreen.Instance.Hide();

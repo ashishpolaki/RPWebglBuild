@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e33753c085d03b84c8593169f61518cd, type: 3}
-  m_Name: EyeBrows
+  m_Name: Eyes
   m_EditorClassIdentifier: 
-  partType: 1
-  partName: EyeBrow
+  partType: 4
+  partName: Eyes
   colorPreset: {fileID: 0}
   parts: 
   blendPartData:
     partData:
-    - name: Raise
+    - name: IrisSmall
       blendShapeNames:
-      - browInnerUpLeft
-      - browOuterUpLeft
-      - browInnerUpRight
-      - browOuterUpRight
-      syntyCharacterPartTypes: 01000000030000000400000017000000
-    - name: Down
+      - irisSmallLeft
+      - irisSmallRight
+      syntyCharacterPartTypes: 0500000006000000
+    - name: EyeWide
       blendShapeNames:
-      - browInnerDownLeft
-      - browOuterDownLeft
-      - browInnerDownRight
-      - browOuterDownRight
-      syntyCharacterPartTypes: 01000000030000000400000017000000
+      - eyeWideLowerLeft
+      - eyeWideLowerRight
+      - eyeWideUpperLeft
+      - eyeWideUpperRight
+      syntyCharacterPartTypes: 01000000

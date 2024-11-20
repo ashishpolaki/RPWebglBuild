@@ -17,6 +17,7 @@ public class UGSManager : MonoBehaviour
     public Authentication Authentication { get; private set; }
     public CloudCode CloudCode { get; private set; }
     public CloudSave CloudSave { get; private set; }
+    public Economy Economy { get; private set; }
 
     public GPS GPS;
     #endregion
@@ -55,17 +56,20 @@ public class UGSManager : MonoBehaviour
     /// <summary>
     /// Initialize Unity Gaming Services
     /// </summary>
-    private void InitializeUGS()
+    private async void InitializeUGS()
     {
         Authentication = new Authentication();
         CloudCode = new CloudCode();
         CloudSave = new CloudSave();
-        Authentication.InitializeUnityServices();
+        Economy = new Economy();
+
+        await Authentication.InitializeUnityServices();
+        CloudCode.InitializeBindings();
     }
     private void LoginSuccessful()
     {
-        CloudCode.InitializeBindings();
         CloudCode.SubscribeToPlayerMessages();
+        Economy.InitializeEconomy();
 
         //Set PlayerData
         using (PlayerData playerData = new PlayerData())
@@ -93,7 +97,7 @@ public class UGSManager : MonoBehaviour
     public void SetPlayerRaceData(PlayerRaceData playerRaceData, bool _allowDefaultValues = false)
     {
         GameDataContainer.Instance.SetGameEvent(playerRaceData, _allowDefaultValues);
-    } 
+    }
     public void SetHostRaceData(HostRaceData hostRaceData, bool _allowDefaultValues = false)
     {
         GameDataContainer.Instance.SetGameEvent(hostRaceData, _allowDefaultValues);
