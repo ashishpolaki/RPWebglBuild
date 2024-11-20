@@ -12,7 +12,11 @@ public class Character : MonoBehaviour
     [SerializeField] private List<CharacterData> characterDataList = new List<CharacterData>();
     [SerializeField] private GameObject rootBone;
     [SerializeField] private Texture2D texture;
-    [SerializeField] private Collider collider;
+    [SerializeField] private BoxCollider collider;
+    [SerializeField] private Vector3 faceSwipeColliderCenter;
+    [SerializeField] private Vector3 faceSwipeColliderSize; 
+    [SerializeField] private Vector3 bodySwipeColliderCenter;
+    [SerializeField] private Vector3 bodySwipeColliderSize;
     #endregion
 
     #region Texture UV's
@@ -26,7 +30,7 @@ public class Character : MonoBehaviour
     private static readonly Vector2Int EyeLeftUV = new Vector2Int(4, 5);
     #endregion
 
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
     public bool isValidate;
     public SkinnedMeshRenderer meshRenderer;
     public SkinnedMeshRenderer changeMeshRenderer;
@@ -222,7 +226,7 @@ public class Character : MonoBehaviour
     }
     #endregion
 
-    #region Turn/Off Character Parts
+    #region Turn On/Off Character Parts
     public void EnableFace()
     {
         List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
@@ -239,6 +243,7 @@ public class Character : MonoBehaviour
             SyntyCharacterPartType.FacialHair
         };
 
+
         foreach (var characterPartData in characterDataList)
         {
             if (!dontDisableList.Contains(characterPartData.CharacterPartType))
@@ -246,6 +251,8 @@ public class Character : MonoBehaviour
                 characterPartData.meshRenderer.gameObject.SetActive(false);
             }
         }
+        collider.center = faceSwipeColliderCenter;
+        collider.size = faceSwipeColliderSize;
     }
     public void EnableFullBody()
     {
@@ -256,6 +263,8 @@ public class Character : MonoBehaviour
                 characterPartData.meshRenderer.gameObject.SetActive(true);
             }
         }
+        collider.center = bodySwipeColliderCenter;
+        collider.size = bodySwipeColliderSize;
     }
     #endregion
 }

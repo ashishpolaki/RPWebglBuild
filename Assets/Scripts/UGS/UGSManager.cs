@@ -111,10 +111,14 @@ public class UGSManager : MonoBehaviour
     #region Public Methods
     public async Task<string> GetHostVenueName(float _latitude, float _longitude)
     {
+#if CHEATCODE_ENABLE
+        _latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
+        _longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
+#endif
         if (string.IsNullOrEmpty(PlayerData.hostID))
         {
-            float latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
-            float longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
+            float latitude = _latitude;
+            float longitude = _longitude;
             string hostVenueName = await CloudSave.GetHostVenueName(StringUtils.HOSTVENUE, latitude, longitude);
             using (PlayerData playerData = new PlayerData())
             {
