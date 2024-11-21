@@ -115,10 +115,10 @@ namespace HorseRace
                 verticalAnimDamping = Mathf.InverseLerp(0, 16, velocity);
             }
 
-            jockeyAnimDamp = Mathf.Lerp(jockeyAnimDamp, verticalAnimDamping + Mathf.InverseLerp(16, 17, velocity), Time.deltaTime);
+          //  jockeyAnimDamp = Mathf.Lerp(jockeyAnimDamp, verticalAnimDamping + Mathf.InverseLerp(16, 17, velocity), Time.deltaTime);
             horseAnimator.speed = jockeyAnimator.speed = animatorSpeed;
             horseAnimator.SetFloat("Vertical", velocity == 0 ? velocity : verticalAnimDamping);
-            jockeyAnimator.SetFloat("Vertical", velocity == 0 ? velocity : jockeyAnimDamp);
+            jockeyAnimator.SetFloat("Vertical", velocity == 0 ? velocity : verticalAnimDamping);
         }
         #endregion
     }

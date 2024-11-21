@@ -36,7 +36,7 @@ namespace HorseRace
                 horse.gameObject.name = $"Horse {horseNumber}";
 
                 //Generate Random Materials
-                List<Material> randomHorseMats = new List<Material>() { horseJockeyMaterials.horseMaterials[Utils.GenerateRandomNumber(0, horseJockeyMaterials.horseMaterials.Length)], horseJockeyMaterials.horseHairMaterials[Utils.GenerateRandomNumber(0, horseJockeyMaterials.horseHairMaterials.Length)] };
+                List<Material> randomHorseMats = new List<Material>() { horseJockeyMaterials.horseMaterials[Utils.GenerateRandomNumber(0, horseJockeyMaterials.horseMaterials.Length)]  /*,horseJockeyMaterials.horseHairMaterials[Utils.GenerateRandomNumber(0, horseJockeyMaterials.horseHairMaterials.Length)]*/ };
                 List<Material> randomJockeyMats = new List<Material>() { horseJockeyMaterials.jockeyMaterials[Utils.GenerateRandomNumber(0, horseJockeyMaterials.jockeyMaterials.Length)] };
                 horse.InitializeMaterials(randomHorseMats, randomJockeyMats);
                 horse.SetHorseNumber(horseNumber);

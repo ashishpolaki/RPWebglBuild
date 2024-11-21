@@ -4039,6 +4039,14 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4582343699820915812, guid: 59206d76d8ce981448ee1c267b8def2a, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 65be9d4c6ed9ef54b8a2760572ce2323, type: 2}
+    - target: {fileID: 4582343699820915812, guid: 59206d76d8ce981448ee1c267b8def2a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f408b16825687e94c898af9e6b6b95bf, type: 2}
     - target: {fileID: 4593842054867674590, guid: 59206d76d8ce981448ee1c267b8def2a, type: 3}
       propertyPath: m_SortingLayer
       value: 32709

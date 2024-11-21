@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: HorseJockeyMaterials
   m_EditorClassIdentifier: 
   horseMaterials:
-  - {fileID: 2100000, guid: 6b420f700614d8440a8963231cf43552, type: 2}
-  - {fileID: 2100000, guid: 9f76b6ad35d24514c88bdc4411c2f73f, type: 2}
-  - {fileID: 2100000, guid: e0efa9d4075b3424ab99c98fa9671398, type: 2}
-  - {fileID: 2100000, guid: 208b849a34934654689af0c16a79b11e, type: 2}
-  - {fileID: 2100000, guid: 7cf92c6c04fadae4ebdd3c4db8d1b8f8, type: 2}
-  - {fileID: 2100000, guid: 694eb13ee47328e44adabd2488cb7252, type: 2}
-  - {fileID: 2100000, guid: 9498c8ab0f7405c4a9317582d05621d6, type: 2}
-  - {fileID: 2100000, guid: 8e97b57cad2609044a1cdfa01db885ee, type: 2}
-  - {fileID: 2100000, guid: e683b6e289ee72842ae145648cf749d6, type: 2}
-  - {fileID: 2100000, guid: 9405de7137ad0ca45bf69c4102aa926b, type: 2}
+  - {fileID: 2100000, guid: 62e7c512dd985c647b6d419f2faa8696, type: 2}
+  - {fileID: 2100000, guid: e12c5adfe63dfa54d8d0e673e229aa9c, type: 2}
+  - {fileID: 2100000, guid: 05fc7648a3701b34fae2539618842255, type: 2}
+  - {fileID: 2100000, guid: 6f11cfe51b9f9b441a51a024d21eb80c, type: 2}
+  - {fileID: 2100000, guid: 9b15b2e8ff4fad04abc15fb3dbcc9db8, type: 2}
+  - {fileID: 2100000, guid: f830288df72ad7a44b004025b05e45ee, type: 2}
+  - {fileID: 2100000, guid: ff27f49d4d0041346a3db7824f754c1f, type: 2}
+  - {fileID: 2100000, guid: 7a02284b6d317c849a662436565657e4, type: 2}
+  - {fileID: 2100000, guid: 9cc872c5354f1c94e86ab167fcab18ac, type: 2}
+  - {fileID: 2100000, guid: b3efd361431eadc4586736f23f80d37b, type: 2}
   horseHairMaterials:
   - {fileID: 2100000, guid: 1a70bede77c1109439867095c196ca6c, type: 2}
   - {fileID: 2100000, guid: efb8dbf4d5a424646b22984b9ec5834d, type: 2}
