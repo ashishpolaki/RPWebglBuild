@@ -74,14 +74,9 @@ namespace HorseRace
         public void InitializeMaterials(List<Material> _horseMaterials, List<Material> _jockeyMaterials)
         {
             HorseMaterials = _horseMaterials.ToArray();
-            JockeyMaterials = _jockeyMaterials.ToArray();
             for (int i = 0; i < horseMeshes.Length; i++)
             {
                 horseMeshes[i].materials = HorseMaterials;
-            }
-            for (int i = 0; i < jockeyMeshes.Length; i++)
-            {
-                jockeyMeshes[i].materials = JockeyMaterials;
             }
         }
         public virtual void UpdateState()
