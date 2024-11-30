@@ -38,7 +38,7 @@ MonoBehaviour:
   - From: '**ANY CAMERA**'
     To: DollyCamera5
     Blend:
-      Style: 1
+      Style: 0
       Time: 2
       CustomCurve:
         serializedVersion: 2
