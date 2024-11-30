@@ -32,7 +32,7 @@ namespace HorseRace.Camera
         public override void FinishState()
         {
             Time.timeScale = 1;
-            Time.fixedDeltaTime = fixedDeltaTime;
+            //          Time.fixedDeltaTime = fixedDeltaTime;
             base.FinishState();
         }
         IEnumerator IEStartSlowDown()
@@ -40,7 +40,7 @@ namespace HorseRace.Camera
             fixedDeltaTime = Time.fixedDeltaTime;
             yield return new WaitForSeconds(slowDownStartAfter);
             Time.timeScale = slowDownFactor;
-            Time.fixedDeltaTime = Time.timeScale * fixedSlowDownSpeed;
+            //        Time.fixedDeltaTime = Time.timeScale * fixedSlowDownSpeed;
         }
     }
 }

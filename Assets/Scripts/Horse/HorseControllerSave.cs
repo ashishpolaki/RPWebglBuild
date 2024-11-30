@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -44,7 +43,6 @@ namespace HorseRace
             }
         }
         #endregion
-
 
         #region Splines
         public SplineSegment currentSplineSegment;
@@ -129,7 +127,7 @@ namespace HorseRace
             {
                 if (controlPointIndex >= currentSplineSegment.splineControlPoints.Count)
                 {
-                    Vector3 destination = SplineManager.Instance.GetFinishLineControlPoint(currentSplineIndex, finishLineControlPointIndex);
+                    Vector3 destination = SplineManager.Instance.GetPostFinishLineControlPoint(currentSplineIndex, finishLineControlPointIndex);
                     finishLineControlPointIndex++;
                     agent.SetDestination(destination);
                     return;

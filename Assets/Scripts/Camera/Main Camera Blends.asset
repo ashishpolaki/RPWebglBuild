@@ -12,158 +12,125 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36baaa8bdcb9d8b49b9199833965d2c3, type: 3}
   m_Name: Main Camera Blends
   m_EditorClassIdentifier: 
-  m_CustomBlends:
-  - m_From: '**ANY CAMERA**'
-    m_To: DollyCamera3
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+  CustomBlends:
+  - From: '**ANY CAMERA**'
+    To: DollyCamera3
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: DollyCamera4
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: DollyCamera4
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: DollyCamera5
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: DollyCamera5
+    Blend:
+      Style: 1
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: Camera6
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: DollyCamera6
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: Camera7
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: DollyCamera7
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: Camera 8
-    m_Blend:
-      m_Style: 0
-      m_Time: 1
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: DollyCamera8
+    Blend:
+      Style: 0
+      Time: 1
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: DollyCamera9
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: OvertakeCamera
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: Camera10
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: RiderFaceCamera1
+    To: RiderFaceCamera2
+    Blend:
+      Style: 1
+      Time: 1
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: DollyCamera11
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: RiderFaceCamera2
+    To: RiderFaceCamera1
+    Blend:
+      Style: 1
+      Time: 1
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: OvertakeCamera
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: RiderFaceCamera1
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: RiderFaceCamera1
-    m_To: RiderFaceCamera2
-    m_Blend:
-      m_Style: 1
-      m_Time: 1
-      m_CustomCurve:
+        m_RotationOrder: 4
+  - From: '**ANY CAMERA**'
+    To: RaceWinnerCamera
+    Blend:
+      Style: 0
+      Time: 2
+      CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: RiderFaceCamera2
-    m_To: RiderFaceCamera1
-    m_Blend:
-      m_Style: 1
-      m_Time: 1
-      m_CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: RiderFaceCamera1
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
-  - m_From: '**ANY CAMERA**'
-    m_To: RaceWinnerCamera
-    m_Blend:
-      m_Style: 0
-      m_Time: 2
-      m_CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
+        m_RotationOrder: 4

@@ -136,22 +136,6 @@ namespace HorseRace
             }
         }
 
-        #region Test
-        public int testHorseNumber = 10;
-        public List<float> testList = new List<float>();
-
-        public void TestMethod()
-        {
-            testList.Clear();
-            testList.Add(0);
-            foreach (var item in horsesByNumber.Values)
-            {
-                float angle = item.currentPercentageInSpline - horsesByNumber[testHorseNumber].currentPercentageInSpline;
-                testList.Add(angle);
-            }
-        }
-        #endregion
-
         #region Speed
         private void AdjustSpeedBasedOnFrontHorses(HorseControllerSave horse)
         {
@@ -163,6 +147,12 @@ namespace HorseRace
                 {
                     //Skip the current horse
                     if (CheckIfHorseNumbersAreSame(horse.HorseNumber, otherHorseNumber))
+                    {
+                        continue;
+                    }
+
+                    //if the other horse crossed the finish line, then no need to check.
+                    if (horsesByNumber[otherHorseNumber].IsFinishLineCrossed)
                     {
                         continue;
                     }

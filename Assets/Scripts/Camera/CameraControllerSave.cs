@@ -7,8 +7,8 @@ namespace HorseRace.Camera
     public class CameraControllerSave : CameraController
     {
         #region Inspector Variables
-        [SerializeField] private CinemachineVirtualCamera zoomInCamera;
-        [SerializeField] private CinemachineVirtualCamera zoomOutCamera;
+        [SerializeField] private CinemachineCamera zoomInCamera;
+        [SerializeField] private CinemachineCamera zoomOutCamera;
         [SerializeField] private float zoomOutWaitTime = 2;
         #endregion
 

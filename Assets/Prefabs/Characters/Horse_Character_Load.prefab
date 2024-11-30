@@ -603,8 +603,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 3558003615993708250}
     m_Modifications:
     - target: {fileID: 1143472634461694944, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
+      propertyPath: m_UpdateMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1143472634461694944, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
       propertyPath: m_CullingMode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4138351216115881664, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
       propertyPath: m_Name

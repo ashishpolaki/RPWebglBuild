@@ -10,7 +10,7 @@ namespace HorseRace.Camera
         private CinemachineTrackedDolly cinemachineTrackedDolly;
         private float pathLength;
 
-        public override void StartState( )
+        public override void StartState()
         {
             base.StartState();
             cinemachineTrackedDolly = virtualCamera.GetCinemachineComponent<CinemachineTrackedDolly>();
