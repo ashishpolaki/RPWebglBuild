@@ -63,7 +63,12 @@ public class StringUtils
     public const string BLEND_MUSCLE = "defaultBuff";
     public const string BLEND_SHAPE_HEAVY = "defaultHeavy";
     public const string BLEND_SHAPE_SKINNY = "defaultSkinny";
+    #endregion
 
+
+    #region Economy
+    public const string INVENTORYITEMID_CHARACTER = "CUSTOMCHARACTER";
+    public const string PLAYERINVENTORYITEMID_CHARACTER = "CurrentCharacterData";
     #endregion
 
     public static bool IsStringEmpty(string value)
