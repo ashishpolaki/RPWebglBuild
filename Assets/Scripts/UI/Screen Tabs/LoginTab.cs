@@ -13,6 +13,8 @@ namespace UI.Screen.Tab
         [SerializeField] private TMP_InputField password_Input;
         [SerializeField] private Button loginBtn;
         [SerializeField] private TextMeshProUGUI errorMessageTxt;
+        [SerializeField] private Vector2 layoutSpace;
+        [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
         #endregion
 
         #region Unity Methods
@@ -46,10 +48,14 @@ namespace UI.Screen.Tab
         /// <param name="message"></param>
         private void OnSignInFailed(string message)
         {
+            verticalLayoutGroup.spacing = layoutSpace.y;
+            errorMessageTxt.gameObject.SetActive(true);
             errorMessageTxt.text = message;
         }
         private void OnValidationFailed(string obj)
         {
+            verticalLayoutGroup.spacing = layoutSpace.y;
+            errorMessageTxt.gameObject.SetActive(true);
             errorMessageTxt.text = obj;
         }
         /// <summary>
@@ -92,9 +98,11 @@ namespace UI.Screen.Tab
         /// </summary>
         private void ResetTextFields()
         {
+            verticalLayoutGroup.spacing = layoutSpace.x;
             username_Input.text = string.Empty;
             password_Input.text = string.Empty;
             errorMessageTxt.text = string.Empty;
+            errorMessageTxt.gameObject.SetActive(false);
         }
 
         /// <summary>

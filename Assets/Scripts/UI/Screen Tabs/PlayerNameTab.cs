@@ -15,6 +15,8 @@ namespace UI.Screen.Tab
         [SerializeField] private Button setPlayerNameBtn;
         [SerializeField] private Button signOutBtn;
         [SerializeField] private TextMeshProUGUI errorMessageText;
+        [SerializeField] private Vector2 layoutSpace;
+        [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
         #endregion
 
         #region Unity Methods
@@ -48,23 +50,34 @@ namespace UI.Screen.Tab
 
             if (StringUtils.IsStringEmpty(playerFirstNameInput.text))
             {
+                verticalLayoutGroup.spacing = layoutSpace.y;
+                errorMessageText.gameObject.SetActive(true);
                 errorMessageText.text = StringUtils.PLAYERFIRSTNAMEERROR;
             }
             if (StringUtils.IsStringEmpty(playerLastNameInput.text))
             {
+                verticalLayoutGroup.spacing = layoutSpace.y;
+                errorMessageText.gameObject.SetActive(true);
                 errorMessageText.text = StringUtils.PLAYERLASTNAMEERROR;
             }
             string playerName = playerFirstNameInput.text + "" + playerLastNameInput.text;
             //Check if player playerName meets the criteria.
             if (!CheckPlayerNameCriteria(playerName))
             {
+                verticalLayoutGroup.spacing = layoutSpace.y;
+                errorMessageText.gameObject.SetActive(true);
                 errorMessageText.text = StringUtils.PLAYERNAMEERROR;
                 return;
             }
 
             //Set Player Name
             Func<Task<string>> method = () => UGSManager.Instance.Authentication.SetPlayerNameAsync(playerName);
-            errorMessageText.text = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            string message = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+            if (!StringUtils.IsStringEmpty(message))
+            {
+                errorMessageText.gameObject.SetActive(true);
+                errorMessageText.text = message;
+            }
             UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.CharacterCustomize);
         }
         private void SignOut()

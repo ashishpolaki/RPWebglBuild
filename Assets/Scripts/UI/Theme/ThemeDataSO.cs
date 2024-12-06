@@ -29,4 +29,7 @@ public class ThemeDataSO : ScriptableObject
     public Color inputFieldBGOutlineColor;
     public Color inputFieldColor;
 
+    public Color inputFieldTextColor;
+    public Color errorTextColor;
+
 }

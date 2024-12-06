@@ -13,7 +13,6 @@ namespace UI
 
         [Header("Toggle UI Elements")]
         [SerializeField] private Image knob; // Knob that moves between On/Off positions
-        [SerializeField] private Image bg;
         [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private TextMeshProUGUI onText;
         [SerializeField] private TextMeshProUGUI offText;
@@ -42,27 +41,6 @@ namespace UI
         public void OnPointerClick(PointerEventData eventData)
         {
             Toggle();
-        }
-        #endregion
-
-        #region Public Methods
-        public void SetThemeColor()
-        {
-            ThemeDataSO themeData = UIController.Instance.CurrentTheme;
-
-            //Set Text Color
-            text.color = themeData.textColor;
-            text.outlineColor = themeData.textOutlineColor;
-            onText.color = themeData.textColor;
-            onText.outlineColor = themeData.textOutlineColor;
-            offText.color = themeData.textColor;
-            offText.outlineColor = themeData.textOutlineColor;
-
-            //Set Image Color
-            bg.color = themeData.toggleColor;
-            bg.GetComponent<Outline>().effectColor = themeData.toggleOutlineColor;
-            knob.color = themeData.toggleColor;
-            knob.GetComponent<Outline>().effectColor = themeData.toggleOutlineColor;
         }
         #endregion
 

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -17,13 +16,14 @@ namespace UI.Screen.Tab
         [SerializeField] private TMP_InputField confirmPassword_Input;
         [SerializeField] private Button registerPlayer_btn;
         [SerializeField] private TextMeshProUGUI errorMessage_txt;
+        [SerializeField] private Vector2 layoutSpace;
+        [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
         #endregion
 
         #region Unity Methods
         private void OnEnable()
         {
             registerPlayer_btn.onClick.AddListener(() => RegisterPlayer());
-            hostToggle.OnValueChanged += OnHostToggleHandle;
 
             ClearInputFields();
             if (UGSManager.Instance != null)
@@ -36,7 +36,6 @@ namespace UI.Screen.Tab
         private void OnDisable()
         {
             registerPlayer_btn.onClick.RemoveAllListeners();
-            hostToggle.OnValueChanged -= OnHostToggleHandle;
 
             if (UGSManager.Instance != null)
             {
@@ -48,7 +47,6 @@ namespace UI.Screen.Tab
         protected override void Start()
         {
             base.Start();
-            hostToggle.SetThemeColor();
         }
         #endregion
 
@@ -59,21 +57,16 @@ namespace UI.Screen.Tab
         /// <param name="message"></param>
         private void OnSignUpFailed(string message)
         {
+            verticalLayoutGroup.spacing = layoutSpace.y;
+            errorMessage_txt.gameObject.SetActive(true);
             errorMessage_txt.text = message;
         }
 
         private void OnValidationFailed(string obj)
         {
+            verticalLayoutGroup.spacing = layoutSpace.y;
+            errorMessage_txt.gameObject.SetActive(true);
             errorMessage_txt.text = obj;
-        }
-
-        private void OnHostToggleHandle(bool val)
-        {
-            using (PlayerData playerData = new PlayerData())
-            {
-                playerData.isHost = val;
-                UGSManager.Instance.SetPlayerData(playerData);
-            }
         }
 
         /// <summary>
@@ -81,7 +74,12 @@ namespace UI.Screen.Tab
         /// </summary>
         private void SignInSuccessful()
         {
-            bool isHost = UGSManager.Instance.PlayerData.isHost;
+            bool isHost = hostToggle.IsOn;
+            using (PlayerData playerData = new PlayerData())
+            {
+                playerData.isHost = isHost;
+                UGSManager.Instance.SetPlayerData(playerData);
+            }
             UGSManager.Instance.CloudSave.SetUserHostAsync(isHost);
             if (isHost)
             {
@@ -108,10 +106,12 @@ namespace UI.Screen.Tab
         /// </summary>
         private void ClearInputFields()
         {
+            verticalLayoutGroup.spacing = layoutSpace.x;
             username_Input.text = string.Empty;
             newPassword_Input.text = string.Empty;
             confirmPassword_Input.text = string.Empty;
             errorMessage_txt.text = string.Empty;
+            errorMessage_txt.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -131,6 +131,8 @@ namespace UI.Screen.Tab
         {
             if (newPassword_Input.text != confirmPassword_Input.text)
             {
+                verticalLayoutGroup.spacing = layoutSpace.y;
+                errorMessage_txt.gameObject.SetActive(true);
                 errorMessage_txt.text = StringUtils.PASSWORDMATCHERROR;
                 return false;
             }

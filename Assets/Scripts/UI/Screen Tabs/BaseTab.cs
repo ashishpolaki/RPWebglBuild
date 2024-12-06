@@ -8,7 +8,6 @@ namespace UI.Screen.Tab
         #region Inspector Variables
         [SerializeField] private ScreenTabType screenTabType;
         [SerializeField] private Button backButton;
-        [SerializeField] private ThemeUI themeUI;
         #endregion
 
         #region Properties
@@ -19,7 +18,6 @@ namespace UI.Screen.Tab
         #region Unity methods
         protected virtual void Start()
         {
-            SetTheme();
         }
         #endregion
 
@@ -39,14 +37,6 @@ namespace UI.Screen.Tab
         protected virtual void OnTabBack()
         {
 
-        }
-        #endregion
-
-        #region Private Methods
-        private void SetTheme()
-        {
-            ThemeDataSO themeData = UIController.Instance.CurrentTheme;
-            themeUI.SetThemeData(themeData);
         }
         #endregion
     }

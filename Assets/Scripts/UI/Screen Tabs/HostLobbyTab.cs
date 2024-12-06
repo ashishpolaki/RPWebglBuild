@@ -129,5 +129,12 @@ namespace UI.Screen.Tab
             messageTxt.text = string.Empty;
         }
         #endregion
+
+        #region Protected Methods
+        protected override void OnTabBack()
+        {
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.HostSetting);
+        }
+        #endregion
     }
 }

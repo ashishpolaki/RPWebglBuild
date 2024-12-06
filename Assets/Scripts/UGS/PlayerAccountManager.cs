@@ -16,13 +16,13 @@ public class PlayerAccountManager : MonoBehaviour
     }
     #endregion
 
-
+#if UNITY_EDITOR
     //Create a method for inspector to signout
     [ContextMenu("SignOut")]
     public void SignOut()
     {
         UGSManager.Instance.Authentication.Signout();
     }
-
+#endif
 }
 #endregion

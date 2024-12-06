@@ -110,5 +110,12 @@ namespace UI.Screen.Tab
             return true;
         }
         #endregion
+
+        #region Protected Methods
+        protected override void OnTabBack()
+        {
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.HostSetting);
+        }
+        #endregion
     }
 }

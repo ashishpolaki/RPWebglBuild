@@ -30,3 +30,5 @@ MonoBehaviour:
   inputFieldBGColor: {r: 0.03137255, g: 0.6431373, b: 0.5803922, a: 1}
   inputFieldBGOutlineColor: {r: 0.07450981, g: 0.8117648, b: 0.7372549, a: 1}
   inputFieldColor: {r: 0.03137255, g: 0.3921569, b: 0.3529412, a: 1}
+  inputFieldTextColor: {r: 1, g: 1, b: 1, a: 1}
+  errorTextColor: {r: 0.36862746, g: 0.08627451, b: 0, a: 1}
