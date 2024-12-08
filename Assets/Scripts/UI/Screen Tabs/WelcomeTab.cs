@@ -62,14 +62,14 @@ namespace UI.Screen.Tab
                 bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
                 bool isCharacterNotCustomized = true;
 
-                if (isPlayerNameEmpty || isCharacterNotCustomized)
+                if(isPlayerNameEmpty)
                 {
-                    ScreenTabType nextScreenTabType = isPlayerNameEmpty ? ScreenTabType.PlayerName : ScreenTabType.CharacterCustomize;
-                    UIController.Instance.ChangeCurrentScreenTab(nextScreenTabType);
+                    UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.PlayerName);
                 }
                 else
                 {
-                    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+                    ScreenType screenType = isCharacterNotCustomized ? ScreenType.CharacterCustomisation : ScreenType.Client;
+                    UIController.Instance.ScreenEvent(screenType, UIScreenEvent.Open);
                     UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
                 }
             }

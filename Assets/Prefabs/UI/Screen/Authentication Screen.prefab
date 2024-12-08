@@ -1645,7 +1645,6 @@ MonoBehaviour:
   - {fileID: 5841817013394337773}
   - {fileID: 2675312979238553406}
   - {fileID: 1949438188345018837}
-  - {fileID: 4794580917509119204}
   backGroundImage: {fileID: 8427584681583089534}
 --- !u!1 &4209171108901499521
 GameObject:
@@ -5323,17 +5322,6 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 1530220977988901659, guid: 59206d76d8ce981448ee1c267b8def2a, type: 3}
   m_PrefabInstance: {fileID: 3651042741686866163}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4794580917509119204 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8080260334675086359, guid: 59206d76d8ce981448ee1c267b8def2a, type: 3}
-  m_PrefabInstance: {fileID: 3651042741686866163}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 784a5d84980af7c4ba581dc9aee2eb74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7525260690464784227 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6540357771720568720, guid: 59206d76d8ce981448ee1c267b8def2a, type: 3}

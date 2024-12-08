@@ -12,7 +12,7 @@ namespace UI.Screen.Tab
         #region Unity Methods
         private void OnEnable()
         {
-            resultText.text = $"Your are place \n #{UGSManager.Instance.PlayerRaceData.racePosition} in the race";
+            resultText.text = $"Your are placed \n #{UGSManager.Instance.PlayerRaceData.racePosition} in the race";
         }
         #endregion
 

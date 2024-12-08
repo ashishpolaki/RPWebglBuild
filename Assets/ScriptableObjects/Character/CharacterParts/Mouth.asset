@@ -22,25 +22,25 @@ MonoBehaviour:
       blendShapeNames:
       - mouthFrownLeft
       - mouthFrownRight
-      syntyCharacterPartTypes: 0100000009000000
+      syntyCharacterPartTypes: 0109
     - name: Smile
       blendShapeNames:
       - mouthSmileLeft
       - mouthSmileRight
-      syntyCharacterPartTypes: 0100000009000000
+      syntyCharacterPartTypes: 0109
     - name: JawRight
       blendShapeNames:
       - jawRight
-      syntyCharacterPartTypes: 01000000090000001900000018000000
+      syntyCharacterPartTypes: 01091918
     - name: JawLeft
       blendShapeNames:
       - jawLeft
-      syntyCharacterPartTypes: 01000000090000001900000018000000
+      syntyCharacterPartTypes: 01091918
     - name: JawForward
       blendShapeNames:
       - jawForward
-      syntyCharacterPartTypes: 010000000900000018000000
+      syntyCharacterPartTypes: 010918
     - name: JawBackward
       blendShapeNames:
       - jawBackward
-      syntyCharacterPartTypes: 010000000900000018000000
+      syntyCharacterPartTypes: 010918

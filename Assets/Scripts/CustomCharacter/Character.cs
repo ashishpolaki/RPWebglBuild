@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System;
 using System.Linq;
+using CharacterCustomisation;
 
 public class Character : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class Character : MonoBehaviour
     [SerializeField] private Vector3 faceSwipeColliderSize;
     [SerializeField] private Vector3 bodySwipeColliderCenter;
     [SerializeField] private Vector3 bodySwipeColliderSize;
+    [SerializeField] private CharacterCustomisationEconomy customisationData = new CharacterCustomisationEconomy();
     #endregion
 
     #region Texture UV's
@@ -26,12 +28,14 @@ public class Character : MonoBehaviour
     private static readonly Vector2Int EyeLidLeftUV = new Vector2Int(1, 4);
     private static readonly Vector2Int EyeRightUV = new Vector2Int(5, 5);
     private static readonly Vector2Int EyeLeftUV = new Vector2Int(4, 5);
+    private static readonly Vector2Int HairUV = new Vector2Int(6, 4);
+    private static readonly Vector2Int FacialHairUV = new Vector2Int(7, 4);
     #endregion
 
 #if UNITY_EDITOR
     public bool isValidate;
-    public SkinnedMeshRenderer meshRenderer;
     public SkinnedMeshRenderer changeMeshRenderer;
+    public SyntyCharacterPartType syntyCharacterPartType;
     public Color color;
     public int u;
     public int v;
@@ -39,7 +43,7 @@ public class Character : MonoBehaviour
     {
         if (isValidate)
         {
-            UpdateTexture(texture, color, u, v);
+            ChangeMesh(syntyCharacterPartType, changeMeshRenderer);
         }
     }
     private void InitializeSyntyCharacterEnum()
@@ -68,7 +72,6 @@ public class Character : MonoBehaviour
         UpdateTexture(texture, color, EyeLidRightUV.x, EyeLidRightUV.y);
         UpdateTexture(texture, color, EyeLidLeftUV.x, EyeLidLeftUV.y);
     }
-
     private void UpdateTexture(Texture2D texture, Color newColor, int u, int v)
     {
         int scaledU = u * 2;
@@ -79,7 +82,6 @@ public class Character : MonoBehaviour
         texture.SetPixel(scaledU + 1, scaledV + 1, newColor);
         texture.Apply();
     }
-
     public void ChangePartColor(Color color, Vector2Int uv)
     {
         UpdateTexture(texture, color, uv.x, uv.y);
@@ -116,7 +118,7 @@ public class Character : MonoBehaviour
     #endregion
 
     #region Outfit Customisation
-    public void ChangeUpperPart(UpperOutfitEconomy upperOutfit)
+    public void ChangeUpperOutfit(UpperOutfitEconomy upperOutfit)
     {
         SkinnedMeshRenderer Torso = Resources.Load<GameObject>($"CharacterParts/Torso/Torso_{upperOutfit.torso}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         SkinnedMeshRenderer LeftUpperArm = Resources.Load<GameObject>($"CharacterParts/LeftUpperArm/LeftUpperArm_{upperOutfit.leftUpperArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
@@ -135,7 +137,7 @@ public class Character : MonoBehaviour
         ChangeMesh(SyntyCharacterPartType.HandRight, RightHand);
     }
 
-    public void ChangeLowerPart(LowerOutfitEconomy lowerOutfit)
+    public void ChangeLowerOutfit(LowerOutfitEconomy lowerOutfit)
     {
         SkinnedMeshRenderer Hips = Resources.Load<GameObject>($"CharacterParts/Hips/Hips_{lowerOutfit.hips}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         SkinnedMeshRenderer RightLeg = Resources.Load<GameObject>($"CharacterParts/RightLeg/RightLeg_{lowerOutfit.rightLeg}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
@@ -148,9 +150,6 @@ public class Character : MonoBehaviour
         ChangeMesh(SyntyCharacterPartType.FootRight, RightFoot);
         ChangeMesh(SyntyCharacterPartType.LegLeft, LeftLeg);
         ChangeMesh(SyntyCharacterPartType.FootLeft, LeftFoot);
-
-        SetBlendShape(SyntyCharacterPartType.Hips, 100, "Legs");
-        SetBlendShape(SyntyCharacterPartType.Hips, 100, "Feet");
     }
     #endregion
 
@@ -213,7 +212,7 @@ public class Character : MonoBehaviour
     #endregion
 
     #region Utils
-    public  Hashtable CreateBoneNameMap(GameObject currentBone)
+    public Hashtable CreateBoneNameMap(GameObject currentBone)
     {
         Hashtable boneNameMap = new Hashtable();
         boneNameMap.Add(currentBone.name, currentBone.transform);
@@ -230,7 +229,7 @@ public class Character : MonoBehaviour
         }
         return boneNameMap;
     }
-    public  Transform[] FindAdditionalBones(Hashtable boneMap, List<SkinnedMeshRenderer> meshes)
+    public Transform[] FindAdditionalBones(Hashtable boneMap, List<SkinnedMeshRenderer> meshes)
     {
         List<Transform> newBones = new List<Transform>();
         foreach (SkinnedMeshRenderer mesh in meshes)
@@ -468,16 +467,16 @@ public class Character : MonoBehaviour
     #region Change Part
     public void ChangePart(SyntyCharacterPartType syntyCharacterPartType, string path)
     {
-        SkinnedMeshRenderer skinnedMeshRenderer = Resources.Load<GameObject>(path).GetComponentInChildren<SkinnedMeshRenderer>();
-        ChangeMesh(syntyCharacterPartType, skinnedMeshRenderer);
+        var skinnedMeshRenderer = Resources.Load<GameObject>(path)?.GetComponentInChildren<SkinnedMeshRenderer>();
+        if (skinnedMeshRenderer != null)
+        {
+            ChangeMesh(syntyCharacterPartType, skinnedMeshRenderer);
+        }
     }
     public void TurnOffPart(SyntyCharacterPartType syntyCharacterPartType)
     {
         characterDataList[(int)syntyCharacterPartType - 1].meshRenderer.enabled = false;
     }
-    #endregion
-
-    #region Turn On/Off Character Parts
     public void EnableFace()
     {
         List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
@@ -494,7 +493,6 @@ public class Character : MonoBehaviour
             SyntyCharacterPartType.FacialHair
         };
 
-
         foreach (var characterPartData in characterDataList)
         {
             if (!dontDisableList.Contains(characterPartData.CharacterPartType))
@@ -502,9 +500,13 @@ public class Character : MonoBehaviour
                 characterPartData.meshRenderer.gameObject.SetActive(false);
             }
         }
-        collider.center = faceSwipeColliderCenter;
-        collider.size = faceSwipeColliderSize;
+        if (collider != null)
+        {
+            collider.center = faceSwipeColliderCenter;
+            collider.size = faceSwipeColliderSize;
+        }
     }
+
     public void EnableFullBody()
     {
         foreach (var characterPartData in characterDataList)
@@ -514,8 +516,122 @@ public class Character : MonoBehaviour
                 characterPartData.meshRenderer.gameObject.SetActive(true);
             }
         }
-        collider.center = bodySwipeColliderCenter;
-        collider.size = bodySwipeColliderSize;
+        if (collider != null)
+        {
+            collider.center = bodySwipeColliderCenter;
+            collider.size = bodySwipeColliderSize;
+        }
+
+    }
+    #endregion
+
+    public void Load(CharacterCustomisationEconomy characterCustomisation)
+    {
+        customisationData = characterCustomisation;
+
+        //Body
+        Color skinToneColor = StringUtils.IsStringEmpty(customisationData.skinToneColor) ? CharacterCustomisationManager.Instance.SkinToneColorPreset.colors[0] : Utils.FromHex(customisationData.skinToneColor);
+        ChangeSkinToneColor(skinToneColor);
+        BodySizeBlendShape(customisationData.bodyType);
+        MusculatureBlendShape(customisationData.bodyMuscleType);
+        BodyGenderBlendShape(customisationData.bodyGenderType);
+
+        //Outfits
+        ChangeUpperOutfit(customisationData.upperOutfit);
+        ChangeLowerOutfit(customisationData.lowerOutfit);
+
+        //Synty Bug Fix
+        ChangePartColor(Color.white, EyeRightUV);
+        ChangePartColor(Color.white, EyeLeftUV);
+
+        //Face Customisation
+        foreach (var customPart in customisationData.customParts)
+        {
+            ChangePartInHead((BlendPartType)customPart.type, customPart.styleNumber);
+            ChangePartColorInHead(customPart.color, (BlendPartType)customPart.type);
+            UpdatePartsBlendShapeInHead((BlendPartType)customPart.type, customPart.blendShapes);
+        }
+    }
+
+    #region Face Customisation
+    public void UpdatePartsBlendShapeInHead(BlendPartType blendPartType, List<BlendShapeEconomy> blendShapes)
+    {
+        if (blendShapes.Count == 0) return;
+
+        CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
+        BlendShapePart blendShapePart = characterPartSO.blendPartData;
+
+        foreach (BlendShapeEconomy blendShapeEconomy in blendShapes)
+        {
+            foreach (var blendShapePartData in blendShapePart.partData)
+            {
+                if (blendShapePartData.name == blendShapeEconomy.name)
+                {
+                    foreach (var syntyCharacterPartType in blendShapePartData.syntyCharacterPartTypes)
+                    {
+                        SetBlendShape(syntyCharacterPartType, blendShapeEconomy.value, blendShapeEconomy.name);
+                    }
+                }
+            }
+        }
+    }
+    public void ChangePartInHead(BlendPartType blendPartType, int styleNumber)
+    {
+        CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
+        if (characterPartSO.parts.Length == 0) return;
+
+        SyntyCharacterPartType characterPartType = CharacterCustomisationManager.Instance.GetCharacterPartType(blendPartType);
+        if (styleNumber == -1)
+        {
+            TurnOffPart(characterPartType);
+        }
+        else
+        {
+            string path = CharacterCustomisationManager.Instance.GetMeshPath(characterPartType, styleNumber);
+            ChangePart(characterPartType, path);
+        }
+    }
+    public void ChangePartColorInHead(string _color, BlendPartType blendPartType)
+    {
+        if (StringUtils.IsStringEmpty(_color)) return;
+
+        CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
+        Color color = Utils.FromHex(_color);
+        Vector2Int textureUV = new Vector2Int(0, 0);
+
+        switch (characterPartSO.partType)
+        {
+            case BlendPartType.Hair:
+                textureUV = HairUV;
+                break;
+            case BlendPartType.FacialHair:
+                textureUV = FacialHairUV;
+                break;
+        }
+
+        ChangePartColor(color, textureUV);
+    }
+    #endregion
+
+    #region Body Customisation
+    public void BodySizeBlendShape(float value)
+    {
+        float heavyBlendValue = value > 0 ? value : 0;
+        float skinnyBlendValue = value < 0 ? Math.Abs(value) : 0;
+
+        SetBlendShape(heavyBlendValue, StringUtils.BLEND_SHAPE_HEAVY);
+        SetBlendShape(skinnyBlendValue, StringUtils.BLEND_SHAPE_SKINNY);
+        customisationData.bodyType = value;
+    }
+    public void MusculatureBlendShape(float value)
+    {
+        SetBlendShape(value, StringUtils.BLEND_MUSCLE);
+        customisationData.bodyMuscleType = value;
+    }
+    public void BodyGenderBlendShape(float value)
+    {
+        SetBlendShape(value, StringUtils.BLEND_GENDER);
+        customisationData.bodyGenderType = value;
     }
     #endregion
 }

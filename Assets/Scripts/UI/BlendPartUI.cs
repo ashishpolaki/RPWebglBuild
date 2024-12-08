@@ -24,7 +24,7 @@ namespace UI
 
         private void OnSliderValueChanged(float value)
         {
-            CharacterCustomisationManager.Instance.SetBlendShapes(blendShapePartData, value);
+          //  CharacterCustomisationManager.Instance.SetBlendShapes(blendShapePartData, value);
         }
 
         public void SetData(BlendShapePartData _blendShapePartData)

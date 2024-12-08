@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class ClassContainer
 {
-    
+
 }
 
 #region Save Race Stats
@@ -30,17 +30,17 @@ public class EconomyCustom
 }
 
 [System.Serializable]
-public class FullBodyEconomy : EconomyCustom
+public class CharacterCustomisationEconomy : EconomyCustom
 {
     public float bodyType;
     public float bodyGenderType;
     public float bodyMuscleType;
-    public string skinToneColor;
-    public List<CustomPartEconomy> customParts;
-    public UpperOutfitEconomy upperOutfit;
-    public LowerOutfitEconomy lowerOutfit;
+    public string skinToneColor = "";
+    public List<CustomPartEconomy> customParts = new List<CustomPartEconomy>();
+    public UpperOutfitEconomy upperOutfit = new UpperOutfitEconomy();
+    public LowerOutfitEconomy lowerOutfit = new LowerOutfitEconomy();
 
-    public FullBodyEconomy() : base()
+    public CharacterCustomisationEconomy() : base()
     {
         bodyType = 0;
         skinToneColor = "";
@@ -49,18 +49,18 @@ public class FullBodyEconomy : EconomyCustom
         lowerOutfit = new LowerOutfitEconomy();
     }
 }
-
 [System.Serializable]
 public class CustomPartEconomy
 {
     public int type; //(int)BlendPartType Enum
-    public int styleNumber;
-    public string color;
-    public List<BlendShapeEconomy> blendShapes;
+    public int styleNumber; //Part Index
+    public string color; //Part Color
+    public List<BlendShapeEconomy> blendShapes; //Part BlendShapes
 
     public CustomPartEconomy()
     {
-        styleNumber = 0;
+        styleNumber = -1;
+        color = "";
         blendShapes = new List<BlendShapeEconomy>();
     }
 }
@@ -78,7 +78,7 @@ public class BlendShapeEconomy
 }
 
 [System.Serializable]
-public class UpperOutfitEconomy
+public class UpperOutfitEconomy : EconomyCustom
 {
     public int torso;
     public int rightUpperArm;
@@ -89,7 +89,7 @@ public class UpperOutfitEconomy
     public int leftHand;
 }
 [System.Serializable]
-public class LowerOutfitEconomy
+public class LowerOutfitEconomy : EconomyCustom
 {
     public int hips;
     public int rightLeg;

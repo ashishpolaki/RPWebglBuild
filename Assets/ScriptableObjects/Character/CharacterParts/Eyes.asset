@@ -22,11 +22,11 @@ MonoBehaviour:
       blendShapeNames:
       - irisSmallLeft
       - irisSmallRight
-      syntyCharacterPartTypes: 0500000006000000
+      syntyCharacterPartTypes: 0506
     - name: EyeWide
       blendShapeNames:
       - eyeWideLowerLeft
       - eyeWideLowerRight
       - eyeWideUpperLeft
       - eyeWideUpperRight
-      syntyCharacterPartTypes: 01000000
+      syntyCharacterPartTypes: 01

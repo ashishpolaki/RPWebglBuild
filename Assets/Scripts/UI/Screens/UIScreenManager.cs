@@ -20,7 +20,7 @@ namespace UI.Screen
             }
         }
 
-        public void ScreenEvent(ScreenType _screenType, UIScreenEvent uIEvent,ScreenTabType screenTabType)
+        public void ScreenEvent(ScreenType _screenType, UIScreenEvent uIEvent, ScreenTabType screenTabType)
         {
             switch (uIEvent)
             {
@@ -47,12 +47,13 @@ namespace UI.Screen
             }
         }
 
-        private void OpenScreen(ScreenType _screenType,ScreenTabType screenTabType)
+        private void OpenScreen(ScreenType _screenType, ScreenTabType screenTabType)
         {
             InstantiateIfDoesntExist(_screenType);
             currentActiveScreen = screenDictionary[_screenType];
             currentActiveScreen.Open(screenTabType);
-        } 
+
+        }
         private void CloseScreen(ScreenType _screenType, ScreenTabType screenTabType)
         {
             if (screenDictionary.ContainsKey(_screenType))
@@ -72,7 +73,7 @@ namespace UI.Screen
             {
                 screenDictionary[_screenType].Hide();
             }
-        } 
+        }
 
         /// <summary>
         /// Instantiate the screen if it doesn't exist in the dictionary

@@ -22,12 +22,8 @@ MonoBehaviour:
       blendShapeNames:
       - noseSneerLeft
       - noseSneerRight
-      syntyCharacterPartTypes: 170000000100000009000000
-      minBlendValue: 1
-      maxBlendVaule: 100
+      syntyCharacterPartTypes: 170109
     - name: Shrink
       blendShapeNames:
       - masculineFeminine
-      syntyCharacterPartTypes: 17000000
-      minBlendValue: 1
-      maxBlendVaule: 100
+      syntyCharacterPartTypes: 17

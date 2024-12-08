@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnumContainer
 {
-    
+
 }
 
 #region Particle
@@ -40,7 +40,7 @@ public enum SoundType
 #endregion
 
 #region UI
-public enum ScreenTabType
+public enum ScreenTabType : byte
 {
     None,
     LoginPlayer,
@@ -58,21 +58,25 @@ public enum ScreenTabType
     VenueCheckIn,
     RaceCheckIn,
     RaceTimer,
-    NotInRace
+    NotInRace,
+    CharacterBodyCustomize,
+    CharacterFaceCustomize,
 }
-public enum ScreenType
+public enum ScreenType : byte
 {
     Login,
     Host,
     Client,
     RaceResults,
+    Race,
+    CharacterCustomisation,
     None
 }
 #endregion
 
 #region Character
 
-public enum CharacterBlendShapeType
+public enum CharacterBlendShapeType : byte
 {
     None,
     BodyType,
@@ -80,7 +84,7 @@ public enum CharacterBlendShapeType
     Musculature
 }
 //Cloud Data dont change
-public enum BlendPartType
+public enum BlendPartType : byte
 {
     Nose,
     Eyebrows,
@@ -91,7 +95,7 @@ public enum BlendPartType
     Mouth
 }
 
-public enum SyntyCharacterPartType
+public enum SyntyCharacterPartType : byte
 {
     None,
     Head = 1,
@@ -120,12 +124,12 @@ public enum SyntyCharacterPartType
     Teeth,
     Tongue,
 }
-public enum CharacterGenderType
+public enum CharacterGenderType : byte
 {
     Male,
     Female
 }
-public enum CharacterPartUIType
+public enum CharacterPartUIType : byte
 {
     FACE,
     HAIR,

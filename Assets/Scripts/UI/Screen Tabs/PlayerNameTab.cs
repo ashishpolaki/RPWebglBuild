@@ -78,7 +78,11 @@ namespace UI.Screen.Tab
                 errorMessageText.gameObject.SetActive(true);
                 errorMessageText.text = message;
             }
-            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.CharacterCustomize);
+            else
+            {
+                UIController.Instance.ScreenEvent(ScreenType.CharacterCustomisation, UIScreenEvent.Open);
+                UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Close);
+            }
         }
         private void SignOut()
         {

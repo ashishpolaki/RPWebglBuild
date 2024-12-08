@@ -24,11 +24,11 @@ MonoBehaviour:
       - browOuterUpLeft
       - browInnerUpRight
       - browOuterUpRight
-      syntyCharacterPartTypes: 01000000030000000400000017000000
+      syntyCharacterPartTypes: 01030417
     - name: Down
       blendShapeNames:
       - browInnerDownLeft
       - browOuterDownLeft
       - browInnerDownRight
       - browOuterDownRight
-      syntyCharacterPartTypes: 01000000030000000400000017000000
+      syntyCharacterPartTypes: 01030417

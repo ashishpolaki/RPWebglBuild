@@ -22,14 +22,14 @@ MonoBehaviour:
       blendShapeNames:
       - cheekHollowLeft
       - cheekHollowRight
-      syntyCharacterPartTypes: 0100000009000000
+      syntyCharacterPartTypes: 0109
     - name: Puff
       blendShapeNames:
       - cheekPuffLeft
       - cheekPuffRight
-      syntyCharacterPartTypes: 0100000009000000
+      syntyCharacterPartTypes: 0109
     - name: Squint
       blendShapeNames:
       - cheekSquintLeft
       - cheekSquintRight
-      syntyCharacterPartTypes: 0100000009000000
+      syntyCharacterPartTypes: 0109
