@@ -11,6 +11,7 @@ public class Character : MonoBehaviour
     [SerializeField] private List<CharacterData> characterDataList = new List<CharacterData>();
     [SerializeField] private GameObject rootBone;
     [SerializeField] private Texture2D texture;
+    [SerializeField] private Animator animator;
     [SerializeField] private BoxCollider collider;
     [SerializeField] private Vector3 faceSwipeColliderCenter;
     [SerializeField] private Vector3 faceSwipeColliderSize;
@@ -62,6 +63,58 @@ public class Character : MonoBehaviour
     }
 
 #endif
+
+    private void Awake()
+    {
+        CreateNewTexture();
+    }
+    private void CreateNewTexture()
+    {
+        texture = Instantiate(texture);
+        foreach (var characterPartData in characterDataList)
+        {
+            if (characterPartData.meshRenderer != null)
+            {
+                characterPartData.meshRenderer.material.mainTexture = texture;
+            }
+        }
+    }
+    public void ChangeAnimator(RuntimeAnimatorController runtimeAnimatorController)
+    {
+        animator.runtimeAnimatorController = runtimeAnimatorController;
+    }
+    public void Load(CharacterCustomisationEconomy characterCustomisation)
+    {
+        customisationData = characterCustomisation;
+
+        //Body
+        Color skinToneColor = StringUtils.IsStringEmpty(customisationData.skinToneColor) ? CharacterCustomisationManager.Instance.SkinToneColorPreset.colors[0] : Utils.FromHex(customisationData.skinToneColor);
+        ChangeSkinToneColor(skinToneColor);
+        BodySizeBlendShape(customisationData.bodyType);
+        MusculatureBlendShape(customisationData.bodyMuscleType);
+        BodyGenderBlendShape(customisationData.bodyGenderType);
+
+        //Outfits
+        ChangeUpperOutfit(customisationData.upperOutfit);
+        ChangeLowerOutfit(customisationData.lowerOutfit);
+
+        //Synty Bug Fix
+        SyntyBug();
+
+        //Face Customisation
+        foreach (var customPart in customisationData.customParts)
+        {
+            ChangePartInHead((BlendPartType)customPart.type, customPart.styleNumber);
+            ChangePartColorInHead(customPart.color, (BlendPartType)customPart.type);
+            UpdatePartsBlendShapeInHead((BlendPartType)customPart.type, customPart.blendShapes);
+        }
+    }
+    public void SyntyBug()
+    {
+        ChangePartColor(Color.white, EyeRightUV);
+        ChangePartColor(Color.white, EyeLeftUV);
+    }
+
     #region Color
     public void ChangeSkinToneColor(Color color)
     {
@@ -525,33 +578,6 @@ public class Character : MonoBehaviour
     }
     #endregion
 
-    public void Load(CharacterCustomisationEconomy characterCustomisation)
-    {
-        customisationData = characterCustomisation;
-
-        //Body
-        Color skinToneColor = StringUtils.IsStringEmpty(customisationData.skinToneColor) ? CharacterCustomisationManager.Instance.SkinToneColorPreset.colors[0] : Utils.FromHex(customisationData.skinToneColor);
-        ChangeSkinToneColor(skinToneColor);
-        BodySizeBlendShape(customisationData.bodyType);
-        MusculatureBlendShape(customisationData.bodyMuscleType);
-        BodyGenderBlendShape(customisationData.bodyGenderType);
-
-        //Outfits
-        ChangeUpperOutfit(customisationData.upperOutfit);
-        ChangeLowerOutfit(customisationData.lowerOutfit);
-
-        //Synty Bug Fix
-        ChangePartColor(Color.white, EyeRightUV);
-        ChangePartColor(Color.white, EyeLeftUV);
-
-        //Face Customisation
-        foreach (var customPart in customisationData.customParts)
-        {
-            ChangePartInHead((BlendPartType)customPart.type, customPart.styleNumber);
-            ChangePartColorInHead(customPart.color, (BlendPartType)customPart.type);
-            UpdatePartsBlendShapeInHead((BlendPartType)customPart.type, customPart.blendShapes);
-        }
-    }
 
     #region Face Customisation
     public void UpdatePartsBlendShapeInHead(BlendPartType blendPartType, List<BlendShapeEconomy> blendShapes)

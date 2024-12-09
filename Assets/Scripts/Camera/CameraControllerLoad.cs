@@ -128,7 +128,7 @@ namespace HorseRace.Camera
         }
         public void EnableRacePositionsUI()
         {
-            UI.UIManager.Instance.EnableRacePositions(false);
+            EventManager.Instance.EnableRaceUI(false);
         }
         public void IncreaseGallopSound()
         {
