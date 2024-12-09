@@ -2452,9 +2452,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2242614968122084721}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
-  m_LocalPosition: {x: -262, y: -30, z: -19312}
-  m_LocalScale: {x: 793, y: 793, z: 793}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 700342419545847811}
@@ -2484,7 +2484,7 @@ Transform:
   - {fileID: 523598979671192958}
   - {fileID: 8097242375070619631}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2817508119553823395
 Animator:
   serializedVersion: 7
@@ -2572,6 +2572,7 @@ MonoBehaviour:
     meshRenderer: {fileID: 6792708968135198686}
   rootBone: {fileID: 1436993689583071026}
   texture: {fileID: 2800000, guid: 8a388c6097516f54f97ad45c416a48e8, type: 3}
+  animator: {fileID: 2817508119553823395}
   collider: {fileID: 986959273214535132}
   faceSwipeColliderCenter: {x: -0.0154585205, y: 1.5797147, z: 0.02333224}
   faceSwipeColliderSize: {x: 0.30490285, y: 0.3694307, z: 0.37006268}
@@ -2836,7 +2837,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2520815082501736801}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

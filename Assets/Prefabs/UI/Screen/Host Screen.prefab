@@ -146,6 +146,7 @@ MonoBehaviour:
   - {fileID: 8550076969310421674}
   - {fileID: 2189482264311287301}
   - {fileID: 5387249110683618358}
+  backGroundImage: {fileID: 6555300815176378602}
 --- !u!1001 &1414418408794460448
 PrefabInstance:
   m_ObjectHideFlags: 0
