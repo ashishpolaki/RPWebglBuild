@@ -4,7 +4,15 @@ namespace HorseRace
 {
     public class HorseControllerLoad : HorseController, ILoadHorseData
     {
+        [SerializeField] private float splineChangeDistance = 3f;
+        [SerializeField] private Character character;
+        private int controlPointIndex = 0;
+        private Vector3 currentSplinePos;
+
         private bool canSlowAgentSpeed;
+
+        public Character Character => character;
+
 
         public override void UpdateState()
         {
@@ -42,17 +50,16 @@ namespace HorseRace
         {
             if (canSlowAgentSpeed)
             {
-                agent.speed -= slowDownSpeedLerp;
+                if (agent != null)
+                {
+                    agent.speed -= slowDownSpeedLerp;
+                }
             }
         }
 
-        [SerializeField] private float splineChangeDistance = 3f;
-        private int controlPointIndex = 0;
-        private Vector3 currentSplinePos;
-
         private void CheckFinishLineStatus()
         {
-            if (isFinishLineCross)
+            if (isFinishLineCross && agent != null)
             {
                 float distance = Vector3.Distance(transform.position, currentSplinePos);
                 if (!agent.hasPath || distance <= splineChangeDistance)
@@ -63,6 +70,11 @@ namespace HorseRace
                     controlPointIndex++;
                 }
             }
+        }
+
+        public void SetCharacter(CharacterCustomisationEconomy characterCustomisationEconomy)
+        {
+            character.Load(characterCustomisationEconomy);
         }
     }
 }

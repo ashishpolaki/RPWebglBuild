@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using HorseRace.UI;
 using System.Linq;
 using UnityEngine.AI;
 using System.Collections;
+using UI;
 
 namespace HorseRace
 {
@@ -11,7 +11,7 @@ namespace HorseRace
     {
         #region Inspector Variables
         [SerializeField] private LoadManager horseLoadManager;
-        [SerializeField] private WinnerHorseJockeyDataSO winnerHorseJockeyDataSO;
+        [SerializeField] private RaceResultManager raceResultManager;
         [SerializeField] private Transform finishLinePosition;
         [SerializeField] private bool canVerifyRaces;
         #endregion
@@ -22,8 +22,8 @@ namespace HorseRace
         private WaitForSeconds waitForPositionCalculation;
         private bool areRacePositionsCalculated = true;
         private int preWinnerHorseNumber;
-        private string preWinnerJockeyName;
         private int horsesVelocityIndex = 0;
+        private bool isRaceMedalsShown;
         #endregion
 
         #region Unity Methods
@@ -47,9 +47,11 @@ namespace HorseRace
             base.Initialize(_horses);
             OnLoadRaceStats();
             EventManager.Instance.OnCameraSetup();
-            waitForPositionCalculation = new WaitForSeconds(1f / GameManager.Instance.HorsesToSpawnList.Count);
+            UIController.Instance.ScreenEvent(ScreenType.Race, UIScreenEvent.Open);
+            waitForPositionCalculation = new WaitForSeconds(GameManager.Instance.HorsesToSpawnList.Count / 12);
         }
 
+        #region Update Horse Race Positions
         IEnumerator IECalculateHorseRacePositions()
         {
             Dictionary<int, float> horseDistances = new Dictionary<int, float>();
@@ -71,7 +73,8 @@ namespace HorseRace
             yield return waitForPositionCalculation;
 
             // Sort the list by distance using LINQ
-            List<KeyValuePair<int, float>> horseDistanceList = horseDistances.OrderBy(h => h.Value).ToList();
+            var horseDistanceList = new List<KeyValuePair<int, float>>(horseDistances);
+            horseDistanceList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
 
             // Set Race Position for Horses
             for (int i = 0; i < horseDistanceList.Count; i++)
@@ -80,13 +83,13 @@ namespace HorseRace
                 int racePosition = i + 1;
                 horsesByNumber[_horseNumber].SetRacePosition(racePosition);
                 horsesInRacePositions[racePosition] = _horseNumber;
-                horsesTransformInRaceOrder[racePosition] = (_horseNumber,horsesByNumber[_horseNumber].transform);
+                horsesTransformInRaceOrder[racePosition] = (_horseNumber, horsesByNumber[_horseNumber].transform);
             }
 
             // Update UI
-            if (horsesInFinishOrder.Count <= 0)
+            if (horsesInRaceFinishOrder.Count <= 0)
             {
-                UpdateUI(horsesInRacePositions);
+                EventManager.Instance.ShowRacePositions(horsesInRacePositions);
             }
             areRacePositionsCalculated = true;
         }
@@ -96,8 +99,7 @@ namespace HorseRace
             //Update horses state
             for (int i = 0; i < horsesByNumber.Count; i++)
             {
-                int _horseNumber = i + 1;
-                horsesByNumber[_horseNumber].UpdateState();
+                horsesByNumber.Values.ElementAt(i).UpdateState();
             }
 
             //Calculate Horse RacePositions
@@ -107,6 +109,8 @@ namespace HorseRace
                 StartCoroutine(IECalculateHorseRacePositions());
             }
         }
+        #endregion
+
         public override Transform RaceWinnerTransform()
         {
             return horsesByNumber[preWinnerHorseNumber].transform;
@@ -114,18 +118,29 @@ namespace HorseRace
 
         private void ConcludeRaceWithWinner()
         {
-            if (horsesInFinishOrder.Count > 0)
+            if (horsesInRaceFinishOrder.Count > 0 && !isRaceMedalsShown)
             {
-                int winnerHorseNumber = horsesInFinishOrder[0];
+                int winnerHorseNumber = horsesInRaceFinishOrder[0];
+
                 if (horsesByNumber.ContainsKey(winnerHorseNumber))
                 {
                     if (horsesByNumber[winnerHorseNumber].AgentCurrentSpeed <= 0)
                     {
-                        winnerHorseJockeyDataSO.SetMaterials(horsesByNumber[winnerHorseNumber].HorseMaterials, horsesByNumber[winnerHorseNumber].JockeyMaterials);
+                        isRaceMedalsShown = true;
+                        int maxRaceWinnersCount = 3;
+                        List<HorseControllerLoad> horseControllerLoads = new List<HorseControllerLoad>();
+                        for (int i = 0; i < maxRaceWinnersCount && i < horsesByNumber.Count; i++)
+                        {
+                            horseControllerLoads.Add(horsesByNumber[horsesInRaceFinishOrder[i]] as HorseControllerLoad);
+                        }
+                        //Store the winner horses Data
+                        raceResultManager.InitializeRaceResults(horseControllerLoads);
+                        EventManager.Instance.OnWinnersMedals();
+
                         SoundManager.Instance.StopSound(SoundType.RaceMusic);
                         SoundManager.Instance.StopSound(SoundType.HorseGallop);
                         SoundManager.Instance.StopSound(SoundType.Cheer);
-                        SceneLoadingManager.Instance.LoadNextScene();
+                        // SceneLoadingManager.Instance.LoadNextScene();
                     }
                 }
             }
@@ -143,33 +158,12 @@ namespace HorseRace
         protected override void RaceFinished()
         {
             base.RaceFinished();
-            UIManager.Instance.ShowWinnerRaceBoard(preWinnerHorseNumber, preWinnerJockeyName);
-            GameManager.Instance.SetCurrentRaceHorsesOrder(horsesInFinishOrder);
+            EventManager.Instance.OnRaceWinner(horsesInRaceFinishOrder[0]);
+            GameManager.Instance.SetCurrentRaceHorsesOrder(horsesInRaceFinishOrder);
             if (canVerifyRaces)
             {
                 VerifyRacePositionList();
             }
-        }
-        protected override void FinishLineCrossed(int _horseNumber)
-        {
-            base.FinishLineCrossed(_horseNumber);
-            if (horsesInFinishOrder.Count > 0)
-            {
-                Dictionary<int, int> horsesInRacePositions = Enumerable.Range(0, horsesInFinishOrder.Count).ToDictionary(index => index + 1, index => horsesInFinishOrder[index]);
-                UIManager.Instance.EnableRacePositions(true);
-                UpdateUI(horsesInRacePositions);
-            }
-        }
-        #endregion
-
-        #region UI
-        /// <summary>
-        /// Update the UI for Horse racing positions.
-        /// </summary>
-        private void UpdateUI(Dictionary<int, int> racePositions)
-        {
-            //Update race Positions UI
-            UIManager.Instance.UpdateRacePositions(racePositions);
         }
         #endregion
 
@@ -180,7 +174,7 @@ namespace HorseRace
         /// </summary>
         private void VerifyRacePositionList()
         {
-            horseLoadManager.VerifyRacePositions(horsesInFinishOrder);
+            horseLoadManager.VerifyRacePositions(horsesInRaceFinishOrder);
         }
 
         /// <summary>

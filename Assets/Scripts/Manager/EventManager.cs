@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HorseRace
@@ -14,6 +15,11 @@ namespace HorseRace
         public event Action<CameraType> OnOvertakeCameraEvent;
         public event Action OnCameraConfigureEvent;
         public event Action<int,int> OnControlPointChangeEvent;
+        [Tooltip("Key: RacePosition, Value : HorseNumber")]
+        public event Action<Dictionary<int,int>> OnRacePositionsEvent;
+        public event Action<bool> OnRaceUIActiveEvent;
+        public event Action<int> OnRaceWinnerEvent;
+        public event Action OnWinnersMedalEvent;
         #endregion
 
         #region Unity Methods
@@ -26,6 +32,23 @@ namespace HorseRace
         }
         #endregion
 
+        public void OnWinnersMedals()
+        {
+            OnWinnersMedalEvent?.Invoke();
+        }
+
+        public void OnRaceWinner(int _horseNumber)
+        {
+            OnRaceWinnerEvent?.Invoke(_horseNumber);
+        }
+        public void EnableRaceUI(bool _enable)
+        {
+            OnRaceUIActiveEvent?.Invoke(_enable);
+        }
+        public void ShowRacePositions(Dictionary<int,int> racePostions)
+        {
+            OnRacePositionsEvent?.Invoke(racePostions);
+        }
         public void StartRace()
         {
             OnRaceStartEvent?.Invoke();

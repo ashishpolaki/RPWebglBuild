@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UI.Screen.Tab;
+using UnityEngine.UI;
 
 namespace UI.Screen
 {
@@ -10,6 +11,7 @@ namespace UI.Screen
         [SerializeField] private ScreenType screenType;
         [SerializeField] private ScreenTabType defaultOpenTab;
         [SerializeField] private List<BaseTab> tabs;
+        [SerializeField] private Image backGroundImage;
         #endregion
 
         #region Private Variables
@@ -29,6 +31,11 @@ namespace UI.Screen
         #region Public Methods
         public virtual void Open(ScreenTabType screenTabType)
         {
+            if (backGroundImage != null)
+            {
+                backGroundImage.sprite = UIController.Instance.CurrentTheme.backGround;
+                backGroundImage.color = UIController.Instance.CurrentTheme.backGroundTintColor;
+            }
             gameObject.SetActive(true);
             //If screenTabType is not None then open the tab
             if (screenTabType != ScreenTabType.None)
@@ -107,13 +114,13 @@ namespace UI.Screen
             {
                 if (Tabs[i].IsOpen)
                 {
-                Tabs[i].Close();
+                    Tabs[i].Close();
                 }
             }
             currentOpenTab = ScreenTabType.None;
         }
         #endregion
-       
+
         #endregion
 
     }

@@ -1,5 +1,6 @@
+using HorseRace.UI;
 using System;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,8 +9,8 @@ namespace UI.Screen
     public class RaceResultsScreen : BaseScreen
     {
         #region Inspector Variables
-        [SerializeField] private TextMeshProUGUI horseJockeyNameTxt;
         [SerializeField] private Button gotoHomeButton;
+        [SerializeField] private List<RaceWinnerUIBoard> raceWinnerUIBoardList;
         #endregion
 
         #region Unity methods
@@ -27,18 +28,13 @@ namespace UI.Screen
         public override void Open(ScreenTabType screenTabType)
         {
             base.Open(screenTabType);
-            if (GameManager.Instance.HorsesInRaceOrderList != null)
+            int count = Mathf.Min(GameManager.Instance.HorsesInRaceOrderList.Count, 3);
+            for (int i = 0; i < count; i++)
             {
-                int firstPlaceHorseNumber = GameManager.Instance.HorsesInRaceOrderList[0];
-                foreach (var playerValue in UGSManager.Instance.HostRaceData.qualifiedPlayers)
-                {
-                    if (playerValue.HorseNumber == firstPlaceHorseNumber)
-                    {
-                        horseJockeyNameTxt.text = $"Winner \n {playerValue.PlayerName} - Horse #{playerValue.HorseNumber}";
-                        break;
-                    }
-                }
+                int horseNumber = GameManager.Instance.HorsesInRaceOrderList[i];
+                raceWinnerUIBoardList[i].SetRaceWinner(horseNumber, UGSManager.Instance.HostRaceData.currentRaceAvatars[horseNumber]);
             }
+            UGSManager.Instance.HostRaceData.Dispose();
         }
         #endregion
 

@@ -42,12 +42,11 @@ namespace HorseRace
         #endregion
 
         #region Properties
-        public Material[] HorseMaterials { get; private set; }
-        public Material[] JockeyMaterials { get; private set; }
+        public Material HorseMaterial { get; private set; }
 
         public int HorseNumber { get => horseNumber; }
         public int RacePosition { get => racePosition; }
-        public float AgentCurrentSpeed { get => agent.speed; }
+        public float AgentCurrentSpeed { get => agent != null ? agent.speed : 0; }
         public float AgentActualSpeed { get => actualSpeed; }
         public bool IsFinishLineCrossed { get => isFinishLineCross; }
         #endregion
@@ -71,12 +70,12 @@ namespace HorseRace
                 horseLegs[i].SetHorseNumber(horseNumber);
             }
         }
-        public void InitializeMaterials(List<Material> _horseMaterials, List<Material> _jockeyMaterials)
+        public void InitializeMaterials(Material _horseMaterial)
         {
-            HorseMaterials = _horseMaterials.ToArray();
+            HorseMaterial = _horseMaterial;
             for (int i = 0; i < horseMeshes.Length; i++)
             {
-                horseMeshes[i].materials = HorseMaterials;
+                horseMeshes[i].material = HorseMaterial;
             }
         }
         public virtual void UpdateState()
@@ -96,24 +95,38 @@ namespace HorseRace
         {
             racePosition = raceNumber;
         }
+        public void RemoveNavmeshAgent()
+        {
+            // Assume this GameObject has a NavMeshAgent component
+            NavMeshAgent navMeshAgent = GetComponent<NavMeshAgent>();
+
+            // Check if the NavMeshAgent component exists
+            if (navMeshAgent != null)
+            {
+                // Remove the NavMeshAgent component
+                Destroy(navMeshAgent);
+            }
+        }
         #endregion
 
         #region Animation
         protected virtual void AnimationState()
         {
             //Vertical Movement Calculation
-            float velocity = agent.velocity.magnitude;
+            float velocity = 0;
             float animatorSpeed = 1;
-            if (velocity > 0)
+            if (agent != null)
             {
-                animatorSpeed = animationMinSpeed + Mathf.InverseLerp(14, 17, velocity);
-                verticalAnimDamping = Mathf.InverseLerp(0, 16, velocity);
+                velocity = agent.velocity.magnitude;
+                if (velocity > 0)
+                {
+                    animatorSpeed = animationMinSpeed + Mathf.InverseLerp(14, 17, velocity);
+                    verticalAnimDamping = Mathf.InverseLerp(0, 16, velocity);
+                }
+                horseAnimator.speed = jockeyAnimator.speed = animatorSpeed;
+                jockeyAnimator.SetFloat("Vertical", velocity == 0 ? velocity : verticalAnimDamping);
             }
-
-          //  jockeyAnimDamp = Mathf.Lerp(jockeyAnimDamp, verticalAnimDamping + Mathf.InverseLerp(16, 17, velocity), Time.deltaTime);
-            horseAnimator.speed = jockeyAnimator.speed = animatorSpeed;
             horseAnimator.SetFloat("Vertical", velocity == 0 ? velocity : verticalAnimDamping);
-            jockeyAnimator.SetFloat("Vertical", velocity == 0 ? velocity : verticalAnimDamping);
         }
         #endregion
     }

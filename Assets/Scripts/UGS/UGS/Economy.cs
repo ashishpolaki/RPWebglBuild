@@ -1,9 +1,7 @@
-using UnityEngine;
 using Unity.Services.Economy;
 using System.Threading.Tasks;
 using Unity.Services.Economy.Model;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
 
 namespace UGS
 {
@@ -19,31 +17,30 @@ namespace UGS
             await EconomyService.Instance.Configuration.SyncConfigurationAsync();
         }
 
-        public async Task GetInventoryItem(string itemID)
+        public async Task<List<PlayersInventoryItem>> GetInventoryItem(string itemID, string playersInventoryItemId)
         {
             GetInventoryOptions options = new GetInventoryOptions
             {
-                InventoryItemIds = new List<string>() { itemID }
+                InventoryItemIds = new List<string>() { itemID, },
+                PlayersInventoryItemIds = new List<string>() { playersInventoryItemId },
             };
 
-            GetInventoryResult upperBodyParts = await EconomyService.Instance.PlayerInventory.GetInventoryAsync(options);
+            GetInventoryResult inventoryResult = await EconomyService.Instance.PlayerInventory.GetInventoryAsync(options);
+            return inventoryResult.PlayersInventoryItems;
         }
-
-        public async Task AddInventoryItem(string itemID, EconomyCustom economy, string instanceId = "")
+        public async Task AddInventoryItem(string itemID, EconomyCustom economy, string playersInventoryItemId = "")
         {
             AddInventoryItemOptions options = new AddInventoryItemOptions
             {
                 InstanceData = economy,
-                PlayersInventoryItemId = instanceId
+                PlayersInventoryItemId = playersInventoryItemId
             };
 
-            PlayersInventoryItem createdInventoryItem = await EconomyService.Instance.PlayerInventory.AddInventoryItemAsync(itemID, options);
+            await EconomyService.Instance.PlayerInventory.AddInventoryItemAsync(itemID, options);
         }
-
         public async Task UpdateInventoryItem(string itemId, EconomyCustom instanceData)
         {
-            PlayersInventoryItem updatedInventoryItem = await EconomyService.Instance.PlayerInventory.UpdatePlayersInventoryItemAsync(itemId, instanceData);
+            await EconomyService.Instance.PlayerInventory.UpdatePlayersInventoryItemAsync(itemId, instanceData);
         }
-
     }
 }

@@ -9,8 +9,6 @@ namespace HorseRace
         #region Inspector Variables
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private PreWinnerManager preWinnerManager;
-        [SerializeField] private ActivateFinishLine finishLine;
-
         [SerializeField] private int changeSpeedPerControlPoint = 2;
         #endregion
 
@@ -29,8 +27,6 @@ namespace HorseRace
         public List<float> slowSpeedsList = new List<float>();
         public List<float> fastSpeedsList = new List<float>();
         public int preWinnerTargetRacePosition = -1;
-
-
 
         #region Unity Methods
         private void Awake()
@@ -72,7 +68,6 @@ namespace HorseRace
             OnSetPreWinner();
             EventManager.Instance.OnCameraSetup();
         }
-
         /// <summary>
         /// Set prewinner horse for the current race.
         /// </summary>
@@ -82,7 +77,6 @@ namespace HorseRace
             preWinnerHorseNumber = horsesByNumber.ElementAt(randomIndex).Key;
             preWinnerHorse = horsesByNumber[preWinnerHorseNumber];
             preWinnerManager.SetPreWinner(preWinnerHorse);
-            finishLine.SetPreWinner(preWinnerHorse);
         }
         #endregion
 
@@ -117,7 +111,7 @@ namespace HorseRace
 
             //Save Race.
             saveManager.SetPreDeterminedWinner(preWinnerHorseNumber);
-            saveManager.SetWinnersList(horsesInFinishOrder);
+            saveManager.SetWinnersList(horsesInRaceFinishOrder);
             saveManager.SetHorseData(horseDatasList);
 
             //Reload the currentScene Again, play infinite loops

@@ -2,26 +2,21 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UI;
 
 namespace HorseRace
 {
     public class RaceWinnerSpawn : MonoBehaviour
     {
-        [SerializeField] private WinnerHorseJockeyDataSO winnerHorseJockeyDataSO;
         [SerializeField] private SkinnedMeshRenderer[] horseMeshes;
-        [SerializeField] private SkinnedMeshRenderer[] jockeyMeshes;
         [SerializeField] private Animator jockeyAnimator;
         [SerializeField] private float fadeValue = 0.25f;
 
         private void Start()
         {
             ChangeAnimationState();
-            InitializeMaterials();
             //   ShowRaceResults();
-            UIController.Instance.ScreenEvent(ScreenType.RaceResults, UIScreenEvent.Open);
         }
-       
+
         private async void ShowRaceResults()
         {
             //Get the horses with race Positions
@@ -46,17 +41,6 @@ namespace HorseRace
             //Upload race results in cloud
             Func<Task> raceResultResponse = () => UGSManager.Instance.CloudCode.SendRaceResults(raceResult);
             await LoadingScreen.Instance.PerformAsyncWithLoading(raceResultResponse);
-        }
-        private void InitializeMaterials()
-        {
-            for (int i = 0; i < horseMeshes.Length; i++)
-            {
-                horseMeshes[i].materials = winnerHorseJockeyDataSO.winnerHorseMaterials;
-            }
-            for (int i = 0; i < jockeyMeshes.Length; i++)
-            {
-                jockeyMeshes[i].materials = winnerHorseJockeyDataSO.WinnerJockeyMaterials;
-            }
         }
         private void ChangeAnimationState()
         {

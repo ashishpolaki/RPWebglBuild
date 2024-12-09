@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UGS;
+using UnityEngine;
 
 public class GameData
 {
@@ -40,6 +40,7 @@ public class PlayerData : GameData, IDisposable
     public string hostID;
     public string hostVenueName;
     public bool isHost;
+    public Character character;
 
     public PlayerData() : base()
     {
@@ -48,6 +49,7 @@ public class PlayerData : GameData, IDisposable
         hostID = default;
         isHost = false;
         hostVenueName = default;
+        character = null;
     }
     public void Dispose()
     {
@@ -78,15 +80,28 @@ public class HostRaceData : GameData, IDisposable
 {
     public List<RaceLobbyParticipant> qualifiedPlayers;
     public List<CurrentRacePlayerCheckIn> unQualifiedPlayersList;
+    [Tooltip("Key : HorseNumber, Value : CharacterCustomisationData")]
+    public Dictionary<int, CharacterCustomisationEconomy> characterCustomisationDatas;
+    public Dictionary<int, RenderTexture> currentRaceAvatars;
 
     public HostRaceData() : base()
     {
+        currentRaceAvatars = new Dictionary<int, RenderTexture>();
         qualifiedPlayers = new List<RaceLobbyParticipant>();
         unQualifiedPlayersList = new List<CurrentRacePlayerCheckIn>();
-    }   
+        characterCustomisationDatas = new Dictionary<int, CharacterCustomisationEconomy>();
+    }
 
     public void Dispose()
     {
+        currentRaceAvatars.Clear();
+        qualifiedPlayers.Clear();
+        unQualifiedPlayersList.Clear();
+        characterCustomisationDatas.Clear();
+        currentRaceAvatars = null;
+        qualifiedPlayers = null;
+        unQualifiedPlayersList = null;
+        characterCustomisationDatas = null;
         GC.SuppressFinalize(this);
     }
 }

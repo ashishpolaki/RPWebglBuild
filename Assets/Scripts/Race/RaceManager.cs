@@ -18,8 +18,8 @@ namespace HorseRace
         [Tooltip("Key: RacePosition, Value : HorseNumber")]
         protected Dictionary<int, int> horsesInRacePositions = new Dictionary<int, int>();
         [Tooltip("Key: RacePosition, (Value : Item1 = Horse Number , Item2 = Horse Transform)")]
-        protected Dictionary<int,(int,Transform)> horsesTransformInRaceOrder = new Dictionary<int, (int, Transform)>();
-        protected List<int> horsesInFinishOrder = new List<int>();
+        protected Dictionary<int, (int, Transform)> horsesTransformInRaceOrder = new Dictionary<int, (int, Transform)>();
+        protected List<int> horsesInRaceFinishOrder = new List<int>();
         #endregion
 
         #region Properties
@@ -30,13 +30,11 @@ namespace HorseRace
         protected virtual void OnEnable()
         {
             EventManager.Instance.OnRaceStartEvent += StartRace;
-            //    EventManager.Instance.OnChangeWaypointGroupEvent += OnWaypointGroupChange;
             EventManager.Instance.OnCrossFinishLineEvent += FinishLineCrossed;
         }
         protected virtual void OnDisable()
         {
             EventManager.Instance.OnRaceStartEvent -= StartRace;
-            //     EventManager.Instance.OnChangeWaypointGroupEvent -= OnWaypointGroupChange;
             EventManager.Instance.OnCrossFinishLineEvent -= FinishLineCrossed;
         }
         protected virtual void FixedUpdate()
@@ -44,30 +42,6 @@ namespace HorseRace
             if (isRaceStart)
             {
                 UpdateHorseRacePositions();
-            }
-        }
-        #endregion
-
-        #region Race Position Tracking
-        protected virtual void UpdateHorseRacePositions()
-        {
-            //Update Horses InRace
-            Dictionary<int,float> horsesSplinePercentages = new Dictionary<int, float>();
-            for (int i = 1; i <= horsesByNumber.Count; i++)
-            {
-                int horseNumber = horsesByNumber.ElementAt(i - 1).Key;
-                horsesByNumber[horseNumber].UpdateState();
-                horsesSplinePercentages[i] = horsesByNumber[i].currentPercentageInSpline;
-            }
-
-            //Sort Horse Racepositions by Spline Percentages
-            var horsesInRaceOrder =  horsesSplinePercentages.OrderByDescending(horsesSplinePercentages => horsesSplinePercentages.Value);
-            for (int i = 1; i <= horsesByNumber.Count; i++)
-            {
-                int horseNumber = horsesInRaceOrder.ElementAt(i - 1).Key;
-                int raceposition = i;
-                horsesInRacePositions[raceposition] = horseNumber;
-                horsesByNumber[horseNumber].SetRacePosition(raceposition);
             }
         }
         #endregion
@@ -80,22 +54,41 @@ namespace HorseRace
             }
         }
 
+        #region Race Position Tracking
+        protected virtual void UpdateHorseRacePositions()
+        {
+            //Update Horses InRace
+            var horsesSplinePercentages = new Dictionary<int, float>();
+            foreach (var horse in horsesByNumber.Values)
+            {
+                horse.UpdateState();
+                horsesSplinePercentages[horse.HorseNumber] = horse.currentPercentageInSpline;
+            }
+
+            //Sort Horse Racepositions by Spline Percentages
+            var horsesInRaceOrder = new List<KeyValuePair<int, float>>(horsesSplinePercentages);
+            horsesInRaceOrder.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+
+            for (int i = 1; i <= horsesByNumber.Count; i++)
+            {
+                int horseNumber = horsesInRaceOrder.ElementAt(i - 1).Key;
+                int raceposition = i;
+                horsesInRacePositions[raceposition] = horseNumber;
+                horsesByNumber[horseNumber].SetRacePosition(raceposition);
+            }
+        }
+        #endregion
+
+        #region Horse Transforms
         public Dictionary<int, (int, Transform)> HorseTransformsInRaceOrder()
         {
-            if (horsesTransformInRaceOrder.Count > 0)
-            {
-                return horsesTransformInRaceOrder;
-            }
-            else
-            {
-                return new Dictionary<int, (int, Transform)>();
-            }
+            return horsesTransformInRaceOrder.Count > 0 ? horsesTransformInRaceOrder : new Dictionary<int, (int, Transform)>();
         }
         public virtual Transform RaceWinnerTransform()
         {
-            return horsesByNumber[horsesInFinishOrder[0]].transform;
+            return horsesByNumber[horsesInRaceFinishOrder[0]].transform;
         }
-
+        #endregion
 
         #region Race Start/Finish Methods
         protected virtual void StartRace()
@@ -104,11 +97,11 @@ namespace HorseRace
         }
         protected virtual void FinishLineCrossed(int _horseNumber)
         {
-            horsesInFinishOrder.Add(_horseNumber);
+            horsesInRaceFinishOrder.Add(_horseNumber);
             horsesByNumber[_horseNumber].FinishLineCrossed();
 
             //Return True, if all Horses Crossed Finish Line
-            if (horsesInFinishOrder.Count >= horsesByNumber.Count)
+            if (horsesInRaceFinishOrder.Count >= horsesByNumber.Count)
             {
                 RaceFinished();
             }
