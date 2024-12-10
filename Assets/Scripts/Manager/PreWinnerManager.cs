@@ -18,7 +18,7 @@ namespace HorseRace
     {
         #region Inspector Variables
         [SerializeField] private List<RaceTargetPosition> raceTargetPositionsList = new List<RaceTargetPosition>();
-        [SerializeField] private CatmullRomSpline catmullRomSpline;
+        [SerializeField] private Spline catmullRomSpline;
         [SerializeField] private HorseSpeedSO horsesSpeedSO;
 
         [SerializeField] private int startCheckControlPointIdx = 2;

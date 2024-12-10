@@ -111,7 +111,7 @@ public class UGSManager : MonoBehaviour
     #region Public Methods
     public async Task<string> GetHostVenueName(float _latitude, float _longitude)
     {
-#if CHEATCODE_ENABLE
+#if CHEAT_CODE
         _latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
         _longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
 #endif

@@ -68,14 +68,17 @@ public class Character : MonoBehaviour
     {
         CreateNewTexture();
     }
-    private void CreateNewTexture()
+    public void CreateNewTexture()
     {
         texture = Instantiate(texture);
         foreach (var characterPartData in characterDataList)
         {
             if (characterPartData.meshRenderer != null)
             {
-                characterPartData.meshRenderer.material.mainTexture = texture;
+                foreach (var item in characterPartData.meshRenderer.materials)
+                {
+                    item.mainTexture = texture;
+                }
             }
         }
     }

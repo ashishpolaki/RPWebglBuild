@@ -1,7 +1,9 @@
+#if CHEAT_CODE
 using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class CheatCode : MonoBehaviour
 {
@@ -72,3 +74,4 @@ public class CheatCode : MonoBehaviour
         return utcDateTime.ToString("yyyy-MM-dd HH:mm:ss");
     }
 }
+#endif

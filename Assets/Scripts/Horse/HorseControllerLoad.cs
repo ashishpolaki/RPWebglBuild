@@ -48,7 +48,7 @@ namespace HorseRace
         /// </summary>
         private void SpeedState()
         {
-            if (canSlowAgentSpeed)
+            if (canSlowAgentSpeed || isFinishLineCross)
             {
                 if (agent != null)
                 {

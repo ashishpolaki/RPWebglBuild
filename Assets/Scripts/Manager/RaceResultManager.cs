@@ -8,7 +8,8 @@ public class RaceResultManager : MonoBehaviour
     [SerializeField] private List<Transform> horseTransformsList;
     [SerializeField] private List<Transform> characterTransformsList;
     [SerializeField] private List<HorseControllerLoad> horses;
-    [SerializeField] private RuntimeAnimatorController jockeyStandAnimatorController;
+    [SerializeField] private RuntimeAnimatorController winnerAnimatorController;
+    [SerializeField] private RuntimeAnimatorController sideWinnersAnimatorController;
 
     public void InitializeRaceResults(List<HorseControllerLoad> _horses)
     {
@@ -27,7 +28,14 @@ public class RaceResultManager : MonoBehaviour
             horses[i].Character.transform.rotation = characterTransformsList[i].rotation;
 
             //Change Character Animator
-            horses[i].Character.ChangeAnimator(jockeyStandAnimatorController);
+            if(i == 0)
+            {
+                horses[i].Character.ChangeAnimator(winnerAnimatorController);
+            }
+            else
+            {
+                horses[i].Character.ChangeAnimator(sideWinnersAnimatorController);
+            }
         }
 
         UIController.Instance.ScreenEvent(ScreenType.RaceResults, UIScreenEvent.Open);

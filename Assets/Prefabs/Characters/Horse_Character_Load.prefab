@@ -795,6 +795,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2520815082501736801, guid: cc1bd9119b2db7a42b471ade20eba96d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2817508119553823395, guid: cc1bd9119b2db7a42b471ade20eba96d, type: 3}
       propertyPath: m_Avatar
       value: 
@@ -803,6 +807,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: db12873384f38c042bbcbaac15a790e7, type: 2}
+    - target: {fileID: 5631929531315099444, guid: cc1bd9119b2db7a42b471ade20eba96d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 986959273214535132, guid: cc1bd9119b2db7a42b471ade20eba96d, type: 3}
     - {fileID: 4036247405977675169, guid: cc1bd9119b2db7a42b471ade20eba96d, type: 3}
