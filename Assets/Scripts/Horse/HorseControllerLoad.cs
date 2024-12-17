@@ -11,18 +11,15 @@ namespace HorseRace
         {
             base.UpdateState();
         }
-
         protected override void ControlPointChange()
         {
             GameManager.Instance.RaceManager.ChangeControlPoint(HorseNumber);
         }
-
         public override void SetSpline(SplineData splineData)
         {
             currentSplineData = splineData;
             currentSplineIndex = splineData.splineIndex;
         }
-
         public void SetCharacter(CharacterCustomisationEconomy characterCustomisationEconomy)
         {
             character.Load(characterCustomisationEconomy);

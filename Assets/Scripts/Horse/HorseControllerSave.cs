@@ -17,6 +17,8 @@ namespace HorseRace
         //[SerializeField] private int overtakeCameraWaypointGroupMax;
         //[SerializeField] private float overtakeCheckTime = 3f;
         //[SerializeField] private int minHorsesOvertake = 2;
+        private int previousSplineIndex = -1;
+        private int nextSplineIndex = -1;
 
         public override void RaceStart()
         {
@@ -39,6 +41,31 @@ namespace HorseRace
             base.InitializeData(_splineData, _speed, _maxSpeed, _accleration, _thresHold);
         }
 
+        protected override void ControlPointChange()
+        {
+            //Control Point Changed
+            if (currentSplineData.splineIndex == nextSplineIndex)
+            {
+                //Reached the spline.
+                GameManager.Instance.RaceManager.HorseReachedSpline(nextSplineIndex, previousSplineIndex, HorseNumber);
+                currentSplineIndex = nextSplineIndex;
+                nextSplineIndex = -1;
+                previousSplineIndex = -1;
+            }
+            base.ControlPointChange();
+        }
+
+        public override void SetSpline(SplineData splineData)
+        {
+            if (splineData.splineIndex != currentSplineIndex)
+            {
+                previousSplineIndex = currentSplineData.splineIndex;
+                nextSplineIndex = splineData.splineIndex;
+            }
+            GameManager.Instance.RaceManager.HorseChangingSpline(currentSplineIndex - 1, nextSplineIndex - 1, HorseNumber);
+            base.SetSpline(splineData);
+        }
+
         #region Speed
         public override void SetSpeed(float speed, float aceleration)
         {
@@ -52,7 +79,6 @@ namespace HorseRace
             });
         }
         #endregion
-
 
         #region Save Info
         private void SaveOvertakeCameraData()
@@ -96,5 +122,6 @@ namespace HorseRace
             return horseData;
         }
         #endregion
+
     }
 }

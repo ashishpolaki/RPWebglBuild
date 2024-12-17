@@ -6,6 +6,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
+//Test Script
 public class BoundingBoxCalculator : MonoBehaviour
 {
     public bool onValidate = false;
@@ -38,9 +39,11 @@ public class BoundingBoxCalculator : MonoBehaviour
     public float targetSpeed2;
     public float currentSpeed2;
     public Vector3 startPosition2;
+    public float timescale;
 
     void Start()
     {
+        Time.timeScale = timescale;
         corners1 = new NativeArray<float3>(8, Allocator.Persistent);
         positions1 = new NativeList<float3>(Allocator.Persistent);
         quaternions1 = new NativeList<quaternion>(Allocator.Persistent);
@@ -100,6 +103,7 @@ public class BoundingBoxCalculator : MonoBehaviour
         {
             Debug.Log("Bounding boxes are colliding!");
         }
+        Time.timeScale = 1f;
         StartCoroutine(VisualizeBoundingBoxes(positions1, quaternions1, positions2, quaternions2));
     }
     private void OnDestroy()
@@ -265,8 +269,13 @@ public struct TestHorseBoundingBoxCalculationJob : IJob
         int splinePointIndex2 = 0;
         isColliding[0] = false;
 
-        while (splinePointIndex1 < splinePoints1.Length || splinePointIndex2 < splinePoints2.Length || (currentSpeed1 <= 0 && currentSpeed2 <= 0))
+        while (splinePointIndex1 < splinePoints1.Length && splinePointIndex2 < splinePoints2.Length)
         {
+            //If both horses speed is zero, then break the loop
+            if ((currentSpeed1 <= 0 && currentSpeed2 <= 0))
+            {
+                break;
+            }
             // Horse 1
             if (splinePointIndex1 < splinePoints1.Length)
             {

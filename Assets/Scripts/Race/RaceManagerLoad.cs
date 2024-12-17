@@ -37,6 +37,7 @@ namespace HorseRace
         }
         #endregion
 
+        #region Initialize
         public override void Initialize(HorseController[] _horses)
         {
             base.Initialize(_horses);
@@ -45,6 +46,7 @@ namespace HorseRace
             UIController.Instance.ScreenEvent(ScreenType.Race, UIScreenEvent.Open);
             waitForPositionCalculation = new WaitForSeconds(GameManager.Instance.HorsesToSpawnList.Count / 12);
         }
+        #endregion
 
         #region Update Horse Race Positions
         IEnumerator IECalculateHorseRacePositions()
@@ -96,11 +98,14 @@ namespace HorseRace
         }
         #endregion
 
+        #region Horse Transforms
         public override Transform RaceWinnerTransform()
         {
             return horsesByNumber[preWinnerHorseNumber].transform;
         }
+        #endregion
 
+        #region Race Winner Medals
         private void ConcludeRaceWithWinner()
         {
             if (horsesInRaceFinishOrder.Count > 0 && !isRaceMedalsShown)
@@ -130,7 +135,9 @@ namespace HorseRace
                 }
             }
         }
+        #endregion
 
+        #region Splines
         public override void ChangeControlPoint(int horseNumber)
         {
             int horseDataArrayIndex = horseNumber - 1;
@@ -139,6 +146,7 @@ namespace HorseRace
             horsesByNumber[horseNumber].SetSpline(splineData);
             horsesByNumber[horseNumber].SetSpeed(controlPointSave.speed, controlPointSave.acceleration);
         }
+        #endregion
 
         #region Race Start/Finish Methods
         protected override void StartRace()

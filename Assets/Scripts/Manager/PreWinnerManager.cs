@@ -18,7 +18,7 @@ namespace HorseRace
     {
         #region Inspector Variables
         [SerializeField] private List<RaceTargetPosition> raceTargetPositionsList = new List<RaceTargetPosition>();
-        [SerializeField] private Spline catmullRomSpline;
+        [SerializeField] private HorseSpline spline;
         [SerializeField] private HorseSpeedSO horsesSpeedSO;
 
         [SerializeField] private int startCheckControlPointIdx = 2;
@@ -92,7 +92,7 @@ namespace HorseRace
                 prevTargetRacePosition = nextTargetRacePosition;
 
                 RaceManagerSave raceManager = (RaceManagerSave)GameManager.Instance.RaceManager;
-                //raceManager.SetPreWinnerTargetRacePosition(nextTargetRacePosition);
+                raceManager.SetPreWinnerTargetRacePosition(nextTargetRacePosition);
             }
         }
 
@@ -120,7 +120,6 @@ namespace HorseRace
         {
             return (raceTargetPositionsList.Count > 0) && (controlPointIndex >= startCheckControlPointIdx);
         }
-
 
         #region Initialize Winner Data
         private void InitializeData()
@@ -158,10 +157,11 @@ namespace HorseRace
             NativeArray<int> selectedControlPoints = new NativeArray<int>(numberOfPoints, Allocator.TempJob);
             GetRandomControlPointsJob job = new GetRandomControlPointsJob
             {
-                totalPoints = catmullRomSpline.ControlPoints.Count,
+                totalPoints = spline.controlPoints.Count,
                 numberOfPoints = numberOfPoints,
                 minGap = controlPointsMinGap,
                 seed = (uint)UnityEngine.Random.Range(1, int.MaxValue),
+                startCheckControlPointIndex = startCheckControlPointIdx,
                 selectedPoints = selectedControlPoints
             };
             JobHandle handle = job.Schedule();
@@ -185,6 +185,7 @@ namespace HorseRace
         public int totalPoints;
         public int numberOfPoints;
         public int minGap;
+        public int startCheckControlPointIndex;
         public uint seed;
 
         public NativeArray<int> selectedPoints;
@@ -197,6 +198,10 @@ namespace HorseRace
             while (tempSelectedPoints.Count < numberOfPoints)
             {
                 int point = random.NextInt(totalPoints);
+
+                // Ensure the point is greater than startCheckControlPointIdx
+                if (point <= startCheckControlPointIndex)
+                    continue;
 
                 // Ensure the point is not too close to any already selected points
                 bool isValid = true;
