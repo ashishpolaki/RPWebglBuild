@@ -92,7 +92,7 @@ namespace HorseRace
                 prevTargetRacePosition = nextTargetRacePosition;
 
                 RaceManagerSave raceManager = (RaceManagerSave)GameManager.Instance.RaceManager;
-                raceManager.SetPreWinnerTargetRacePosition(nextTargetRacePosition);
+                //raceManager.SetPreWinnerTargetRacePosition(nextTargetRacePosition);
             }
         }
 

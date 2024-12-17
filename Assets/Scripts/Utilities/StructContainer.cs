@@ -1,6 +1,4 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class StructContainer
 {
@@ -65,14 +63,16 @@ public struct Position
 public struct HorseData
 {
     public string horseNumber;
+    public ControlPointSave[] controlPoints;
     public string overtakeData;
-    public string raceData;
 }
 [System.Serializable]
-public struct HorseVelocity
+public struct ControlPointSave
 {
-    public string x;
-    public string z;
+    public float speed;
+    public float acceleration;
+    public int splineIndex;
+    public int controlPointIndex;
 }
 [System.Serializable]
 public struct RaceVarianceResults

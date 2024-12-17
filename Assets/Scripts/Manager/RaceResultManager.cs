@@ -18,7 +18,7 @@ public class RaceResultManager : MonoBehaviour
         for (int i = 0; i < horses.Count ; i++)
         {
             //Load Horse
-            horses[i].RemoveNavmeshAgent();
+            //horses[i].RemoveNavmeshAgent();
             horses[i].transform.position = horseTransformsList[i].position;
             horses[i].transform.rotation = horseTransformsList[i].rotation;
 
