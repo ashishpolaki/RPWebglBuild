@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1585de293560142a37aa2e4a21e92d, type: 3}
   m_Name: InRaceHorseSpeeds
   m_EditorClassIdentifier: 
-  startMinSpeed: 13
-  startMaxSpeed: 18
-  inRaceMinSpeed: 14
-  inRaceMaxSpeed: 16
-  inRaceMinSpeedInterval: 5
-  inRaceMaxSpeedInterval: 6
+  targetSpeedRange:
+    x: 13
+    y: 16
+  initialAccelerationRange:
+    x: 7
+    y: 10
+  finishRaceControlPointIndex: 69
+  finishRaceAccelerationIncrement: 0.5
+  finishRaceAccelerationMultiplier: 0.03
+  acceleration: 2
+  maxSpeed: 15

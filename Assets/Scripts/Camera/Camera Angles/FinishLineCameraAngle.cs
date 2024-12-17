@@ -6,7 +6,6 @@ namespace HorseRace.Camera
     public class FinishLineCameraAngle : CameraAngle
     {
         [SerializeField] private float slowDownFactor;
-        [SerializeField] private float slowDownLength;
         [SerializeField] private float fixedSlowDownSpeed;
         [SerializeField] private float slowDownStartAfter = 1f;
 
@@ -32,7 +31,7 @@ namespace HorseRace.Camera
         public override void FinishState()
         {
             Time.timeScale = 1;
-            //          Time.fixedDeltaTime = fixedDeltaTime;
+            Time.fixedDeltaTime = fixedDeltaTime;
             base.FinishState();
         }
         IEnumerator IEStartSlowDown()
@@ -40,7 +39,7 @@ namespace HorseRace.Camera
             fixedDeltaTime = Time.fixedDeltaTime;
             yield return new WaitForSeconds(slowDownStartAfter);
             Time.timeScale = slowDownFactor;
-            //        Time.fixedDeltaTime = Time.timeScale * fixedSlowDownSpeed;
+            Time.fixedDeltaTime =  fixedSlowDownSpeed;
         }
     }
 }

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3558003615993708250}
-  - component: {fileID: 5750909885858109595}
   - component: {fileID: -3683993312135743439}
   m_Layer: 0
   m_Name: Horse_Character_Load
@@ -34,28 +33,6 @@ Transform:
   - {fileID: 2174921525113132505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -89.12, z: 0}
---- !u!195 &5750909885858109595
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4224020205653764925}
-  m_Enabled: 1
-  m_AgentTypeID: -1372625422
-  m_Radius: 0.6
-  m_Speed: 20
-  m_Acceleration: 10
-  avoidancePriority: 50
-  m_AngularSpeed: 25
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 0
-  m_AutoBraking: 0
-  m_AutoRepath: 0
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 3
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &-3683993312135743439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,14 +53,11 @@ MonoBehaviour:
   - {fileID: 4790750241945534040}
   horseMeshes:
   - {fileID: 2518837155690047007}
-  jockeyMeshes: []
   horseAnimator: {fileID: 6675397057991039522}
   jockeyAnimator: {fileID: 6378605570329760454}
-  agent: {fileID: 5750909885858109595}
-  animationMinSpeed: 1
-  slowDownSpeedLerp: 0.02
-  currentPercentageInSpline: 0
-  splineChangeDistance: 3
+  colliderTransform: {fileID: 0}
+  canDrawGizmos: 0
+  customDeltaTIme: 1
   character: {fileID: 6275033480894677282}
 --- !u!1 &4787377853415501036
 GameObject:
