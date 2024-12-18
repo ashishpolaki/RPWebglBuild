@@ -29,9 +29,28 @@ namespace HorseRace
         }
         protected override void FixedUpdate()
         {
+            if (!isRaceStart)
+            {
+                return;
+            }
             if (isRaceStart)
             {
-                base.FixedUpdate();
+                //Update horses state
+                foreach (var item in horsesByNumber.Values)
+                {
+                    item.UpdateState();
+                    if (item.IsControlPointChange == true)
+                    {
+                        ChangeControlPoint(item.HorseNumber);
+                    }
+                }
+
+                //Calculate Horse RacePositions
+                if (!areRacePositionsCalculating)
+                {
+                    areRacePositionsCalculating = true;
+                    StartCoroutine(IECalculateHorseRacePositions());
+                }
                 ConcludeRaceWithWinner();
             }
         }
@@ -80,22 +99,6 @@ namespace HorseRace
             }
             areRacePositionsCalculating = false;
         }
-
-        protected override void UpdateHorseRacePositions()
-        {
-            //Update horses state
-            foreach (var item in horsesByNumber.Values)
-            {
-                item.UpdateState();
-            }
-
-            //Calculate Horse RacePositions
-            if (!areRacePositionsCalculating)
-            {
-                areRacePositionsCalculating = true;
-                StartCoroutine(IECalculateHorseRacePositions());
-            }
-        }
         #endregion
 
         #region Horse Transforms
@@ -114,7 +117,7 @@ namespace HorseRace
 
                 if (horsesByNumber.ContainsKey(winnerHorseNumber))
                 {
-                     if (horsesByNumber[winnerHorseNumber].CurrentSpeed <= 0.5f)
+                    if (horsesByNumber[winnerHorseNumber].CurrentSpeed <= 0.5f)
                     {
                         isRaceMedalsShown = true;
                         int maxRaceWinnersCount = 3;
@@ -145,6 +148,7 @@ namespace HorseRace
             SplineData splineData = horseSplineManager.GetSplineData(horsesByNumber[horseNumber].CurrentSplineIndex, controlPointSave.splineIndex, horsesByNumber[horseNumber].CurrentControlPointIndex);
             horsesByNumber[horseNumber].SetSpline(splineData);
             horsesByNumber[horseNumber].SetSpeed(controlPointSave.speed, controlPointSave.acceleration);
+            horsesByNumber[horseNumber].OnControlPointChangeSuccessful();
         }
         #endregion
 

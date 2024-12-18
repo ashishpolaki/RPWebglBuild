@@ -24,7 +24,7 @@ namespace HorseRace
         private List<float> slowSpeedsList = new List<float>();
         private List<float> fastSpeedsList = new List<float>();
         private List<float> horseFinishLineAccelerationValues = new List<float>();
-        private List<int> finishLineSplinePattern = new List<int> { 0, -1, 1 };
+        private List<int> finishLineSplinePattern = new List<int> { 0, -1, 1, 2, -2, 3, -3 };
         #endregion
 
         #region Unity Methods
@@ -45,7 +45,15 @@ namespace HorseRace
                 foreach (var item in horsesByNumber.Values)
                 {
                     item.UpdateState();
+                    if (item.IsControlPointChange == true)
+                    {
+                        //Stop the Game and make calculation to change the spline
+                        Time.timeScale = 0;
+                        ChangeControlPoint(item.HorseNumber);
+                        Time.timeScale = 1;
+                    }
                 }
+                CalculateRacePositions();
             }
 
             if (isRaceFinish)
@@ -141,6 +149,7 @@ namespace HorseRace
                 speed = speed - (speed * 0.10f);
                 slowSpeedsList.Add(speed);
             }
+            slowSpeedsList = slowSpeedsList.OrderBy(x => x).ToList();
         }
         private void GenerateFastSpeedsList(int count)
         {
@@ -152,51 +161,138 @@ namespace HorseRace
                 speed = speed + (speed * 0.10f);
                 fastSpeedsList.Add(speed);
             }
+            fastSpeedsList = fastSpeedsList.OrderBy(x => x).ToList();
+        }
+
+        private float GetSpeed(int HorseNumber)
+        {
+            float speed = Utils.GenerateRandomNumber(horseSpeedSO.targetSpeedRange.x, horseSpeedSO.targetSpeedRange.y);
+            if (preWinnerTargetRacePosition == -1 || preWinnerTargetRacePosition == horsesByNumber[preWinnerHorseNumber].RacePosition)
+            {
+                return speed;
+            }
+            if (IsPreWinnerHorse(HorseNumber))
+            {
+                if (IsHorsePositionAhead(preWinnerHorse.RacePosition, preWinnerTargetRacePosition))
+                {
+                    speed = GetRandomSlowSpeed();
+                }
+                else
+                {
+                    speed = GetRandomHighSpeed();
+                }
+            }
+            //Check if the Normal horse is in the preWinner horse's target race position.
+            else
+            {
+                int currentPosition = horsesByNumber[HorseNumber].RacePosition;
+                int startPosition = preWinnerHorse.RacePosition + 1;
+
+                if ((currentPosition >= startPosition && currentPosition <= preWinnerTargetRacePosition) ||
+                    (currentPosition < startPosition && currentPosition >= preWinnerTargetRacePosition))
+                {
+                    if (IsHorsePositionAhead(horsesByNumber[HorseNumber].RacePosition, preWinnerTargetRacePosition))
+                    {
+                        speed = GetRandomHighSpeed();
+                    }
+                    else
+                    {
+                        speed = GetRandomSlowSpeed();
+                    }
+                }
+            }
+            return speed;
         }
         #endregion
 
-        #region Spline
+        #region Splines 
+        private void SetFinishLineSplinePattern(int horseNumber)
+        {
+            bool isCollided = true;
+
+            for (int i = 0; i < finishLineSplinePattern.Count; i++)
+            {
+                int splineIndex = horsesByNumber[horseNumber].CurrentSplineIndex + finishLineSplinePattern[i];
+
+                if (splineIndex > 0 && splineIndex <= horseSplineManager.TotalSplinesCount)
+                {
+                    List<int> horses = horseSplineManager.GetHorsesCurrentlyInSpline(splineIndex);
+                    horses.AddRange(horseSplineManager.GetIncomingHorsesInSpline(splineIndex));
+                    foreach (var otherhorseNumber in horses)
+                    {
+                        if (!CheckIfHorseNumbersAreSame(horseNumber, otherhorseNumber)
+                            && IsOtherHorseIsFrontOfCurrentHorse(horseNumber, otherhorseNumber))
+                        {
+                            isCollided = CheckCollisionWithOtherHorse(horseNumber, otherhorseNumber, splineIndex, horsesByNumber[horseNumber].CurrentSplineIndex, 0);
+                            if (!isCollided)
+                            {
+                                if (horsesByNumber[horseNumber].CurrentSplineIndex != splineIndex)
+                                {
+                                    horsesByNumber[horseNumber].SetSpline(horseSplineManager.GetSplineData(horsesByNumber[horseNumber].CurrentSplineIndex, splineIndex, horsesByNumber[horseNumber].CurrentControlPointIndex));
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    if (!isCollided)
+                        break;
+                }
+            }
+            horsesByNumber[horseNumber].SetSpeed(0, horseFinishLineAccelerationValues[0]);
+            horsesByNumber[horseNumber].OnControlPointChangeSuccessful();
+            horseFinishLineAccelerationValues.RemoveAt(0);
+        }
+
+        private bool CheckIncomingCollisions(int horseNumber, int currentSplineIndex, int controlPointIndex, ref float targetSpeed)
+        {
+            List<int> horsesIncomingIntoCurrentSpline = new List<int>(horseSplineManager.GetIncomingHorsesInSpline(currentSplineIndex));
+            foreach (var otherHorseNumber in horsesIncomingIntoCurrentSpline)
+            {
+                if (!CheckIfHorseNumbersAreSame(horseNumber, otherHorseNumber) &&
+                    IsOtherHorseIsInTheRangeOfControlPoint(otherHorseNumber, controlPointIndex))
+                {
+                    bool isCollisionWithIncomingHorse = CheckCollisionWithOtherHorse(horseNumber, otherHorseNumber, currentSplineIndex, currentSplineIndex, targetSpeed);
+                    if (isCollisionWithIncomingHorse)
+                    {
+                        targetSpeed = horsesByNumber[horseNumber].TargetSpeed;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool CheckFrontCollisions(int horseNumber, int currentSplineIndex, int controlPointIndex, ref float targetSpeed)
+        {
+            List<int> horsesInFrontOfCurrentHorse = new List<int>(horseSplineManager.GetHorsesCurrentlyInSpline(currentSplineIndex));
+            foreach (var otherHorseNumber in horsesInFrontOfCurrentHorse)
+            {
+                if (!CheckIfHorseNumbersAreSame(horseNumber, otherHorseNumber)
+                    && IsOtherHorseIsInTheRangeOfControlPoint(otherHorseNumber, controlPointIndex)
+                    && IsOtherHorseIsFrontOfCurrentHorse(horseNumber, otherHorseNumber))
+                {
+                    bool isCollisionWithFrontHorse = CheckCollisionWithOtherHorse(horseNumber, otherHorseNumber, currentSplineIndex, currentSplineIndex, targetSpeed);
+                    if (isCollisionWithFrontHorse)
+                    {
+                        targetSpeed = horseSpeedSO.targetSpeedRange.x;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public override void ChangeControlPoint(int horseNumber)
         {
+            //Check if all the horses has crossed the finish line.
             if (horseFinishLineAccelerationValues.Count <= 0)
             {
                 return;
             }
+
+            //Set Acceleration Values for the horses after finish Line.
             if (horseSpeedSO.finishRaceControlPointIndex <= horsesByNumber[horseNumber].CurrentControlPointIndex)
             {
-                //Set Finish Line Spline Pattern
-                bool isCollided = true;
-
-                for (int i = 0; i < finishLineSplinePattern.Count; i++)
-                {
-                    int splineIndex = horsesByNumber[horseNumber].CurrentSplineIndex + finishLineSplinePattern[0];
-
-                    if (splineIndex > 0 && splineIndex <= horseSplineManager.TotalSplinesCount)
-                    {
-                        List<int> horses = horseSplineManager.GetHorsesCurrentlyInSpline(splineIndex);
-                        horses.AddRange(horseSplineManager.GetIncomingHorsesInSpline(splineIndex));
-                        foreach (var otherhorseNumber in horses)
-                        {
-                            if (!CheckIfHorseNumbersAreSame(horseNumber, otherhorseNumber)
-                                && IsOtherHorseIsFrontOfCurrentHorse(horseNumber, otherhorseNumber))
-                            {
-                                isCollided = CheckCollisionWithOtherHorse(horseNumber, otherhorseNumber, splineIndex, horsesByNumber[horseNumber].CurrentSplineIndex, 0);
-                                if (!isCollided)
-                                {
-                                    if (horsesByNumber[horseNumber].CurrentSplineIndex != splineIndex)
-                                    {
-                                        horsesByNumber[horseNumber].SetSpline(horseSplineManager.GetSplineData(horsesByNumber[horseNumber].CurrentSplineIndex, splineIndex, horsesByNumber[horseNumber].CurrentControlPointIndex));
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        if (!isCollided)
-                            break;
-                    }
-                }
-                horsesByNumber[horseNumber].SetSpeed(0, horseFinishLineAccelerationValues[0]);
-                horseFinishLineAccelerationValues.RemoveAt(0);
+                SetFinishLineSplinePattern(horseNumber);
                 return;
             }
 
@@ -211,67 +307,35 @@ namespace HorseRace
             bool isCollisionWithRightHorse = false;
             bool isCollisionWithFrontHorse = false;
             bool isCollisionWithIncomingHorse = false;
-            float targetSpeed = Utils.GenerateRandomNumber(horseSpeedSO.targetSpeedRange.x, horseSpeedSO.targetSpeedRange.y);
+            float targetSpeed = GetSpeed(horseNumber);
 
             if (direction == Direction.Left)
             {
                 //Check for incoming collisions
-                List<int> horsesIncomingIntoCurrentSpline = new List<int>(horseSplineManager.GetIncomingHorsesInSpline(currentSplineIndex));
-                foreach (var otherHorseNumber in horsesIncomingIntoCurrentSpline)
-                {
-                    if (!CheckIfHorseNumbersAreSame(horseNumber, otherHorseNumber) &&
-                        IsOtherHorseIsInTheRangeOfControlPoint(otherHorseNumber, controlPointIndex))
-                    {
-                        isCollisionWithIncomingHorse = CheckCollisionWithOtherHorse(horseNumber, otherHorseNumber, currentSplineIndex, currentSplineIndex, targetSpeed);
-                        if (isCollisionWithIncomingHorse)
-                        {
-                            // Decrease the speed of the horse to avoid collision with the other horse.
-                            targetSpeed = horse.TargetSpeed;
-                            break;
-                        }
-                    }
-                }
+                isCollisionWithIncomingHorse = CheckIncomingCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
 
+                //Set Left Collision
                 if (isCollisionWithIncomingHorse || direction == Direction.None || leftSplineIndex <= 0)
                 {
                     isCollisionWithLeftHorse = true;
                 }
 
+                //Set Right Collision
                 if (isCollisionWithIncomingHorse || direction == Direction.None || rightSplineIndex >= horseSplineManager.TotalSplinesCount)
                 {
                     isCollisionWithRightHorse = true;
                 }
 
-                //Check Collisions
+                //Check  Collisions with Left Horse.
                 if (!isCollisionWithLeftHorse)
                 {
-                    if (direction == Direction.Left && leftSplineIndex > 0)
-                    {
-                        HandleSplineChange(horseNumber, leftSplineIndex, currentSplineIndex, controlPointIndex, targetSpeed, ref isCollisionWithLeftHorse);
-                    }
+                    HandleSplineChange(horseNumber, leftSplineIndex, currentSplineIndex, controlPointIndex, targetSpeed, ref isCollisionWithLeftHorse);
                 }
 
+                //Check for Front Collisions
                 if (isCollisionWithLeftHorse)
                 {
-                    //Check Collisions with front horse.
-                    List<int> horsesInFrontOfCurrentHorse = new List<int>(horseSplineManager.GetHorsesCurrentlyInSpline(currentSplineIndex));
-                    foreach (var otherHorseNumber in horsesInFrontOfCurrentHorse)
-                    {
-                        if (!CheckIfHorseNumbersAreSame(horseNumber, otherHorseNumber)
-                       && IsOtherHorseIsInTheRangeOfControlPoint(otherHorseNumber, controlPointIndex)
-                       && IsOtherHorseIsFrontOfCurrentHorse(horseNumber, otherHorseNumber))
-
-                        {
-                            isCollisionWithFrontHorse = CheckCollisionWithOtherHorse(horseNumber, otherHorseNumber, currentSplineIndex, currentSplineIndex, targetSpeed);
-                            //  Debug.Log($"Front Collision:{isCollisionWithFrontHorse} {horseNumber} collides with {otherHorseNumber}");
-                            if (isCollisionWithFrontHorse)
-                            {
-                                targetSpeed = horseSpeedSO.targetSpeedRange.x;
-                                break;
-                            }
-                        }
-                    }
-
+                    isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
                 }
 
                 //Check Collisions with right horse.
@@ -283,28 +347,22 @@ namespace HorseRace
 
                     if (isCollisionWithRightHorse)
                     {
-                        targetSpeed = horseSpeedSO.targetSpeedRange.x;
+                        for (int i = slowSpeedsList.Count - 1; i >= 0; i--)
+                        {
+                            targetSpeed = slowSpeedsList[i];
+                            isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
+                            if (!isCollisionWithFrontHorse)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
             }
             else if (direction == Direction.Right)
             {
-                //Check for incoming collisions
-                List<int> horsesIncomingIntoCurrentSpline = new List<int>(horseSplineManager.GetIncomingHorsesInSpline(currentSplineIndex));
-                foreach (var otherHorseNumber in horsesIncomingIntoCurrentSpline)
-                {
-                    if (!CheckIfHorseNumbersAreSame(horseNumber, otherHorseNumber) &&
-                        IsOtherHorseIsInTheRangeOfControlPoint(otherHorseNumber, controlPointIndex))
-                    {
-                        isCollisionWithIncomingHorse = CheckCollisionWithOtherHorse(horseNumber, otherHorseNumber, currentSplineIndex, currentSplineIndex, targetSpeed);
-                        if (isCollisionWithIncomingHorse)
-                        {
-                            // Decrease the speed of the horse to avoid collision with the other horse.
-                            targetSpeed = horse.TargetSpeed;
-                            break;
-                        }
-                    }
-                }
+                isCollisionWithIncomingHorse = CheckIncomingCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
+
                 if (isCollisionWithIncomingHorse || direction == Direction.None || leftSplineIndex <= 0)
                 {
                     isCollisionWithLeftHorse = true;
@@ -314,56 +372,56 @@ namespace HorseRace
                 {
                     isCollisionWithRightHorse = true;
                 }
-                //Check Collisions with right Horses
+
                 if (!isCollisionWithRightHorse)
                 {
-                    if (direction == Direction.Right && rightSplineIndex <= horseSplineManager.TotalSplinesCount)
-                    {
-                        HandleSplineChange(horseNumber, rightSplineIndex, currentSplineIndex, controlPointIndex, targetSpeed, ref isCollisionWithLeftHorse);
-                    }
+                    HandleSplineChange(horseNumber, rightSplineIndex, currentSplineIndex, controlPointIndex, targetSpeed, ref isCollisionWithLeftHorse);
                 }
-
 
                 if (isCollisionWithRightHorse)
                 {
-                    //Check Collisions with front horse.
-                    List<int> horsesInFrontOfCurrentHorse = new List<int>(horseSplineManager.GetHorsesCurrentlyInSpline(currentSplineIndex));
-                    foreach (var otherHorseNumber in horsesInFrontOfCurrentHorse)
-                    {
-                        if (!CheckIfHorseNumbersAreSame(horseNumber, otherHorseNumber)
-                       && IsOtherHorseIsInTheRangeOfControlPoint(otherHorseNumber, controlPointIndex)
-                       && IsOtherHorseIsFrontOfCurrentHorse(horseNumber, otherHorseNumber))
-
-                        {
-                            isCollisionWithFrontHorse = CheckCollisionWithOtherHorse(horseNumber, otherHorseNumber, currentSplineIndex, currentSplineIndex, targetSpeed);
-                            if (isCollisionWithFrontHorse)
-                            {
-                                //  Debug.Log($"Front Collision: {horseNumber} collides with {otherHorseNumber}");
-                                targetSpeed = horseSpeedSO.targetSpeedRange.x;
-                                break;
-                            }
-                        }
-                    }
-
+                    isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
                 }
 
-                //Check Collisions with left horse.
                 if (!isCollisionWithLeftHorse && isCollisionWithFrontHorse)
                 {
                     targetSpeed = Utils.GenerateRandomNumber(horseSpeedSO.targetSpeedRange.x, horseSpeedSO.targetSpeedRange.y);
-
                     HandleSplineChange(horseNumber, leftSplineIndex, currentSplineIndex, controlPointIndex, targetSpeed, ref isCollisionWithRightHorse);
 
                     if (isCollisionWithLeftHorse)
                     {
-                        targetSpeed = horseSpeedSO.targetSpeedRange.x;
+                        for (int i = slowSpeedsList.Count - 1; i >= 0; i--)
+                        {
+                            targetSpeed = slowSpeedsList[i];
+                            isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
+                            if (!isCollisionWithFrontHorse)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
-
+            }
+            else if (direction == Direction.None)
+            {
+                isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
+                if (isCollisionWithFrontHorse)
+                {
+                    for (int i = 0; i < speedGenerationCount; i++)
+                    {
+                        targetSpeed = GetRandomSlowSpeed();
+                        isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
+                        if (!isCollisionWithFrontHorse)
+                        {
+                            break;
+                        }
+                    }
+                }
             }
 
             horsesByNumber[horseNumber].SetSpeed(targetSpeed, horseSpeedSO.acceleration);
-            CalculateRacePositions();
+            horsesByNumber[horseNumber].OnControlPointChangeSuccessful();
+            Time.timeScale = 1;
         }
         private bool CheckCollisionWithOtherHorse(int HorseNumber, int otherHorseNumber, int nextSplineIndex, int currentSplineIndex, float targetSpeed)
         {
@@ -520,7 +578,7 @@ namespace HorseRace
         }
         #endregion
 
-        #region PreWinner Logic
+        #region PreWinner
         public void SetPreWinnerTargetRacePosition(int _targetRacePos)
         {
             preWinnerTargetRacePosition = _targetRacePos;
@@ -529,6 +587,12 @@ namespace HorseRace
         {
             return preWinnerHorseNumber == horseNumber;
         }
+
+        private bool IsHorsePositionAhead(int racePosition, int otherRacePosition)
+        {
+            return racePosition < otherRacePosition;
+        }
+
         #endregion
 
         #region Horse Transforms
@@ -538,48 +602,6 @@ namespace HorseRace
         }
         #endregion
 
-        //private void ChangeSpeedRequest(int HorseNumber)
-        //{
-        //    float speed = Utils.GenerateRandomNumber(horseSpeedSO.inRaceMinSpeed, horseSpeedSO.inRaceMaxSpeed);
-        //    HorseControllerSave horse = (HorseControllerSave)horsesByNumber[HorseNumber];
-
-        //    if (IsAnyHorseJoiningCurrentControlPoint(horse.currentSplineIndex, horse.controlPointIndex, out int incomingHorseIndex))
-        //    {
-        //        float incomingHorseSpeed = GetHorseSpeed(incomingHorseIndex);
-        //        speed = Utils.GenerateRandomNumber(horseSpeedSO.inRaceMinSpeed, incomingHorseSpeed);
-        //    }
-        //    else if (preWinnerTargetRacePosition > 0)
-        //    {
-        //        if (IsPreWinnerHorse(HorseNumber))
-        //        {
-        //            if (IsHorsePositionAhead(preWinnerHorse.RacePosition, preWinnerTargetRacePosition))
-        //            {
-        //                speed = GetRandomSlowSpeed();
-        //            }
-        //            else
-        //            {
-        //                speed = GetRandomHighSpeed();
-        //            }
-        //        }
-        //        else
-        //        {
-        //            //Check if the horse is in the preWinner horse's target race position.
-        //            if (horsesByNumber[HorseNumber].RacePosition <= preWinnerTargetRacePosition && horsesByNumber[HorseNumber].RacePosition > preWinnerHorse.RacePosition)
-        //            {
-        //                if (IsHorsePositionAhead(horsesByNumber[HorseNumber].RacePosition, preWinnerTargetRacePosition))
-        //                {
-        //                    speed = GetRandomHighSpeed();
-        //                }
-        //                else
-        //                {
-        //                    speed = GetRandomSlowSpeed();
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    SetHorseSpeed(speed, HorseNumber);
-        //}
     }
 }
 

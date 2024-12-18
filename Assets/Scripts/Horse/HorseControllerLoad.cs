@@ -11,9 +11,9 @@ namespace HorseRace
         {
             base.UpdateState();
         }
-        protected override void ControlPointChange()
+        protected override void OnControlPointChange()
         {
-            GameManager.Instance.RaceManager.ChangeControlPoint(HorseNumber);
+            base.OnControlPointChange();
         }
         public override void SetSpline(SplineData splineData)
         {

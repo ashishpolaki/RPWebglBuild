@@ -39,10 +39,7 @@ namespace HorseRace
         }
         protected virtual void FixedUpdate()
         {
-            if (isRaceStart)
-            {
-                UpdateHorseRacePositions();
-            }
+          
         }
         #endregion
 
@@ -68,13 +65,6 @@ namespace HorseRace
         public void HorseChangingSpline(int currentSplineArrayIndex, int nextSplineArrayIndex, int horseNumber)
         {
             horseSplineManager.HorseChangingSpline(currentSplineArrayIndex, nextSplineArrayIndex, horseNumber);
-        }
-
-        #endregion
-
-        #region Race Position Tracking
-        protected virtual void UpdateHorseRacePositions()
-        {
         }
         #endregion
 

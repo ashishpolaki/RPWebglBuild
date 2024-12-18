@@ -43,13 +43,14 @@ namespace HorseRace
         public Material HorseMaterial { get; private set; }
         public int HorseNumber { get => horseNumber; }
         public int RacePosition { get => racePosition; }
+        public bool IsControlPointChange { get; private set; }
         public bool IsFinishLineCrossed { get => isFinishLineCross; }
         public Transform ColliderTransform { get => colliderTransform; }
 
+        public SplineData CurrentSplineData { get => currentSplineData; }
         public int CurrentControlPointIndex { get => currentControlPointIndex; }
         public int CurrentSplinePointIndex { get => currentSplinePointIndex; }
         public int CurrentSplineIndex { get => currentSplineIndex; }
-        public SplineData CurrentSplineData { get => currentSplineData; }
         public float Acceleration { get => acceleration; }
         public float TargetSpeed { get => targetSpeed; }
         public float MaxSpeed { get => maxSpeed; }
@@ -110,8 +111,7 @@ namespace HorseRace
                     //Search for upcoming control Point Index
                     if (currentControlPointIndex + 1 == currentSplineData.splinePoints[currentSplinePointIndex].controlPointIndex)
                     {
-                        currentControlPointIndex++;
-                        ControlPointChange();
+                        OnControlPointChange();
                     }
                 }
             }
@@ -134,9 +134,14 @@ namespace HorseRace
         {
             currentSplineData = splineData;
         }
-        protected virtual void ControlPointChange()
+        protected virtual void OnControlPointChange()
         {
-            GameManager.Instance.RaceManager.ChangeControlPoint(HorseNumber);
+            currentControlPointIndex++;
+            IsControlPointChange = true;
+        }
+        public void OnControlPointChangeSuccessful()
+        {
+            IsControlPointChange = false;
         }
         #endregion
 

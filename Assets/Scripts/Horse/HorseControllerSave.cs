@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace HorseRace
@@ -28,7 +27,6 @@ namespace HorseRace
         {
             base.UpdateState();
         }
-
         public override void InitializeData(SplineData _splineData, float _speed, float _maxSpeed, float _accleration, float _thresHold)
         {
             controlPointsSaveList.Add(new ControlPointSave
@@ -40,10 +38,9 @@ namespace HorseRace
             });
             base.InitializeData(_splineData, _speed, _maxSpeed, _accleration, _thresHold);
         }
-
-        protected override void ControlPointChange()
+        protected override void OnControlPointChange()
         {
-            //Control Point Changed
+            base.OnControlPointChange();
             if (currentSplineData.splineIndex == nextSplineIndex)
             {
                 //Reached the spline.
@@ -52,7 +49,7 @@ namespace HorseRace
                 nextSplineIndex = -1;
                 previousSplineIndex = -1;
             }
-            base.ControlPointChange();
+            EventManager.Instance.OnControlPointChange(HorseNumber, CurrentControlPointIndex);
         }
 
         public override void SetSpline(SplineData splineData)
@@ -122,6 +119,5 @@ namespace HorseRace
             return horseData;
         }
         #endregion
-
     }
 }
