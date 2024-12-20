@@ -4,22 +4,6 @@ using UnityEngine;
 
 public class HorseSplineManager : MonoBehaviour
 {
-    public static HorseSplineManager Instance;
-
-    #region Unity Methods
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-    #endregion
-
     #region Inspector Variables
     [SerializeField] private int Laps;
     [SerializeField] private float segmentLength = 0.2f;
@@ -27,7 +11,7 @@ public class HorseSplineManager : MonoBehaviour
     [Tooltip("Horse Collider Extents")]
     [SerializeField] private float3 extents;
     [SerializeField] private float changeThresholdDistance = 3;
-    [SerializeField] private float forwardHorseThresholdDistance = 6;
+    [SerializeField] private List<int> horsesCountPerSpline;
     [SerializeField] private List<HorseSpline> HorseSplinesList;
     [SerializeField] private List<SplineTracker> SplineHorseTrackerList = new List<SplineTracker>();
     [SerializeField] private List<SplineData> splineDataList = new List<SplineData>();
@@ -35,23 +19,25 @@ public class HorseSplineManager : MonoBehaviour
 
     #region Properties
     public float ChangeThresholdDistance => changeThresholdDistance;
-    public float ForwardHorseThresholdDistance => forwardHorseThresholdDistance;
     public float3 Extents => extents;
     public int TotalSplinesCount => splineDataList.Count;
     public int ControlPointLength => controlPointLength;
+    public List<int> HorsesCountPerSpline => horsesCountPerSpline;
     #endregion
 
 #if UNITY_EDITOR
     [Space(10), Header("Editor")]
-    public bool validateControlPointGroups;
-    public bool validateControlPointsInSplines;
-    public bool validateCreateSplinePoints;
+    public bool nameControlPointGroups;
+    public bool addControlPointsInSplines;
+    public bool createSplinePoints;
+    public bool turnOnMesh;
+    public bool turnOffMesh;
     public bool canDrawGizmos;
     public GameObject controlPointsParent;
 
     private void OnValidate()
     {
-        if (validateControlPointGroups)
+        if (nameControlPointGroups)
         {
             //Set Horse Control Point index
             for (int i = 0; i < controlPointsParent.transform.childCount; i++)
@@ -67,7 +53,24 @@ public class HorseSplineManager : MonoBehaviour
             }
         }
 
-        if (validateControlPointsInSplines)
+        //Turn off mesh of controlpointGroups Children
+        if (turnOnMesh || turnOffMesh)
+        {
+            for (int i = 0; i < controlPointsParent.transform.childCount; i++)
+            {
+                HorseControlPoint[] horseControlPoints = controlPointsParent.transform.GetComponentsInChildren<HorseControlPoint>();
+                for (int j = 0; j < horseControlPoints.Length; j++)
+                { 
+                    //Turn off mesh of childrens
+                    for(int k = 0; k < horseControlPoints[i].GetComponentsInChildren<MeshRenderer>().Length;k++)
+                    {
+                        horseControlPoints[i].GetComponentsInChildren<MeshRenderer>()[k].enabled = turnOffMesh ? false : true;
+                    }
+                }
+            }
+        }
+
+        if (addControlPointsInSplines)
         {
             for (int i = 0; i < HorseSplinesList.Count; i++)
             {
@@ -92,7 +95,7 @@ public class HorseSplineManager : MonoBehaviour
         }
 
         // Draw splines
-        if (validateCreateSplinePoints)
+        if (createSplinePoints)
         {
             //Set Control Point Length
             controlPointLength = 0;
@@ -153,6 +156,19 @@ public class HorseSplineManager : MonoBehaviour
     }
 
 #endif
+
+    public bool CanAddHorseToSpline(int splineIndex)
+    {
+        int splineArrayIndex = splineIndex - 1;
+
+        //If -1, return true;
+        if(horsesCountPerSpline[splineArrayIndex] == -1)
+        {
+            return true;
+        }
+
+        return SplineHorseTrackerList[splineArrayIndex].TotalHorsesInSpline < horsesCountPerSpline[splineArrayIndex];
+    }
 
     public SplineData SetSplineWithCustomControlPoints(List<int> splineIndexesPerControlPoint)
     {
@@ -323,6 +339,8 @@ public struct SplineTracker
     public List<int> horsesInCurrentSpline; // Horses that are in the current spline.
     public List<int> horsesIncomingToSpline; // Horses that are going to join this spline from another spline.
     public List<int> horsesOutgoingFromSpline; // Horses that are going to leave this spline for another spline.
+
+    public int TotalHorsesInSpline => horsesInCurrentSpline.Count + horsesIncomingToSpline.Count;
 }
 
 [System.Serializable]

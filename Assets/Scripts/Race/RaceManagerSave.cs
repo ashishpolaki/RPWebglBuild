@@ -281,6 +281,10 @@ namespace HorseRace
             }
             return false;
         }
+        private bool CanAddHorseToSpline(int splineIndex)
+        {
+            return horseSplineManager.CanAddHorseToSpline(splineIndex);
+        }
         public override void ChangeControlPoint(int horseNumber)
         {
             //Check if all the horses has crossed the finish line.
@@ -315,7 +319,7 @@ namespace HorseRace
                 isCollisionWithIncomingHorse = CheckIncomingCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
 
                 //Set Left Collision
-                if (isCollisionWithIncomingHorse || direction == Direction.None || leftSplineIndex <= 0)
+                if (isCollisionWithIncomingHorse || direction == Direction.None || leftSplineIndex <= 0 || !CanAddHorseToSpline(leftSplineIndex))
                 {
                     isCollisionWithLeftHorse = true;
                 }
@@ -407,13 +411,18 @@ namespace HorseRace
                 isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
                 if (isCollisionWithFrontHorse)
                 {
-                    for (int i = 0; i < speedGenerationCount; i++)
+                    HandleSplineChange(horseNumber, rightSplineIndex, currentSplineIndex, controlPointIndex, targetSpeed, ref isCollisionWithRightHorse);
+
+                    if (isCollisionWithRightHorse)
                     {
-                        targetSpeed = GetRandomSlowSpeed();
-                        isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
-                        if (!isCollisionWithFrontHorse)
+                        for (int i = 0; i < speedGenerationCount; i++)
                         {
-                            break;
+                            targetSpeed = GetRandomSlowSpeed();
+                            isCollisionWithFrontHorse = CheckFrontCollisions(horseNumber, currentSplineIndex, controlPointIndex, ref targetSpeed);
+                            if (!isCollisionWithFrontHorse)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
