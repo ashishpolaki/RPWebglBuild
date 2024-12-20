@@ -293,11 +293,7 @@ MonoBehaviour:
   jockeyAnimator: {fileID: 5548984344008174689}
   colliderTransform: {fileID: 3318369290850497794}
   canDrawGizmos: 0
-  splineChangeDistance: 3
-  overtakeCameraWaypointGroupMin: 2
-  overtakeCameraWaypointGroupMax: 19
-  overtakeCheckTime: 5
-  minHorsesOvertake: 3
+  controlPointsSaveList: []
 --- !u!1 &5302657878742996796
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,6 +606,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3558003615993708250}
     m_Modifications:
+    - target: {fileID: 1143472634461694944, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1143472634461694944, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
       propertyPath: m_CullingMode
       value: 1

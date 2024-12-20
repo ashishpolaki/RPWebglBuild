@@ -57,7 +57,6 @@ MonoBehaviour:
   jockeyAnimator: {fileID: 6378605570329760454}
   colliderTransform: {fileID: 0}
   canDrawGizmos: 0
-  customDeltaTIme: 1
   character: {fileID: 6275033480894677282}
 --- !u!1 &4787377853415501036
 GameObject:
@@ -577,7 +576,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1143472634461694944, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
       propertyPath: m_UpdateMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1143472634461694944, guid: d3d6cd8c789d17547b2d086987be6235, type: 3}
       propertyPath: m_CullingMode
