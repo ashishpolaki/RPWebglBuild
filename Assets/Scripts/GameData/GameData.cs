@@ -94,10 +94,6 @@ public class HostRaceData : GameData, IDisposable
 
     public void Dispose()
     {
-        currentRaceAvatars.Clear();
-        qualifiedPlayers.Clear();
-        unQualifiedPlayersList.Clear();
-        characterCustomisationDatas.Clear();
         currentRaceAvatars = null;
         qualifiedPlayers = null;
         unQualifiedPlayersList = null;

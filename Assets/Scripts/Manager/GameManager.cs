@@ -55,8 +55,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         GPS = new GPS();
-        // LoadHorsesInRaceOrder();
-        // HorsesToSpawnList = new List<int>(HorsesInPreRaceOrderList);
+        LoadHorsesInRaceOrder();
+        HorsesToSpawnList = new List<int>(HorsesInPreRaceOrderList);
         //HorsesToSpawnList = new List<int>() { HorsesInPreRaceOrderList[0], HorsesInPreRaceOrderList[1], HorsesInPreRaceOrderList[2] };
     }
 #if UNITY_EDITOR
