@@ -10,20 +10,20 @@ namespace HorseRace
     public class LoadManager : MonoBehaviour
     {
         private HorseRaceResults horseRaceResults;
-        private RaceStats raceStat;
-        private int currentRaceIndex;
-        private string currentFileName;
+     ///   private RaceStats raceStat;
+     //   private int currentRaceIndex;
+     //   private string currentFileName;
 
         public RaceStats CurrentRaceStat { get => GameManager.Instance.CurrentRaceData; }
 
         private void Awake()
         {
             horseRaceResults = new HorseRaceResults();
-           // LoadRandomRaceStat();
+            // LoadRandomRaceStat();
         }
         private void LoadRandomRaceStat()
         {
-            (currentRaceIndex, currentFileName, raceStat) = horseRaceResults.LoadRandomRace();
+          //  (currentRaceIndex, currentFileName, raceStat) = horseRaceResults.LoadRandomRace();
         }
 
         /// <summary>
@@ -53,15 +53,15 @@ namespace HorseRace
             if (isHavingVariance)
             {
                 RaceVarianceResults verifyRaceResults = new RaceVarianceResults();
-                verifyRaceResults.raceFileName = currentFileName;
-                verifyRaceResults.raceIndex = currentRaceIndex;
+                verifyRaceResults.raceFileName = GameManager.Instance.CurrentFileName;
+                verifyRaceResults.raceIndex = GameManager.Instance.CurrentRaceIndex;
                 verifyRaceResults.variances = horsePositionsVariances.ToArray();
 
                 //Change File 
                 horseRaceResults.ModifyRaceFile(verifyRaceResults);
 
                 //Save
-                string numberString = Regex.Replace(currentFileName, "[^0-9]", ""); // Remove all non-numeric characters
+                string numberString = Regex.Replace(GameManager.Instance.CurrentFileName, "[^0-9]", ""); // Remove all non-numeric characters
                 Guid guid = Guid.NewGuid();
                 string path = Path.Combine(Application.streamingAssetsPath + "/RaceVarianceFiles", $"{Int32.Parse(numberString)}Race_{guid}.json");
                 string json = JsonUtility.ToJson(verifyRaceResults, true);

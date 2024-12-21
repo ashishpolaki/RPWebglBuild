@@ -1,0 +1,16 @@
+{
+    "raceFileName": "HorseRaceStats1441",
+    "raceIndex": 0,
+    "variances": [
+        {
+            "racePosition": 4,
+            "savedHorseNumber": 4,
+            "currentHorseNumber": 5
+        },
+        {
+            "racePosition": 5,
+            "savedHorseNumber": 5,
+            "currentHorseNumber": 4
+        }
+    ]
+}

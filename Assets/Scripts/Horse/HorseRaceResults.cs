@@ -1,4 +1,3 @@
-using HorseRace;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,9 +40,8 @@ public class HorseRaceResults
         //string currentJsonFile = File.ReadAllText(currentFileName);
         //  return ReturnRaceStats(currentJsonFile, currentFileName);
 
-        TextAsset[] asset = Resources.LoadAll<TextAsset>("RaceFiles");
-
         // If you need to work with files in the persistent directory, do it here
+        TextAsset[] asset = Resources.LoadAll<TextAsset>("RaceFiles");
         TextAsset raceFile = asset[Utils.GenerateRandomNumber(0, asset.Length)];
         string json = raceFile.text;
         return ReturnRaceStats(json, raceFile.name);
@@ -51,10 +49,10 @@ public class HorseRaceResults
 
     public void ModifyRaceFile(RaceVarianceResults raceVarianceResult)
     {
-        string path = $"{raceVarianceResult.raceFileName}";
-        string currentJsonFile = File.ReadAllText(raceVarianceResult.raceFileName);
-
-        RaceStats[] races = JsonUtility.FromJson<SaveRaceStats>(currentJsonFile).raceStats;
+        // string currentJsonFile = File.ReadAllText(raceVarianceResult.raceFileName);
+        string path = $"RaceFiles/{raceVarianceResult.raceFileName}";
+        TextAsset textAsset = Resources.Load<TextAsset>(path);
+        RaceStats[] races = JsonUtility.FromJson<SaveRaceStats>(textAsset.text).raceStats;
         RaceStats currentRaceStat = races[raceVarianceResult.raceIndex];
 
         //Change the predetermined winner.
@@ -84,8 +82,10 @@ public class HorseRaceResults
             }
         }
 
+
         //Now replace the current CurrentRaceData with the modified one. 
-        SaveRaceStatsData(path, races);
+        string filePath = Path.Combine(Application.dataPath, "Resources/RaceFiles", raceVarianceResult.raceFileName);
+        SaveRaceStatsData(filePath, races);
     }
     #endregion
 

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
 
 
     public RaceStats CurrentRaceData { get; private set; }
+    public int CurrentRaceIndex { get; private set; }
+    public string CurrentFileName { get; private set; }
     public List<int> HorsesInRaceOrderList { get; private set; }
     public List<int> HorsesInPreRaceOrderList { get; private set; }
     public List<int> HorsesToSpawnList
@@ -85,9 +87,7 @@ public class GameManager : MonoBehaviour
     public List<int> LoadHorsesInRaceOrder()
     {
         HorseRaceResults horseRaceResults = new HorseRaceResults();
-        int currentRaceIndex = 0;
-        string currentFileName = string.Empty;
-        (currentRaceIndex, currentFileName, CurrentRaceData) = horseRaceResults.LoadRandomRace();
+        (CurrentRaceIndex, CurrentFileName, CurrentRaceData) = horseRaceResults.LoadRandomRace();
         foreach (var waypoint in CurrentRaceData.waypoints)
         {
             if (waypoint.number == "WinnersList")
