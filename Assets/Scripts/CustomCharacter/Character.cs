@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 using CharacterCustomisation;
+using System.Threading.Tasks;
+using Unity.Services.Economy.Model;
 
 public class Character : MonoBehaviour
 {
@@ -68,11 +70,20 @@ public class Character : MonoBehaviour
     }
 
 #endif
-
+    #region Unity methods
     private void Awake()
     {
         CreateNewTexture();
     }
+    #endregion
+
+    #region Animation
+    public void ChangeAnimator(RuntimeAnimatorController runtimeAnimatorController)
+    {
+        animator.runtimeAnimatorController = runtimeAnimatorController;
+    }
+    #endregion
+
     public void CreateNewTexture()
     {
         texture = Instantiate(texture);
@@ -87,10 +98,12 @@ public class Character : MonoBehaviour
             }
         }
     }
-    public void ChangeAnimator(RuntimeAnimatorController runtimeAnimatorController)
+    public void SyntyBug()
     {
-        animator.runtimeAnimatorController = runtimeAnimatorController;
+        ChangePartColor(Color.white, EyeRightUV);
+        ChangePartColor(Color.white, EyeLeftUV);
     }
+    #region Load/Save
     public void Load(CharacterCustomisationEconomy characterCustomisation)
     {
         customisationData = characterCustomisation;
@@ -103,8 +116,8 @@ public class Character : MonoBehaviour
         BodyGenderBlendShape(customisationData.bodyGenderType);
 
         //Outfits
-        // ChangeUpperOutfit(customisationData.upperOutfit);
-        // ChangeLowerOutfit(customisationData.lowerOutfit);
+        ChangeUpperOutfit(customisationData.upperOutfit);
+        ChangeLowerOutfit(customisationData.lowerOutfit);
 
         //Synty Bug Fix
         SyntyBug();
@@ -114,18 +127,33 @@ public class Character : MonoBehaviour
         {
             ChangePartInHead((BlendPartType)customPart.type, customPart.styleNumber);
             ChangePartColorInHead(customPart.color, (BlendPartType)customPart.type);
-            UpdatePartsBlendShapeInHead((BlendPartType)customPart.type, customPart.blendShapes);
+            // UpdatePartsBlendShapeInHead((BlendPartType)customPart.type, customPart.blendShapes);
         }
     }
-    public void SyntyBug()
+
+    public async Task Save()
     {
-        ChangePartColor(Color.white, EyeRightUV);
-        ChangePartColor(Color.white, EyeLeftUV);
+        Func<Task<List<PlayersInventoryItem>>> method = async () => await UGSManager.Instance.Economy.GetInventoryItem(StringUtils.INVENTORYITEMID_CHARACTER, StringUtils.PLAYERINVENTORYITEMID_CHARACTER);
+        List<PlayersInventoryItem> playersInventoryItems = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
+        bool isCharacterDataExist = playersInventoryItems.Count > 0;
+        if (isCharacterDataExist)
+        {
+            //Update 
+            await UGSManager.Instance.Economy.UpdateInventoryItem(StringUtils.PLAYERINVENTORYITEMID_CHARACTER, customisationData);
+        }
+        else
+        {
+            //Add
+            await UGSManager.Instance.Economy.AddInventoryItem(StringUtils.INVENTORYITEMID_CHARACTER, customisationData, StringUtils.PLAYERINVENTORYITEMID_CHARACTER);
+        }
     }
+
+    #endregion
 
     #region Color
     public void ChangeSkinToneColor(Color color)
     {
+        customisationData.skinToneColor = Utils.ToHex(color);
         UpdateTexture(texture, color, TorsoUV.x, TorsoUV.y);
         UpdateTexture(texture, color, NoseUV.x, NoseUV.y);
         UpdateTexture(texture, color, EarLeftUV.x, EarLeftUV.y);
@@ -822,38 +850,63 @@ public class Character : MonoBehaviour
     #endregion
 
     #region Face Customisation
-    public void UpdatePartsBlendShapeInHead(BlendPartType blendPartType, List<BlendShapeEconomy> blendShapes)
-    {
-        if (blendShapes.Count == 0) return;
+    //public void UpdatePartsBlendShapeInHead(BlendPartType blendPartType, List<BlendShapeEconomy> blendShapes)
+    //{
+    //    if (blendShapes.Count == 0) return;
 
-        CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
-        BlendShapePart blendShapePart = characterPartSO.blendPartData;
+    //    CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
+    //    BlendShapePart blendShapePart = characterPartSO.blendPartData;
 
-        foreach (BlendShapeEconomy blendShapeEconomy in blendShapes)
-        {
-            foreach (var blendShapePartData in blendShapePart.partData)
-            {
-                if (blendShapePartData.name == blendShapeEconomy.name)
-                {
-                    foreach (var syntyCharacterPartType in blendShapePartData.syntyCharacterPartTypes)
-                    {
-                        SetBlendShape(syntyCharacterPartType, blendShapeEconomy.value, blendShapeEconomy.name);
-                    }
-                }
-            }
-        }
-    }
+    //    foreach (BlendShapeEconomy blendShapeEconomy in blendShapes)
+    //    {
+    //        foreach (var blendShapePartData in blendShapePart.partData)
+    //        {
+    //            if (blendShapePartData.name == blendShapeEconomy.name)
+    //            {
+    //                foreach (var syntyCharacterPartType in blendShapePartData.syntyCharacterPartTypes)
+    //                {
+    //                    SetBlendShape(syntyCharacterPartType, blendShapeEconomy.value, blendShapeEconomy.name);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
     public void ChangePartInHead(BlendPartType blendPartType, int styleNumber)
     {
         CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
         if (characterPartSO.parts.Length == 0) return;
+
+        //Save Customisation Data
+        bool isFound = false;
+        foreach (var customPartData in customisationData.customParts)
+        {
+            if (customPartData.type == (int)blendPartType)
+            {
+                isFound = true;
+                customPartData.styleNumber = styleNumber;
+                break;
+            }
+        }
+        //If not found
+        if (isFound == false)
+        {
+            customisationData.customParts.Add(new CustomPartEconomy()
+            {
+                type = (int)blendPartType,
+                styleNumber = styleNumber,
+                color = "",
+            });
+        }
 
         List<SyntyCharacterPartType> characterPartList = CharacterCustomisationManager.Instance.GetCharacterPartType(blendPartType);
         foreach (SyntyCharacterPartType characterPartType in characterPartList)
         {
             if (styleNumber == -1)
             {
-                TurnOffPart(characterPartType);
+                if (characterPartType == SyntyCharacterPartType.FacialHair)
+                {
+                    TurnOffPart(characterPartType);
+                }
             }
             else
             {
@@ -865,6 +918,27 @@ public class Character : MonoBehaviour
     public void ChangePartColorInHead(string _color, BlendPartType blendPartType)
     {
         if (StringUtils.IsStringEmpty(_color)) return;
+
+        //Save Customisation Data
+        bool isFound = false;
+        foreach (var customPartData in customisationData.customParts)
+        {
+            if (customPartData.type == (int)blendPartType)
+            {
+                isFound = true;
+                customPartData.color = _color;
+                break;
+            }
+        }
+        //If not found
+        if (isFound == false)
+        {
+            customisationData.customParts.Add(new CustomPartEconomy()
+            {
+                type = (int)blendPartType,
+                color = _color,
+            });
+        }
 
         CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
         Color color = Utils.FromHex(_color);

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -88,9 +89,10 @@ namespace UI.Screen.Tab
         #endregion
 
         #region Button Listener Methods
-        private void OnSubmitButton()
+        private async void OnSubmitButton()
         {
-         UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.CharacterCustomize);
+            await character.Save();
+            UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.CharacterCustomize);
         }
         private void OnLowerOutfitButton()
         {

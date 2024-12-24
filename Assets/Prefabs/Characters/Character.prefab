@@ -2495,7 +2495,7 @@ Animator:
   m_GameObject: {fileID: 2242614968122084721}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 12d6d9d404b39014580b3b3542fa2824, type: 3}
-  m_Controller: {fileID: 9100000, guid: 6a664a070c2c11f499197102764b941a, type: 2}
+  m_Controller: {fileID: 9100000, guid: f408b16825687e94c898af9e6b6b95bf, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2592,12 +2592,17 @@ MonoBehaviour:
       leftUpperArm: 0
       leftLowerArm: 0
       leftHand: 0
+      torsoColors: []
+      upperArmColors: []
     lowerOutfit:
       hips: 0
       rightLeg: 0
       rightFoot: 0
       leftLeg: 0
       leftFoot: 0
+      hipsColors: []
+      legColors: []
+      footColors: []
   isValidate: 0
   changeMeshRenderer: {fileID: 0}
   syntyCharacterPartType: 0

@@ -12,7 +12,7 @@ public class SkinColorCustomisationUI : MonoBehaviour
     private bool isColorDataLoaded;
     private List<PartColorUI> partColorsList = new List<PartColorUI>();
 
-    [Space(10),Header("Render")]
+    [Space(10), Header("Render")]
     [SerializeField] private Camera characterCamera;
     [SerializeField] private Vector3 cameraOffset;
     [SerializeField] private float orthoGraphicSize;
@@ -49,6 +49,7 @@ public class SkinColorCustomisationUI : MonoBehaviour
 
         OnCharacterAssign?.Invoke(renderTexture, character.transform);
     }
+
     public void SetData(ColorPresetSO colorPresetSO)
     {
         if (!isColorDataLoaded)
@@ -58,6 +59,7 @@ public class SkinColorCustomisationUI : MonoBehaviour
                 PartColorUI partColor = Instantiate(partColorPrefab, colorsParent);
                 partColor.SetColor(color);
                 partColor.OnColorSelected += OnColorSelected;
+                partColorsList.Add(partColor);
             }
             isColorDataLoaded = true;
         }
@@ -77,6 +79,11 @@ public class SkinColorCustomisationUI : MonoBehaviour
 
     private void OnColorSelected(Color color)
     {
+        //Unselect all other colors
+        foreach (var partColor in partColorsList)
+        {
+            partColor.UnSelect();
+        }
         character.ChangeSkinToneColor(color);
     }
 }

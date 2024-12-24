@@ -44,7 +44,7 @@ public class CharacterCustomisationEconomy : EconomyCustom
     {
         bodyType = 0;
         skinToneColor = "";
-        customParts = new List<CustomPartEconomy>();
+     //   customParts = new List<CustomPartEconomy>();
         upperOutfit = new UpperOutfitEconomy();
         lowerOutfit = new LowerOutfitEconomy();
     }
@@ -55,27 +55,17 @@ public class CustomPartEconomy
     public int type; //(int)BlendPartType Enum
     public int styleNumber; //Part Index
     public string color; //Part Color
-    public List<BlendShapeEconomy> blendShapes; //Part BlendShapes
+   // public List<BlendShapeEconomy> blendShapes; //Part BlendShapes
 
     public CustomPartEconomy()
     {
+        type = -1;
         styleNumber = -1;
         color = "";
-        blendShapes = new List<BlendShapeEconomy>();
+       // blendShapes = new List<BlendShapeEconomy>();
     }
 }
-[System.Serializable]
-public class BlendShapeEconomy
-{
-    public string name;
-    public float value;
 
-    public BlendShapeEconomy()
-    {
-        name = "";
-        value = 0;
-    }
-}
 
 [System.Serializable]
 public class UpperOutfitEconomy : EconomyCustom
@@ -146,4 +136,16 @@ public class OutfitColorEconomy
         color = "";
     }
 }
+//[System.Serializable]
+//public class BlendShapeEconomy
+//{
+//    public string name;
+//    public float value;
+
+//    public BlendShapeEconomy()
+//    {
+//        name = "";
+//        value = 0;
+//    }
+//}
 #endregion
