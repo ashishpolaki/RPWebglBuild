@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class StructContainer
 {
@@ -92,6 +93,12 @@ public struct VarianceRacePosition
 
 #region Character
 [System.Serializable]
+public struct CharacterPartUI
+{
+    public CharacterPartUIType characterPartType;
+    public Sprite icon;
+}
+[System.Serializable]
 public struct CharacterData
 {
     public SyntyCharacterPartType CharacterPartType;
@@ -109,5 +116,37 @@ public struct BlendShapePartData
     public string name;
     public string[] blendShapeNames;
     public SyntyCharacterPartType[] syntyCharacterPartTypes;
+}
+#endregion
+
+#region Texture
+[System.Serializable]
+public struct CharacterPartTextureColors
+{
+    public Vector2Int uvCoordinates; 
+    public Color textureColor; 
+}
+[System.Serializable]
+public struct RenderTextureSettings
+{
+   public GraphicsFormat colorFormat;
+   public GraphicsFormat depthStencilFormat;
+   public Vector2Int renderTextureSize;
+}
+[System.Serializable]
+public struct CaptureTextureSettings
+{
+    public BlendPartType blendPartType;
+    public Vector3 Offset;
+    public float FieldOfView;
+    public Vector2Int RenderTextureSize;
+}
+[System.Serializable]
+public struct  CaptureOutfitTextureSettings
+{
+    public OutfitType outfitType;
+    public Vector3 Offset;
+    public float FieldOfView;
+    public Vector2Int RenderTextureSize;
 }
 #endregion

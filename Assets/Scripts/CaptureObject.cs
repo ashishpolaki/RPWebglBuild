@@ -26,4 +26,19 @@ public class CaptureObject : MonoBehaviour
         captureCamera.gameObject.SetActive(false);
         return renderTexture;
     }
+
+    public RenderTexture CaptureWithCustom(GameObject gameObject, Vector3 offset, float _fov, Vector2Int renderTextureSize)
+    {
+        captureCamera.targetTexture = null;
+        captureCamera.gameObject.SetActive(true);
+        captureCamera.transform.position = gameObject.transform.position + offset;
+        captureCamera.fieldOfView = _fov;
+        captureCamera.transform.eulerAngles = rotation;
+        RenderTexture renderTexture = new RenderTexture(renderTextureSize.x, renderTextureSize.y, colorFormat, depthStencilFormat);
+        captureCamera.targetTexture = renderTexture;
+       captureCamera.Render();
+        captureCamera.gameObject.SetActive(false);
+        return renderTexture;
+    }
+   
 }

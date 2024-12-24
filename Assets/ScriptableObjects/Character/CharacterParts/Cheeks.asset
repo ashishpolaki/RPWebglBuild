@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33753c085d03b84c8593169f61518cd, type: 3}
   m_Name: Cheeks
   m_EditorClassIdentifier: 
-  partType: 5
+  partType: 6
   partName: Cheeks
   colorPreset: {fileID: 0}
   parts: 

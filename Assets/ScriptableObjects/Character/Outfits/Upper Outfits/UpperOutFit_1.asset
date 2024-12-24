@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e00c1e6b17ca234eac15604c6267605, type: 3}
+  m_Name: UpperOutFit_1
+  m_EditorClassIdentifier: 
+  index: 1
+  torsoIndex: 1
+  upperRightArmIndex: 1
+  lowerRightArmIndex: 1
+  upperLeftArmIndex: 1
+  lowerLeftArmIndex: 1
+  torsoColors:
+  - uvCoordinates: {x: 0, y: 15}
+    textureColor: {r: 0.6226415, g: 0.2731399, b: 0.3810649, a: 0}
+  - uvCoordinates: {x: 0, y: 14}
+    textureColor: {r: 0.6509434, g: 0.47572452, b: 0.31011927, a: 0}
+  - uvCoordinates: {x: 0, y: 13}
+    textureColor: {r: 0.5849056, g: 0.37798145, b: 0.37798145, a: 0}
+  upperArmColors:
+  - uvCoordinates: {x: 1, y: 15}
+    textureColor: {r: 0.5882353, g: 0.47450984, b: 0.3647059, a: 0}
+  - uvCoordinates: {x: 2, y: 15}
+    textureColor: {r: 0.5882353, g: 0.4745098, b: 0.3647059, a: 0}

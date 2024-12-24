@@ -27,8 +27,12 @@ public class Character : MonoBehaviour
     private static readonly Vector2Int EarRightUV = new Vector2Int(2, 5);
     private static readonly Vector2Int EyeLidRightUV = new Vector2Int(2, 4);
     private static readonly Vector2Int EyeLidLeftUV = new Vector2Int(1, 4);
+    private static readonly Vector2Int EyeInnerLeftUV = new Vector2Int(4, 2);
     private static readonly Vector2Int EyeRightUV = new Vector2Int(5, 5);
     private static readonly Vector2Int EyeLeftUV = new Vector2Int(4, 5);
+    private static readonly Vector2Int EyeInnerRightUV = new Vector2Int(5, 2);
+    private static readonly Vector2Int EyeBrowRightUV = new Vector2Int(7, 5);
+    private static readonly Vector2Int EyeBrowLeftUV = new Vector2Int(6, 5);
     private static readonly Vector2Int HairUV = new Vector2Int(6, 4);
     private static readonly Vector2Int FacialHairUV = new Vector2Int(7, 4);
     #endregion
@@ -44,6 +48,7 @@ public class Character : MonoBehaviour
     {
         if (isValidate)
         {
+            ChangePartColor(color, new Vector2Int(u, v));
             ChangeMesh(syntyCharacterPartType, changeMeshRenderer);
         }
     }
@@ -98,8 +103,8 @@ public class Character : MonoBehaviour
         BodyGenderBlendShape(customisationData.bodyGenderType);
 
         //Outfits
-        ChangeUpperOutfit(customisationData.upperOutfit);
-        ChangeLowerOutfit(customisationData.lowerOutfit);
+        // ChangeUpperOutfit(customisationData.upperOutfit);
+        // ChangeLowerOutfit(customisationData.lowerOutfit);
 
         //Synty Bug Fix
         SyntyBug();
@@ -142,6 +147,13 @@ public class Character : MonoBehaviour
     {
         UpdateTexture(texture, color, uv.x, uv.y);
     }
+    public void ChangePartsColor(Color color, List<Vector2Int> uvList)
+    {
+        foreach (var uv in uvList)
+        {
+            UpdateTexture(texture, color, uv.x, uv.y);
+        }
+    }
     #endregion
 
     #region Blend Shape
@@ -176,36 +188,105 @@ public class Character : MonoBehaviour
     #region Outfit Customisation
     public void ChangeUpperOutfit(UpperOutfitEconomy upperOutfit)
     {
-        SkinnedMeshRenderer Torso = Resources.Load<GameObject>($"CharacterParts/Torso/Torso_{upperOutfit.torso}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer LeftUpperArm = Resources.Load<GameObject>($"CharacterParts/LeftUpperArm/LeftUpperArm_{upperOutfit.leftUpperArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer LeftLowerArm = Resources.Load<GameObject>($"CharacterParts/LeftLowerArm/LeftLowerArm_{upperOutfit.leftLowerArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer LeftHand = Resources.Load<GameObject>($"CharacterParts/LeftHand/LeftHand_{upperOutfit.leftHand}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer RightUpperArm = Resources.Load<GameObject>($"CharacterParts/RightUpperArm/RightUpperArm_{upperOutfit.rightUpperArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer RightLowerArm = Resources.Load<GameObject>($"CharacterParts/RightLowerArm/RightLowerArm_{upperOutfit.rightLowerArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer RightHand = Resources.Load<GameObject>($"CharacterParts/RightHand/RightHand_{upperOutfit.rightHand}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+        customisationData.upperOutfit = upperOutfit;
 
-        ChangeMesh(SyntyCharacterPartType.Torso, Torso);
-        ChangeMesh(SyntyCharacterPartType.ArmUpperLeft, LeftUpperArm);
-        ChangeMesh(SyntyCharacterPartType.ArmLowerLeft, LeftLowerArm);
-        ChangeMesh(SyntyCharacterPartType.HandLeft, LeftHand);
-        ChangeMesh(SyntyCharacterPartType.ArmUpperRight, RightUpperArm);
-        ChangeMesh(SyntyCharacterPartType.ArmLowerRight, RightLowerArm);
-        ChangeMesh(SyntyCharacterPartType.HandRight, RightHand);
+        if (upperOutfit.torso != -1)
+        {
+            SkinnedMeshRenderer Torso = Resources.Load<GameObject>($"CharacterParts/Torso/Torso_{upperOutfit.torso}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.Torso, Torso);
+        }
+
+        if (upperOutfit.leftUpperArm != -1)
+        {
+            SkinnedMeshRenderer LeftUpperArm = Resources.Load<GameObject>($"CharacterParts/LeftUpperArm/LeftUpperArm_{upperOutfit.leftUpperArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.ArmUpperLeft, LeftUpperArm);
+        }
+
+        if (upperOutfit.leftLowerArm != -1)
+        {
+            SkinnedMeshRenderer LeftLowerArm = Resources.Load<GameObject>($"CharacterParts/LeftLowerArm/LeftLowerArm_{upperOutfit.leftLowerArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.ArmLowerLeft, LeftLowerArm);
+        }
+
+        if (upperOutfit.leftHand != -1)
+        {
+            SkinnedMeshRenderer LeftHand = Resources.Load<GameObject>($"CharacterParts/LeftHand/LeftHand_{upperOutfit.leftHand}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.HandLeft, LeftHand);
+        }
+
+        if (upperOutfit.rightUpperArm != -1)
+        {
+            SkinnedMeshRenderer RightUpperArm = Resources.Load<GameObject>($"CharacterParts/RightUpperArm/RightUpperArm_{upperOutfit.rightUpperArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.ArmUpperRight, RightUpperArm);
+        }
+
+        if (upperOutfit.rightLowerArm != -1)
+        {
+            SkinnedMeshRenderer RightLowerArm = Resources.Load<GameObject>($"CharacterParts/RightLowerArm/RightLowerArm_{upperOutfit.rightLowerArm}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.ArmLowerRight, RightLowerArm);
+        }
+
+        if (upperOutfit.rightHand != -1)
+        {
+            SkinnedMeshRenderer RightHand = Resources.Load<GameObject>($"CharacterParts/RightHand/RightHand_{upperOutfit.rightHand}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.HandRight, RightHand);
+        }
+
+        foreach (var item in upperOutfit.torsoColors)
+        {
+            ChangePartColor(Utils.FromHex(item.color), new Vector2Int(item.u, item.v));
+        }
+
+        foreach (var item in upperOutfit.upperArmColors)
+        {
+            ChangePartColor(Utils.FromHex(item.color), new Vector2Int(item.u, item.v));
+        }
     }
 
     public void ChangeLowerOutfit(LowerOutfitEconomy lowerOutfit)
     {
-        SkinnedMeshRenderer Hips = Resources.Load<GameObject>($"CharacterParts/Hips/Hips_{lowerOutfit.hips}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer RightLeg = Resources.Load<GameObject>($"CharacterParts/RightLeg/RightLeg_{lowerOutfit.rightLeg}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer RightFoot = Resources.Load<GameObject>($"CharacterParts/RightFoot/RightFoot_{lowerOutfit.rightFoot}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer LeftLeg = Resources.Load<GameObject>($"CharacterParts/LeftLeg/LeftLeg_{lowerOutfit.leftLeg}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        SkinnedMeshRenderer LeftFoot = Resources.Load<GameObject>($"CharacterParts/LeftFoot/LeftFoot_{lowerOutfit.leftFoot}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+        customisationData.lowerOutfit = lowerOutfit;
+        if (lowerOutfit.hips != -1)
+        {
+            SkinnedMeshRenderer Hips = Resources.Load<GameObject>($"CharacterParts/Hips/Hips_{lowerOutfit.hips}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.Hips, Hips);
+        }
+        if (lowerOutfit.rightLeg != -1)
+        {
+            SkinnedMeshRenderer RightLeg = Resources.Load<GameObject>($"CharacterParts/RightLeg/RightLeg_{lowerOutfit.rightLeg}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.LegRight, RightLeg);
+        }
+        if (lowerOutfit.rightFoot != -1)
+        {
+            SkinnedMeshRenderer RightFoot = Resources.Load<GameObject>($"CharacterParts/RightFoot/RightFoot_{lowerOutfit.rightFoot}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.FootRight, RightFoot);
+        }
+        if (lowerOutfit.leftLeg != -1)
+        {
+            SkinnedMeshRenderer LeftLeg = Resources.Load<GameObject>($"CharacterParts/LeftLeg/LeftLeg_{lowerOutfit.leftLeg}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.LegLeft, LeftLeg);
+        }
+        if (lowerOutfit.leftFoot != -1)
+        {
+            SkinnedMeshRenderer LeftFoot = Resources.Load<GameObject>($"CharacterParts/LeftFoot/LeftFoot_{lowerOutfit.leftFoot}").gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+            ChangeMesh(SyntyCharacterPartType.FootLeft, LeftFoot);
+        }
 
-        ChangeMesh(SyntyCharacterPartType.Hips, Hips);
-        ChangeMesh(SyntyCharacterPartType.LegRight, RightLeg);
-        ChangeMesh(SyntyCharacterPartType.FootRight, RightFoot);
-        ChangeMesh(SyntyCharacterPartType.LegLeft, LeftLeg);
-        ChangeMesh(SyntyCharacterPartType.FootLeft, LeftFoot);
+        foreach (var item in lowerOutfit.hipsColors)
+        {
+            ChangePartColor(Utils.FromHex(item.color), new Vector2Int(item.u, item.v));
+        }
+
+        foreach (var item in lowerOutfit.legColors)
+        {
+            ChangePartColor(Utils.FromHex(item.color), new Vector2Int(item.u, item.v));
+        }
+
+        foreach (var item in lowerOutfit.footColors)
+        {
+            ChangePartColor(Utils.FromHex(item.color), new Vector2Int(item.u, item.v));
+        }
+
     }
     #endregion
 
@@ -520,19 +601,57 @@ public class Character : MonoBehaviour
     }
     #endregion
 
-    #region Change Part
-    public void ChangePart(SyntyCharacterPartType syntyCharacterPartType, string path)
+    #region Enable Parts
+
+    public void EnableLowerBody()
     {
-        var skinnedMeshRenderer = Resources.Load<GameObject>(path)?.GetComponentInChildren<SkinnedMeshRenderer>();
-        if (skinnedMeshRenderer != null)
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
         {
-            ChangeMesh(syntyCharacterPartType, skinnedMeshRenderer);
+            SyntyCharacterPartType.Hips,
+            SyntyCharacterPartType.LegLeft,
+            SyntyCharacterPartType.LegRight,
+            SyntyCharacterPartType.FootLeft,
+            SyntyCharacterPartType.FootRight
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
         }
     }
-    public void TurnOffPart(SyntyCharacterPartType syntyCharacterPartType)
+
+    public void EnableUpperBody()
     {
-        characterDataList[(int)syntyCharacterPartType - 1].meshRenderer.enabled = false;
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
+        {
+            SyntyCharacterPartType.Torso,
+            SyntyCharacterPartType.ArmUpperLeft,
+            SyntyCharacterPartType.ArmUpperRight,
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
+        }
+
     }
+
     public void EnableFace()
     {
         List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
@@ -579,8 +698,128 @@ public class Character : MonoBehaviour
         }
 
     }
+    public void EnableEyebrows()
+    {
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
+        {
+            SyntyCharacterPartType.EyebrowLeft,
+            SyntyCharacterPartType.EyebrowRight,
+            SyntyCharacterPartType.Head
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
+        }
+    }
+    public void EnableNose()
+    {
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
+        {
+            SyntyCharacterPartType.Nose,
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
+        }
+    }
+    public void EnableEars()
+    {
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
+        {
+            SyntyCharacterPartType.EarLeft,
+            SyntyCharacterPartType.EarRight,
+            SyntyCharacterPartType.Head,
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
+        }
+    }
+    public void EnableFacialHair()
+    {
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
+        {
+            SyntyCharacterPartType.FacialHair,
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public void EnableHair()
+    {
+        List<SyntyCharacterPartType> dontDisableList = new List<SyntyCharacterPartType>()
+        {
+            SyntyCharacterPartType.Hair,
+            SyntyCharacterPartType.Head
+        };
+
+        foreach (var characterPartData in characterDataList)
+        {
+            if (!dontDisableList.Contains(characterPartData.CharacterPartType))
+            {
+                characterPartData.meshRenderer.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (!characterPartData.meshRenderer.gameObject.activeSelf)
+                    characterPartData.meshRenderer.gameObject.SetActive(true);
+            }
+        }
+    }
     #endregion
 
+    #region Change Part
+    public void ChangePart(SyntyCharacterPartType syntyCharacterPartType, string path)
+    {
+        var skinnedMeshRenderer = Resources.Load<GameObject>(path)?.GetComponentInChildren<SkinnedMeshRenderer>();
+        if (skinnedMeshRenderer != null)
+        {
+            ChangeMesh(syntyCharacterPartType, skinnedMeshRenderer);
+        }
+    }
+    public void TurnOffPart(SyntyCharacterPartType syntyCharacterPartType)
+    {
+        characterDataList[(int)syntyCharacterPartType - 1].meshRenderer.enabled = false;
+    }
+    #endregion
 
     #region Face Customisation
     public void UpdatePartsBlendShapeInHead(BlendPartType blendPartType, List<BlendShapeEconomy> blendShapes)
@@ -609,15 +848,18 @@ public class Character : MonoBehaviour
         CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
         if (characterPartSO.parts.Length == 0) return;
 
-        SyntyCharacterPartType characterPartType = CharacterCustomisationManager.Instance.GetCharacterPartType(blendPartType);
-        if (styleNumber == -1)
+        List<SyntyCharacterPartType> characterPartList = CharacterCustomisationManager.Instance.GetCharacterPartType(blendPartType);
+        foreach (SyntyCharacterPartType characterPartType in characterPartList)
         {
-            TurnOffPart(characterPartType);
-        }
-        else
-        {
-            string path = CharacterCustomisationManager.Instance.GetMeshPath(characterPartType, styleNumber);
-            ChangePart(characterPartType, path);
+            if (styleNumber == -1)
+            {
+                TurnOffPart(characterPartType);
+            }
+            else
+            {
+                string path = CharacterCustomisationManager.Instance.GetMeshPath(characterPartType, styleNumber);
+                ChangePart(characterPartType, path);
+            }
         }
     }
     public void ChangePartColorInHead(string _color, BlendPartType blendPartType)
@@ -626,19 +868,27 @@ public class Character : MonoBehaviour
 
         CharacterPartSO characterPartSO = CharacterCustomisationManager.Instance.GetCharacterPartSO(blendPartType);
         Color color = Utils.FromHex(_color);
-        Vector2Int textureUV = new Vector2Int(0, 0);
+        List<Vector2Int> textureUVList = new List<Vector2Int>();
 
         switch (characterPartSO.partType)
         {
             case BlendPartType.Hair:
-                textureUV = HairUV;
+                textureUVList.Add(HairUV);
                 break;
             case BlendPartType.FacialHair:
-                textureUV = FacialHairUV;
+                textureUVList.Add(FacialHairUV);
+                break;
+            case BlendPartType.Eyes:
+                textureUVList.Add(EyeInnerLeftUV);
+                textureUVList.Add(EyeInnerRightUV);
+                break;
+            case BlendPartType.Eyebrows:
+                textureUVList.Add(EyeBrowLeftUV);
+                textureUVList.Add(EyeBrowRightUV);
                 break;
         }
 
-        ChangePartColor(color, textureUV);
+        ChangePartsColor(color, textureUVList);
     }
     #endregion
 

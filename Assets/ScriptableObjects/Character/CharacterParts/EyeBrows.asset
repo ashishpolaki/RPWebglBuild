@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partType: 1
   partName: EyeBrow
-  colorPreset: {fileID: 0}
-  parts: 
+  colorPreset: {fileID: 11400000, guid: 423cb8f38ba9062458c49931774c7d47, type: 2}
+  parts: 00000000010000000200000003000000
   blendPartData:
     partData:
     - name: Raise

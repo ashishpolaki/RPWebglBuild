@@ -40,6 +40,12 @@ public enum SoundType
 #endregion
 
 #region UI
+public enum OutfitType
+{
+    None,
+    Upper,
+    Lower
+}
 public enum ScreenTabType : byte
 {
     None,
@@ -61,6 +67,7 @@ public enum ScreenTabType : byte
     NotInRace,
     CharacterBodyCustomize,
     CharacterFaceCustomize,
+    CharacterOutfitCustomize
 }
 public enum ScreenType : byte
 {
@@ -75,7 +82,6 @@ public enum ScreenType : byte
 #endregion
 
 #region Character
-
 public enum CharacterBlendShapeType : byte
 {
     None,
@@ -91,8 +97,9 @@ public enum BlendPartType : byte
     Hair,
     FacialHair,
     Eyes,
+    Ears,
     Cheek,
-    Mouth
+    Mouth,
 }
 
 public enum SyntyCharacterPartType : byte
@@ -124,22 +131,15 @@ public enum SyntyCharacterPartType : byte
     Teeth,
     Tongue,
 }
-public enum CharacterGenderType : byte
-{
-    Male,
-    Female
-}
 public enum CharacterPartUIType : byte
 {
-    FACE,
-    HAIR,
-    EYEBROWS,
-    BEARD,
-    HAT,
-    MASK,
-    TORSO,
-    ARMS,
-    HANDS,
-    LEGS
+    Body_Shape,
+    Body_SkinTone,
+    Head_EyeBrows,
+    Head_Ears,
+    Head_Eyes,
+    Head_FacialHair,
+    Head_Hair,
+    Head_Nose,
 }
 #endregion

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33753c085d03b84c8593169f61518cd, type: 3}
   m_Name: Mouth
   m_EditorClassIdentifier: 
-  partType: 6
+  partType: 7
   partName: Mouth
   colorPreset: {fileID: 0}
   parts: 

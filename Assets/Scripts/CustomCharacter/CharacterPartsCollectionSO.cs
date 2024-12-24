@@ -6,6 +6,8 @@ namespace CharacterCustomisation
     public class CharacterPartsCollectionSO : ScriptableObject
     {
         public CharacterPartSO[] characterParts;
+        public UpperOutfitSO[] characterUpperOutfits;
+        public LowerOutfitSO[] characterLowerOutfits;
 
         public CharacterPartSO GetCharacterPart(BlendPartType partType)
         {

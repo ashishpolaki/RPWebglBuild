@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partType: 4
   partName: Eyes
-  colorPreset: {fileID: 0}
+  colorPreset: {fileID: 11400000, guid: 43ee1b7c645e7b64197a3733f42c5597, type: 2}
   parts: 
   blendPartData:
     partData:

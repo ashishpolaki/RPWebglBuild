@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6e2987d96e2707479d0711d6bfd258b, type: 3}
+  m_Name: LowerOutFit_0
+  m_EditorClassIdentifier: 
+  index: 0
+  hipsIndex: 0
+  rightLegIndex: 0
+  leftLegIndex: 0
+  rightFootIndex: 0
+  leftFootIndex: 0
+  hipsColors:
+  - uvCoordinates: {x: 0, y: 10}
+    textureColor: {r: 0.5471698, g: 0.42907235, b: 0.2710039, a: 0}
+  - uvCoordinates: {x: 0, y: 9}
+    textureColor: {r: 0.420386, g: 0.32800817, b: 0.5943396, a: 0}
+  - uvCoordinates: {x: 0, y: 6}
+    textureColor: {r: 0.5754717, g: 0.4530203, b: 0.31216627, a: 0}
+  legColors:
+  - uvCoordinates: {x: 1, y: 9}
+    textureColor: {r: 0.33187968, g: 0.5118548, b: 0.6226415, a: 0}
+  - uvCoordinates: {x: 1, y: 8}
+    textureColor: {r: 0.31612673, g: 0.6037736, b: 0.5104172, a: 0}
+  - uvCoordinates: {x: 2, y: 9}
+    textureColor: {r: 0.33333334, g: 0.5137255, b: 0.62352943, a: 0}
+  - uvCoordinates: {x: 2, y: 8}
+    textureColor: {r: 0.31764707, g: 0.6039216, b: 0.50980395, a: 0}
+  footColors: []

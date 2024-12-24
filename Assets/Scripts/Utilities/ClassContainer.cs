@@ -87,6 +87,23 @@ public class UpperOutfitEconomy : EconomyCustom
     public int leftUpperArm;
     public int leftLowerArm;
     public int leftHand;
+
+    public OutfitColorEconomy[] torsoColors;
+    public OutfitColorEconomy[] upperArmColors;
+
+    public UpperOutfitEconomy()
+    {
+        torsoColors = new OutfitColorEconomy[0];
+        upperArmColors = new OutfitColorEconomy[0];
+
+        torso = -1;
+        rightUpperArm = -1;
+        rightLowerArm = 0;
+        rightHand = 0;
+        leftUpperArm = -1;
+        leftLowerArm = 0;
+        leftHand = 0;
+    }
 }
 [System.Serializable]
 public class LowerOutfitEconomy : EconomyCustom
@@ -96,5 +113,37 @@ public class LowerOutfitEconomy : EconomyCustom
     public int rightFoot;
     public int leftLeg;
     public int leftFoot;
+
+    public OutfitColorEconomy[] hipsColors;
+    public OutfitColorEconomy[] legColors;
+    public OutfitColorEconomy[] footColors;
+
+    public LowerOutfitEconomy()
+    {
+        hipsColors = new OutfitColorEconomy[0];
+        legColors = new OutfitColorEconomy[0];
+        footColors = new OutfitColorEconomy[0];
+
+        hips = -1;
+        rightLeg = -1;
+        rightFoot = -1;
+        leftLeg = -1;
+        leftFoot = -1;
+    }
+}
+
+[System.Serializable]
+public class OutfitColorEconomy
+{
+    public int u;
+    public int v;
+    public string color;
+
+    public OutfitColorEconomy()
+    {
+        u = -1;
+        v = -1;
+        color = "";
+    }
 }
 #endregion

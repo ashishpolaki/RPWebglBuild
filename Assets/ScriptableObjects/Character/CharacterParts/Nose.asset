@@ -15,7 +15,7 @@ MonoBehaviour:
   partType: 0
   partName: Nose
   colorPreset: {fileID: 0}
-  parts: 
+  parts: 00000000010000000200000003000000
   blendPartData:
     partData:
     - name: NoseSneer
