@@ -59,12 +59,21 @@ public class CheatCode : MonoBehaviour
     }
     #endregion
 
-    private void Save()
+    private async void Save()
     {
         CheatDateTime = ConvertDateTimeToUTC(cheatTime.ReturnTime(), dateSelectorUI.ReturnDate());
         Latitude = !string.IsNullOrEmpty(latitudeInput.text) ? float.Parse(latitudeInput.text) : 0;
         Longitude = !string.IsNullOrEmpty(longitudeInput.text) ? float.Parse(longitudeInput.text) : 0;
+
+        await UGSManager.Instance.CloudCode.SetCheatCode(CheatDateTime, IsCheatEnabled);
+
     }
+
+    public DateTime GetCheatDateTime()
+    {
+        return DateTime.ParseExact(CheatDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+    }
+
     private string ConvertDateTimeToUTC(string timeString, string dateString)
     {
         string dateTimeString = $"{dateString} {timeString}";

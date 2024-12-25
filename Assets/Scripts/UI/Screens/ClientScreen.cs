@@ -58,12 +58,10 @@ namespace UI.Screen
         private void OnRaceResult(string _raceResult)
         {
             UGS.PlayerRaceResult raceResult = JsonConvert.DeserializeObject<UGS.PlayerRaceResult>(_raceResult);
-            using (PlayerRaceData raceData = new PlayerRaceData())
-            {
-                raceData.horseNumber = raceResult.HorseNumber;
-                raceData.racePosition = raceResult.RacePosition;
-                UGSManager.Instance.SetPlayerRaceData(raceData);
-            }
+            PlayerRaceData raceData = new PlayerRaceData();
+            raceData.horseNumber = raceResult.HorseNumber;
+            raceData.racePosition = raceResult.RacePosition;
+            UGSManager.Instance.SetPlayerRaceData(raceData);
             CloseAllTabs();
             OpenTab(ScreenTabType.RaceResults);
         }

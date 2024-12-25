@@ -68,9 +68,12 @@ namespace UI.Screen.Tab
             {
                 messageTxt.text = "No Players Checked In";
             }
-
+            else if (racePlayerCheckIns.Count == 1)
+            {
+                messageTxt.text = "One Player Checked In";
+            }
             //Check Min 2 players to start a race
-            else if (racePlayerCheckIns.Count > 1)
+            else if (racePlayerCheckIns.Count > 2)
             {
                 lobbyPlayersScrollObject.gameObject.SetActive(true);
                 startRace_btn.interactable = true;
@@ -102,16 +105,23 @@ namespace UI.Screen.Tab
         {
             ResetData();
             ResetFields();
-
             await GetRaceCheckInPlayersAsync();
         }
         private async void StartRace()
         {
-            Func<Task> response = () => UGSManager.Instance.CloudCode.StartRace(UGSManager.Instance.HostRaceData.qualifiedPlayers, UGSManager.Instance.HostRaceData.unQualifiedPlayersList);
-            await LoadingScreen.Instance.PerformAsyncWithLoading(response);
-            UnityEngine.Screen.orientation = ScreenOrientation.LandscapeLeft;
-            GameManager.Instance.HorsesToSpawnList = UGSManager.Instance.HostRaceData.qualifiedPlayers.Select(x => x.HorseNumber).ToList();
-            LoadingScreen.Instance.LoadSceneAdditiveAsync((int)Scene.Race);
+            LoadingScreen.Instance.Show();
+            //{
+            //    GameManager.Instance.LoadHorsesInRaceOrder();
+            //    List<RaceLobbyParticipant> qualifiedPlayers = new List<RaceLobbyParticipant>();
+            //    qualifiedPlayers.Add(new RaceLobbyParticipant() { HorseNumber = GameManager.Instance.HorsesInPreRaceOrderList[0], PlayerName = "NareshReddy",PlayerID = "nVTTUdMqqjqnmoJhFrid0Yh2mt7I" });
+            //    qualifiedPlayers.Add(new RaceLobbyParticipant() { HorseNumber = GameManager.Instance.HorsesInPreRaceOrderList[1], PlayerName = "AjithReddy",PlayerID = "dvWxMXzQv0kHYagsTvbqVLflrzaT"});
+            //    HostRaceData hostRaceData = new HostRaceData();
+            //    hostRaceData.qualifiedPlayers = qualifiedPlayers;
+            //    UGSManager.Instance.SetHostRaceData(hostRaceData);
+            //    await UGSManager.Instance.CloudCode.StartRace(qualifiedPlayers, UGSManager.Instance.HostRaceData.unQualifiedPlayersList);
+            //}
+            await UGSManager.Instance.CloudCode.StartRace(UGSManager.Instance.HostRaceData.qualifiedPlayers, UGSManager.Instance.HostRaceData.unQualifiedPlayersList);
+            LoadingScreen.Instance.Hide();
         }
         private void ResetData()
         {

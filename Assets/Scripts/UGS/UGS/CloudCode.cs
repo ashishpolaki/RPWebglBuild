@@ -167,8 +167,6 @@ namespace UGS
             try
             {
                 setVenueNameResponse = await module.SetVenueName(venueRegistrationData);
-                if (venueRegistrationData != null)
-                    venueRegistrationData.Dispose();
             }
             catch (CloudCodeException exception)
             {
@@ -194,6 +192,7 @@ namespace UGS
                 hostScheduleRace.RaceInterval = _raceInterval;
 
                 RaceScheduleResponse raceScheduleResponse = await module.ScheduleRaceTimings(UGSManager.Instance.VenueRegistrationData.Name, hostScheduleRace);
+
                 if (raceScheduleResponse.IsScheduled)
                 {
                     OnRaceScheduleSuccessEvent?.Invoke();
@@ -270,7 +269,7 @@ namespace UGS
             RaceCheckInResponse raceCheckInResponse = new RaceCheckInResponse();
             try
             {
-                raceCheckInResponse = await module.RaceCheckInRequest(venueName);
+                raceCheckInResponse = await module.RaceCheckInRequest(venueName, UGSManager.Instance.PlayerData.playerName);
             }
             catch (CloudCodeException exception)
             {
@@ -373,11 +372,14 @@ namespace UGS
                 StartRaceResponse startRaceResponse = await module.StartRace(startRaceRequest);
                 if (startRaceResponse.IsRaceStart)
                 {
+                    HostRaceData hostRaceData = new HostRaceData();
+                    hostRaceData.characterCustomisationDatas = startRaceResponse.playerOutfits;
+                    UGSManager.Instance.SetHostRaceData(hostRaceData);
                     OnRaceStartSuccessEvent?.Invoke();
                 }
                 else
                 {
-                    Debug.LogError(startRaceResponse.Message);
+                    Debug.Log(startRaceResponse.Message);
                 }
             }
             catch (CloudCodeException exception)
@@ -390,6 +392,20 @@ namespace UGS
             }
         }
 
+        #endregion
+
+        #region CheatCode
+        public async Task SetCheatCode(string dateTime, bool _isCheatActive)
+        {
+            try
+            {
+                await module.SetCheatCode(dateTime, _isCheatActive);
+            }
+            catch (CloudCodeException exception)
+            {
+                Debug.LogException(exception);
+            }
+        }
         #endregion
     }
 }

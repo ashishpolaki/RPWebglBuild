@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
@@ -133,19 +134,21 @@ namespace UI.Screen.Tab
             LoadingScreen.Instance.Hide();
         }
         #endregion
-
-        #region Venue CheckIn Methods
-        private async Task FetchVenueCheckInAsync()
+        
+    #region Venue CheckIn Methods
+    private async Task FetchVenueCheckInAsync()
         {
             VenueCheckInResponse venueCheckInResponse = await UGSManager.Instance.CloudCode.GetVenueCheckInData(UGSManager.Instance.PlayerData.hostVenueName);
+            //Can able to checkIn
             if (venueCheckInResponse.CanCheckIn)
             {
                 venueCheckInMessageText.text = venueCheckInResponse.Message;
             }
 
+            //Parse NextCheckInTime and Start CountDown
             if (!StringUtils.IsStringEmpty(venueCheckInResponse.NextCheckInTime))
             {
-                nextVenueCheckInTime = DateTime.Parse(venueCheckInResponse.NextCheckInTime);
+                nextVenueCheckInTime = DateTime.ParseExact(venueCheckInResponse.NextCheckInTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 StartCountDownTimer();
             }
 
@@ -160,7 +163,14 @@ namespace UI.Screen.Tab
         IEnumerator IEStartCountDown()
         {
             StringBuilder sb = new StringBuilder();
-            venueTimeLeft = nextVenueCheckInTime - DateTime.UtcNow;
+            DateTime currentTime = DateTime.UtcNow;
+#if CHEAT_CODE
+            if (CheatCode.Instance.IsCheatEnabled)
+            {
+                currentTime = CheatCode.Instance.GetCheatDateTime();
+            }
+#endif
+            venueTimeLeft = nextVenueCheckInTime - currentTime;
             while (venueTimeLeft.TotalSeconds >= 0)
             {
                 sb.Clear();
@@ -191,7 +201,7 @@ namespace UI.Screen.Tab
 
             if (!StringUtils.IsStringEmpty(venueCheckInResponse.NextCheckInTime))
             {
-                nextVenueCheckInTime = DateTime.Parse(venueCheckInResponse.NextCheckInTime);
+                nextVenueCheckInTime = DateTime.ParseExact(venueCheckInResponse.NextCheckInTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 StartCountDownTimer();
             }
         }
@@ -236,7 +246,7 @@ namespace UI.Screen.Tab
                 enterRaceBlackPanel.SetActive(false);
 
                 //Save Data
-                upcomingRaceTime = DateTime.Parse(enterRaceResponse.UpcomingRaceTime);
+                upcomingRaceTime = DateTime.ParseExact(enterRaceResponse.UpcomingRaceTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                 raceInterval = enterRaceResponse.RaceInterval;
                 using (PlayerRaceData playerRaceData = new PlayerRaceData())
                 {
@@ -244,10 +254,10 @@ namespace UI.Screen.Tab
                     playerRaceData.raceInterval = raceInterval;
                     UGSManager.Instance.SetPlayerRaceData(playerRaceData);
                 }
-
                 enterRaceButton.onClick.RemoveAllListeners();
                 enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceTimer));
             }
+            //If the upcoming race found then open RaceCHeckinTab
             else if (enterRaceResponse.IsFoundUpcomingRace)
             {
                 if (!StringUtils.IsStringEmpty(enterRaceResponse.UpcomingRaceTime))
@@ -256,7 +266,7 @@ namespace UI.Screen.Tab
                     enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceCheckIn));
 
                     //Save Data
-                    upcomingRaceTime = DateTime.Parse(enterRaceResponse.UpcomingRaceTime);
+                    upcomingRaceTime = DateTime.ParseExact(enterRaceResponse.UpcomingRaceTime, "MM/dd/yyyy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                     raceInterval = enterRaceResponse.RaceInterval;
                     using (PlayerRaceData playerRaceData = new PlayerRaceData())
                     {
@@ -264,7 +274,6 @@ namespace UI.Screen.Tab
                         playerRaceData.raceInterval = raceInterval;
                         UGSManager.Instance.SetPlayerRaceData(playerRaceData);
                     }
-
                     CheckRaceCheckIn();
                 }
             }
@@ -274,6 +283,10 @@ namespace UI.Screen.Tab
             }
         }
 
+        /// <summary>
+        /// Verify if the player is already in a ongoing race
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> VerifyRaceLobby()
         {
             RaceLobbyParticipant raceLobbyParticipant = await UGSManager.Instance.CloudCode.TryGetRaceLobbyPlayer(UGSManager.Instance.PlayerData.hostVenueName);
@@ -285,7 +298,6 @@ namespace UI.Screen.Tab
                     playerRaceData.horseNumber = raceLobbyParticipant.HorseNumber;
                     UGSManager.Instance.SetPlayerRaceData(playerRaceData);
                 }
-
                 enterRaceTitleText.text = "Continue Race";
                 enterRaceButton.onClick.RemoveAllListeners();
                 enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceInProgress));
@@ -295,10 +307,13 @@ namespace UI.Screen.Tab
             return false;
         }
 
+        /// <summary>
+        /// Show Previous Race Results
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> VerifyRaceResults()
         {
             PlayerRaceResult previousRaceResult = await UGSManager.Instance.CloudCode.GetPreviousRaceResult(UGSManager.Instance.PlayerData.hostVenueName);
-
             if (previousRaceResult.RacePosition != -1)
             {
                 previousRaceResultInfoObject.gameObject.SetActive(true);
@@ -310,7 +325,16 @@ namespace UI.Screen.Tab
 
         private void CheckRaceCheckIn()
         {
-            TimeSpan timeUntilNextRace = upcomingRaceTime - DateTime.UtcNow;
+            DateTime currentTime = DateTime.UtcNow;
+
+#if CHEAT_CODE
+            if(CheatCode.Instance.IsCheatEnabled)
+            {
+                currentTime = CheatCode.Instance.GetCheatDateTime();
+            }
+#endif
+
+            TimeSpan timeUntilNextRace = upcomingRaceTime - currentTime;
             bool canConfirmCheckIn = timeUntilNextRace.TotalSeconds <= raceInterval;
             if (canConfirmCheckIn)
             {
@@ -332,8 +356,15 @@ namespace UI.Screen.Tab
         IEnumerator IEStartEnterRaceTimer()
         {
             StringBuilder sb = new StringBuilder();
+            DateTime currentTime = DateTime.UtcNow;
 
-            raceCheckInTimeLeft = (upcomingRaceTime - DateTime.UtcNow) + new TimeSpan(0, -raceInterval, 0);
+#if CHEAT_CODE
+            if (CheatCode.Instance.IsCheatEnabled)
+            {
+                currentTime = CheatCode.Instance.GetCheatDateTime();
+            }
+#endif
+            raceCheckInTimeLeft = (upcomingRaceTime - currentTime) + new TimeSpan(0, -raceInterval, 0);
             while (raceCheckInTimeLeft.TotalSeconds >= 0)
             {
                 sb.Clear();

@@ -24,7 +24,6 @@ namespace UGS
                 InventoryItemIds = new List<string>() { itemID, },
                 PlayersInventoryItemIds = new List<string>() { playersInventoryItemId },
             };
-
             GetInventoryResult inventoryResult = await EconomyService.Instance.PlayerInventory.GetInventoryAsync(options);
             return inventoryResult.PlayersInventoryItems;
         }

@@ -26,7 +26,15 @@ namespace UI.Screen.Tab
         private void StartTimer()
         {
             raceTime = UGSManager.Instance.PlayerRaceData.upcomingRaceTime;
-            raceStartTimeLeft = raceTime - DateTime.UtcNow;
+            DateTime currentTime = DateTime.UtcNow;
+
+#if CHEAT_CODE
+            if (CheatCode.Instance.IsCheatEnabled)
+            {
+                currentTime = CheatCode.Instance.GetCheatDateTime();
+            }
+#endif
+            raceStartTimeLeft = raceTime - currentTime;
             waitForSeconds = new WaitForSecondsRealtime(1);
             StartCoroutine(IEStartTimer());
         }

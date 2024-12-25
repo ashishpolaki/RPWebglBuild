@@ -46,15 +46,20 @@ public class GPS
 
     public IEnumerator IEGetLocation()
     {
-#if UNITY_EDITOR
-        OnLocationResult?.Invoke("Location Fetch Successful",15, 15);
-        yield break;
-#endif
-
         const int maxWaitSeconds = 10;
         Message = string.Empty;
         Latitude = 0;
         Longitude = 0;
+
+#if CHEAT_CODE
+        if(CheatCode.Instance.IsCheatEnabled)
+        {
+            Latitude = CheatCode.Instance.Latitude; 
+            Longitude = CheatCode.Instance.Longitude;
+            OnLocationResult?.Invoke(Message, Latitude, Longitude);
+            yield break;
+        }
+#endif
 
         // Check if the user has location service enabled.
         if (!Input.location.isEnabledByUser)
