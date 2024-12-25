@@ -22,7 +22,7 @@ namespace HorseRaceCloudCode
         }
 
         [CloudCodeFunction("EnterRaceRequest")]
-        public async Task<EnterRaceResponse> EnterRaceRequest(IExecutionContext context, IRaceController raceController, string venueName)
+        public async Task<EnterRaceResponse> EnterRaceRequest(IExecutionContext context, ICheatCode cheatCode, IRaceController raceController, string venueName)
         {
             EnterRaceResponse enterRaceResponse = new EnterRaceResponse();
             DateTime currentDateTime = DateTime.UtcNow;
@@ -32,6 +32,8 @@ namespace HorseRaceCloudCode
                 enterRaceResponse.Message = "Invalid Player ID";
                 return enterRaceResponse;
             }
+
+            currentDateTime = cheatCode.IsCheatCodeActive(context.PlayerId) ? cheatCode.CurrentDateTime(context.PlayerId) : currentDateTime;
 
             if (StringUtils.IsEmpty(venueName))
             {
@@ -74,7 +76,7 @@ namespace HorseRaceCloudCode
         }
 
         [CloudCodeFunction("RaceCheckInRequest")]
-        public async Task<RaceCheckInResponse> RaceCheckInRequest(IExecutionContext context, IRaceController iController, string venueName, string playerName)
+        public async Task<RaceCheckInResponse> RaceCheckInRequest(IExecutionContext context, ICheatCode cheatCode, IRaceController iController, string venueName, string playerName)
         {
             RaceCheckInResponse raceCheckInResponse = new RaceCheckInResponse();
 
@@ -92,6 +94,11 @@ namespace HorseRaceCloudCode
 
             //Check if player is cheating by changing time in his device.
             DateTime currentDateTime = DateTime.UtcNow;
+
+#if !CheatCode
+            currentDateTime = cheatCode.IsCheatCodeActive(context.PlayerId) ? cheatCode.CurrentDateTime(context.PlayerId) : currentDateTime;
+#endif
+
             var hostRaceScheduleData = await Utils.GetCustomDataWithKey<RaceScheduleRequest>(context, gameApiClient, venueName, "RaceSchedule");
             bool isConfirmRaceCHeckInValid = IsConfirmRaceCheckInValid(hostRaceScheduleData, currentDateTime);
             if (!isConfirmRaceCHeckInValid)
@@ -149,14 +156,13 @@ namespace HorseRaceCloudCode
             {
                 return new PlayerRaceResult();
             }
-
-            await Task.Run(() =>
+            PlayerRaceResult playerRaceResult = await Task.Run(() =>
             {
-                PlayerRaceResult playerRaceResult = controller.GetPlayerRaceResult(context.PlayerId, venueName);
-                return;
+                PlayerRaceResult result = controller.GetPlayerRaceResult(context.PlayerId, venueName);
+                return result;
             });
 
-            return new PlayerRaceResult();
+            return playerRaceResult;
         }
 
 

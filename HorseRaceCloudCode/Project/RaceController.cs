@@ -120,7 +120,7 @@ namespace HorseRaceCloudCode
         #region Race Result
         public void AddRaceResult(PlayerRaceResult playerRaceResult, string venueName)
         {
-            if (raceResults.ContainsKey(venueName))
+            if (raceResults.ContainsKey(venueName) == false)
             {
                 raceResults.Add(venueName, new List<PlayerRaceResult>());
             }

@@ -10,5 +10,6 @@ public class ModuleConfig : ICloudCodeSetup
         config.Dependencies.AddSingleton(GameApiClient.Create());
         config.Dependencies.AddSingleton<IPushClient, PushClient>(_ => PushClient.Create());
         config.Dependencies.AddSingleton<IRaceController, RaceController>();
+        config.Dependencies.AddSingleton<ICheatCode, CheatCode>();
     }
 }

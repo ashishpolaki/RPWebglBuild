@@ -24,3 +24,16 @@ A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceC
 A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\any\refint\HorseRaceCloudCode.dll
 A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.pdb
 A:\Free\RPHorseRace\HorseRaceCloudCode\Project\obj\Release\net6.0\any\ref\HorseRaceCloudCode.dll
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\bin\Release\net6.0\any\HorseRaceCloudCode.deps.json
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\bin\Release\net6.0\any\HorseRaceCloudCode.dll
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\bin\Release\net6.0\any\HorseRaceCloudCode.pdb
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.csproj.AssemblyReference.cache
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.GeneratedMSBuildEditorConfig.editorconfig
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.AssemblyInfoInputs.cache
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.AssemblyInfo.cs
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.csproj.CoreCompileInputs.cache
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.sourcelink.json
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.dll
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\refint\HorseRaceCloudCode.dll
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\HorseRaceCloudCode.pdb
+A:\Free\RPWebglBuild\HorseRaceCloudCode\Project\obj\Release\net6.0\any\ref\HorseRaceCloudCode.dll

@@ -47,10 +47,21 @@ namespace HorseRaceCloudCode
 
             VenueRegistrationRequest venueRegistrationRequest = await Utils.GetCustomDataWithKey<VenueRegistrationRequest>(context, gameApiClient, StringUtils.HOSTVENUEKEY, context.PlayerId);
 
+            //Get Player Outfits
+            Dictionary<int, CharacterCustomisationEconomy> playerOutfits = new Dictionary<int, CharacterCustomisationEconomy>();
+            foreach (var player in startRaceRequest.RaceLobbyParticipants)
+            {
+                var playerInventory = await gameApiClient.EconomyInventory.GetPlayerInventoryAsync(context, context.ServiceToken, context.ProjectId, player.PlayerID);
+                CharacterCustomisationEconomy characterCustomisationEconomy = JsonConvert.DeserializeObject<CharacterCustomisationEconomy>(playerInventory.Data.Results[0].InstanceData.ToString());
+                playerOutfits.Add(player.HorseNumber, characterCustomisationEconomy);
+            }
+            response.playerOutfits = playerOutfits;
+
             //Start Race
             await SetLobbyPlayers(context, raceController, venueRegistrationRequest.Name, startRaceRequest.RaceLobbyParticipants);
             SetUnQualifiedPlayers(context, startRaceRequest.UnQualifiedPlayerIDs);
             raceController.DeleteRaceCheckIns(venueRegistrationRequest.Name);
+            raceController.DeleteRaceResult(venueRegistrationRequest.Name);
             response.IsRaceStart = true;
             return response;
         }
@@ -90,7 +101,6 @@ namespace HorseRaceCloudCode
         }
         #endregion
 
-
         [CloudCodeFunction("GetVenueRaceCheckIns")]
         public async Task<List<CurrentRacePlayerCheckIn>> GetVenueRaceCheckIns(IExecutionContext context, IRaceController controller)
         {
@@ -104,7 +114,7 @@ namespace HorseRaceCloudCode
             return new List<CurrentRacePlayerCheckIn>();
         }
 
-        [CloudCodeFunction("SendRaceResults")]
+        [CloudCodeFunction("RaceResults")]
         public async Task SendRaceResultToPlayers(IExecutionContext context, IRaceController controller, RaceResult raceResultData)
         {
             VenueRegistrationRequest venueRegistrationRequest = await Utils.GetCustomDataWithKey<VenueRegistrationRequest>(context, gameApiClient, StringUtils.HOSTVENUEKEY, context.PlayerId);
@@ -113,16 +123,16 @@ namespace HorseRaceCloudCode
             {
                 //Send Message to the players for Race Results
                 await pushClient.SendPlayerMessageAsync(context, $"{JsonConvert.SerializeObject(raceResultData.playerRaceResults[i])}", "RaceResult", raceResultData.playerRaceResults[i].PlayerID);
-                controller.AddRaceResult(raceResultData.playerRaceResults[i], raceResultData.playerRaceResults[i].PlayerID);
+                controller.AddRaceResult(raceResultData.playerRaceResults[i], venueRegistrationRequest.Name);
 
                 //Set Race Wins Count
                 if (raceResultData.playerRaceResults[i].RacePosition == 1)
                 {
                     int raceWinsCount = 0;
                     var response = await gameApiClient.CloudSaveData.GetProtectedItemsAsync(context, context.ServiceToken, context.ProjectId, raceResultData.playerRaceResults[i].PlayerID, new List<string> { "TotalRaceWins" });
-                    if (response.Data != null && response.Data.Results != null && response.Data.Results.Count > 0)
+                    if (response != null && response.Data != null && response.Data.Results != null && response.Data.Results.Count > 0)
                     {
-                        raceWinsCount = (int)response.Data.Results[0].Value;
+                        raceWinsCount = JsonConvert.DeserializeObject<int>(response.Data.Results[0].Value.ToString());
                     }
                     raceWinsCount++;
                     await gameApiClient.CloudSaveData.SetProtectedItemAsync(context, context.ServiceToken, context.ProjectId, raceResultData.playerRaceResults[i].PlayerID, new SetItemBody("TotalRaceWins", raceWinsCount));

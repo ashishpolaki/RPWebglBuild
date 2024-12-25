@@ -16,7 +16,7 @@ namespace HorseRaceCloudCode
             this.gameApiClient = _gameApiClient;
         }
 
-        [CloudCodeFunction("SetVenueName")] 
+        [CloudCodeFunction("SetVenueName")]
         public async Task<SetVenueNameResponse> SetVenueName(IExecutionContext context, VenueRegistrationRequest venueData)
         {
             SetVenueNameResponse response = new SetVenueNameResponse();
@@ -41,7 +41,7 @@ namespace HorseRaceCloudCode
             }
 
             var nameResponse = await gameApiClient.CloudSaveData.GetCustomItemsAsync(context, context.ServiceToken, context.ProjectId, venueData.Name);
-            if (nameResponse.Data != null && nameResponse.Data.Results != null && nameResponse.Data.Results.Count > 0)
+            if (nameResponse != null && nameResponse.Data != null && nameResponse.Data.Results != null && nameResponse.Data.Results.Count > 0)
             {
                 response.Message = "Venue Name already exists";
                 return response;
@@ -102,7 +102,7 @@ namespace HorseRaceCloudCode
         }
 
         [CloudCodeFunction("RaceScheduleTimings")]
-        public async Task<RaceScheduleResponse> ScheduleRaceTimings(IExecutionContext context,string venueName, RaceScheduleRequest raceScheduleRequest)
+        public async Task<RaceScheduleResponse> ScheduleRaceTimings(IExecutionContext context, string venueName, RaceScheduleRequest raceScheduleRequest)
         {
             RaceScheduleResponse response = new RaceScheduleResponse();
             response.IsScheduled = false;
