@@ -6,6 +6,7 @@ using System.Linq;
 using CharacterCustomisation;
 using System.Threading.Tasks;
 using Unity.Services.Economy.Model;
+using UGS;
 
 public class Character : MonoBehaviour
 {
@@ -14,7 +15,6 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject rootBone;
     [SerializeField] private Texture2D texture;
     [SerializeField] private Animator animator;
-    [SerializeField] private BoxCollider collider;
     [SerializeField] private Vector3 faceSwipeColliderCenter;
     [SerializeField] private Vector3 faceSwipeColliderSize;
     [SerializeField] private Vector3 bodySwipeColliderCenter;
@@ -107,7 +107,6 @@ public class Character : MonoBehaviour
     public void Load(CharacterCustomisationEconomy characterCustomisation)
     {
         customisationData = characterCustomisation;
-
         //Body
         Color skinToneColor = StringUtils.IsStringEmpty(customisationData.skinToneColor) ? CharacterCustomisationManager.Instance.SkinToneColorPreset.colors[0] : Utils.FromHex(customisationData.skinToneColor);
         ChangeSkinToneColor(skinToneColor);
@@ -703,11 +702,6 @@ public class Character : MonoBehaviour
                 characterPartData.meshRenderer.gameObject.SetActive(false);
             }
         }
-        if (collider != null)
-        {
-            collider.center = faceSwipeColliderCenter;
-            collider.size = faceSwipeColliderSize;
-        }
     }
 
     public void EnableFullBody()
@@ -719,12 +713,6 @@ public class Character : MonoBehaviour
                 characterPartData.meshRenderer.gameObject.SetActive(true);
             }
         }
-        if (collider != null)
-        {
-            collider.center = bodySwipeColliderCenter;
-            collider.size = bodySwipeColliderSize;
-        }
-
     }
     public void EnableEyebrows()
     {

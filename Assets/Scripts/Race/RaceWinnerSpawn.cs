@@ -14,34 +14,8 @@ namespace HorseRace
         private void Start()
         {
             ChangeAnimationState();
-            //   ShowRaceResults();
         }
-
-        private async void ShowRaceResults()
-        {
-            //Get the horses with race Positions
-            List<int> racePositionHorseNumbers = GameManager.Instance.HorsesInRaceOrderList;
-
-            //Get the lobby players
-            List<UGS.RaceLobbyParticipant> raceLobbyParticipants = null;
-            //await UGSManager.Instance.CloudSave.TryGetRaceLobby(UGSManager.Instance.PlayerData.playerID, StringUtils.RACELOBBY);
-
-            //Create race result data.
-            UGS.RaceResult raceResult = new UGS.RaceResult();
-            foreach (var raceLobbyParticipant in raceLobbyParticipants)
-            {
-                raceResult.playerRaceResults.Add(new UGS.PlayerRaceResult
-                {
-                    PlayerID = raceLobbyParticipant.PlayerID,
-                    HorseNumber = raceLobbyParticipant.HorseNumber,
-                    RacePosition = racePositionHorseNumbers.IndexOf(raceLobbyParticipant.HorseNumber) + 1
-                });
-            }
-
-            //Upload race results in cloud
-            Func<Task> raceResultResponse = () => UGSManager.Instance.CloudCode.SendRaceResults(raceResult);
-            await LoadingScreen.Instance.PerformAsyncWithLoading(raceResultResponse);
-        }
+      
         private void ChangeAnimationState()
         {
             //Play random animation from the Animator Controller.

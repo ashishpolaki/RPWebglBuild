@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UGS;
 
 namespace HorseRace
 {
@@ -30,7 +31,7 @@ namespace HorseRace
         {
             if (isLoadGameScene)
             {
-                LoadCharacter();
+                // LoadCharacter();
             }
             HorseController[] horseControllers = new HorseController[spawnHorses.Count];
             HostRaceData hostRaceData = new HostRaceData();
@@ -48,6 +49,7 @@ namespace HorseRace
                     if (horseControllerLoad != null)
                     {
                         horseControllerLoad.Character.CreateNewTexture();
+                        
                         horseControllerLoad.SetCharacter(UGSManager.Instance.HostRaceData.characterCustomisationDatas[horseNumber]);
                         horseControllerLoad.Character.EnableFace();
                         RenderTexture renderTexture = GameManager.Instance.CaptureObject.Capture(horseControllerLoad.Character.gameObject);
