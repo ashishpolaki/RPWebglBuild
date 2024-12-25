@@ -34,69 +34,105 @@ namespace Unity.Services.CloudCode.GeneratedBindings
         #region Host
         public async Task<VenueRegistrationResponse> RegisterVenue(VenueRegistrationRequest _venueData)
         {
-            return await k_Service.CallModuleEndpointAsync<VenueRegistrationResponse>(MODULE, REGISTER_VENUE,
-                 new Dictionary<string, object>() { { "venueData", _venueData } });
+            //return await k_Service.CallModuleEndpointAsync<VenueRegistrationResponse>(MODULE, REGISTER_VENUE,
+            //     new Dictionary<string, object>() { { "venueData", _venueData } });
+
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<VenueRegistrationResponse>(MODULE, REGISTER_VENUE,
+                                                     new Dictionary<string, object>() { { "venueData", _venueData } });
+
         }
         public async Task<RaceScheduleResponse> ScheduleRaceTimings(string venueName, RaceScheduleRequest _raceData)
         {
-            return await k_Service.CallModuleEndpointAsync<RaceScheduleResponse>(MODULE, SCHEDULE_RACE,
-                 new Dictionary<string, object>() { { "venueName", venueName }, { "raceScheduleRequest", _raceData } });
+            //return await k_Service.CallModuleEndpointAsync<RaceScheduleResponse>(MODULE, SCHEDULE_RACE,
+            //     new Dictionary<string, object>() { { "venueName", venueName }, { "raceScheduleRequest", _raceData } });
+
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<RaceScheduleResponse>("HorseRaceCloudCode", "RaceScheduleTimings",
+                                      new Dictionary<string, object>() { { "venueName", venueName }, { "raceScheduleRequest", _raceData } });
         }
         public async Task<SetVenueNameResponse> SetVenueName(VenueRegistrationRequest _venueData)
         {
-            return await k_Service.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
-                                 new Dictionary<string, object>() { { "venueData", _venueData } });
+            //return await k_Service.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
+            //                     new Dictionary<string, object>() { { "venueData", _venueData } });
+
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<SetVenueNameResponse>(MODULE, SET_VENUE_NAME,
+                               new Dictionary<string, object>() { { "venueData", _venueData } });
         }
         public async Task<List<CurrentRacePlayerCheckIn>> GetRaceCheckIns()
         {
-            return await k_Service.CallModuleEndpointAsync<List<CurrentRacePlayerCheckIn>>(MODULE, "GetVenueRaceCheckIns");
+            //  return await k_Service.CallModuleEndpointAsync<List<CurrentRacePlayerCheckIn>>(MODULE, "GetVenueRaceCheckIns");
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<List<CurrentRacePlayerCheckIn>>(MODULE, "GetVenueRaceCheckIns");
         }
         public async Task<StartRaceResponse> StartRace(StartRaceRequest startRaceRequest)
         {
-            return await k_Service.CallModuleEndpointAsync<StartRaceResponse>(MODULE, STARTRACE,
+            //return await k_Service.CallModuleEndpointAsync<StartRaceResponse>(MODULE, STARTRACE,
+            //       new Dictionary<string, object>() { { "startRaceRequest", startRaceRequest } });
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<StartRaceResponse>(MODULE, STARTRACE,
                    new Dictionary<string, object>() { { "startRaceRequest", startRaceRequest } });
         }
         public async Task SendRaceResults(RaceResult raceResultData)
         {
-            await k_Service.CallModuleEndpointAsync(MODULE, RACE_RESULTS,
-                 new Dictionary<string, object>() { { "raceResultData", raceResultData } });
+            // await k_Service.CallModuleEndpointAsync(MODULE, RACE_RESULTS,
+            //       new Dictionary<string, object>() { { "raceResultData", raceResultData } });
+            await CloudCodeService.Instance.CallModuleEndpointAsync(MODULE, RACE_RESULTS,
+             new Dictionary<string, object>() { { "raceResultData", raceResultData } });
         }
         #endregion
 
         #region Player
         public async Task<VenueCheckInResponse> GetVenueCheckInData(string venueName)
         {
-            return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, VENUE_CHECKIN,
-                 new Dictionary<string, object>() { { "venueName", venueName } });
+            //   return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, VENUE_CHECKIN,
+            //       new Dictionary<string, object>() { { "venueName", venueName } });
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, VENUE_CHECKIN,
+                new Dictionary<string, object>() { { "venueName", venueName } });
         }
         public async Task<VenueCheckInResponse> SetVenueCheckIn(string venueName)
         {
-            return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, SET_VENUE_CHECKIN,
-                 new Dictionary<string, object>() { { "venueName", venueName } });
+            //   return await k_Service.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, SET_VENUE_CHECKIN,
+            //       new Dictionary<string, object>() { { "venueName", venueName } });
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<VenueCheckInResponse>(MODULE, SET_VENUE_CHECKIN,
+               new Dictionary<string, object>() { { "venueName", venueName } });
         }
 
         public async Task<EnterRaceResponse> EnterRaceRequest(string venueName)
         {
-            return await k_Service.CallModuleEndpointAsync<EnterRaceResponse>(MODULE, ENTER_RACE_REQUEST,
-                 new Dictionary<string, object>() { { "venueName", venueName } });
+            //   return await k_Service.CallModuleEndpointAsync<EnterRaceResponse>(MODULE, ENTER_RACE_REQUEST,
+            //        new Dictionary<string, object>() { { "venueName", venueName } });
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<EnterRaceResponse>(MODULE, ENTER_RACE_REQUEST,
+                new Dictionary<string, object>() { { "venueName", venueName } });
         }
 
-        public async Task<RaceCheckInResponse> RaceCheckInRequest(string venueName)
+        public async Task<RaceCheckInResponse> RaceCheckInRequest(string venueName, string playerName)
         {
-            return await k_Service.CallModuleEndpointAsync<RaceCheckInResponse>(MODULE, RACE_CHECKIN_REQUEST,
-                  new Dictionary<string, object>() { { "venueName", venueName } });
+            //   return await k_Service.CallModuleEndpointAsync<RaceCheckInResponse>(MODULE, RACE_CHECKIN_REQUEST,
+            //        new Dictionary<string, object>() { { "venueName", venueName } });
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<RaceCheckInResponse>(MODULE, RACE_CHECKIN_REQUEST,
+              new Dictionary<string, object>() { { "venueName", venueName }, { "playerName", playerName } });
         }
         public async Task<RaceLobbyParticipant> TryGetRaceLobbyPlayer(string venueName)
         {
-            return await k_Service.CallModuleEndpointAsync<RaceLobbyParticipant>(MODULE, "TryGetRaceLobbyPlayer",
-                  new Dictionary<string, object>() { { "venueName", venueName } });
+            //   return await k_Service.CallModuleEndpointAsync<RaceLobbyParticipant>(MODULE, "TryGetRaceLobbyPlayer",
+            //       new Dictionary<string, object>() { { "venueName", venueName } });
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<RaceLobbyParticipant>(MODULE, "TryGetRaceLobbyPlayer",
+               new Dictionary<string, object>() { { "venueName", venueName } });
         }
 
         public async Task<PlayerRaceResult> PreviousRaceResultRequest(string venueName)
         {
-            return await k_Service.CallModuleEndpointAsync<PlayerRaceResult>(MODULE, "PreviousRaceResult",
+            // return await k_Service.CallModuleEndpointAsync<PlayerRaceResult>(MODULE, "PreviousRaceResult",
+            //    new Dictionary<string, object>() { { "venueName", venueName } });
+
+            return await CloudCodeService.Instance.CallModuleEndpointAsync<PlayerRaceResult>(MODULE, "PreviousRaceResult",
                   new Dictionary<string, object>() { { "venueName", venueName } });
         }
         #endregion
+
+        public async Task SetCheatCode(string dateTime, bool _isCheatActive)
+        {
+            //   await  k_Service.Instance.CallModuleEndpointAsync(MODULE, "SetCheatCode",
+            // new Dictionary<string, object>() { { "dateTime", dateTime }, { "isActive", _isCheatActive } });
+            await CloudCodeService.Instance.CallModuleEndpointAsync(MODULE, "SetCheatCode",
+                                new Dictionary<string, object>() { { "dateTime", dateTime }, { "isActive", _isCheatActive } });
+        }
     }
 }
