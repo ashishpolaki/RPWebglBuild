@@ -22,6 +22,11 @@ public class Character : MonoBehaviour
     [SerializeField] private CharacterCustomisationEconomy customisationData = new CharacterCustomisationEconomy();
     #endregion
 
+    #region Property
+    public int CurrentTorso => customisationData.upperOutfit.torso;
+    public int CurrentHips => customisationData.lowerOutfit.hips;
+    #endregion
+
     #region Texture UV's
     private static readonly Vector2Int TorsoUV = new Vector2Int(0, 5);
     private static readonly Vector2Int NoseUV = new Vector2Int(1, 1);
@@ -50,7 +55,7 @@ public class Character : MonoBehaviour
     {
         if (isValidate)
         {
-            ChangePartColor(color, new Vector2Int(u, v));
+           // ChangePartColor(color, new Vector2Int(u, v));
             ChangeMesh(syntyCharacterPartType, changeMeshRenderer);
         }
     }

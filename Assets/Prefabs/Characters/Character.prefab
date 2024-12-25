@@ -192,6 +192,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6516113852528601480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &364893793576381838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3702884651061702496}
+  m_Layer: 0
+  m_Name: tors_dyn_01_01_c
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3702884651061702496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364893793576381838}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.23809272, y: -0.5640699, z: 0.68089616, w: -0.40189227}
+  m_LocalPosition: {x: 0.07375211, y: -0.13615093, z: 0.12387114}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5184922069346852424}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &400572786362683861
 GameObject:
   m_ObjectHideFlags: 0
@@ -2560,8 +2591,6 @@ MonoBehaviour:
     meshRenderer: {fileID: 2407942035775069530}
   - CharacterPartType: 21
     meshRenderer: {fileID: 5287185388115321432}
-  - CharacterPartType: 22
-    meshRenderer: {fileID: 7704129396184866528}
   - CharacterPartType: 23
     meshRenderer: {fileID: 2670296282593576471}
   - CharacterPartType: 24
@@ -6322,6 +6351,7 @@ Transform:
   - {fileID: 7312694619045963243}
   - {fileID: 7054578910176714625}
   - {fileID: 4605548571332990445}
+  - {fileID: 3702884651061702496}
   m_Father: {fileID: 6138637018070836637}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6469352387049375726
@@ -7626,7 +7656,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 17756598249193320, guid: 19cbcdb366147b649b924984db7f6931, type: 3}
+  m_Mesh: {fileID: 3015088539879231320, guid: 67ab014cd1f8e244c8b2fea660b22a19, type: 3}
   m_Bones:
   - {fileID: 3275603048360115878}
   - {fileID: 1255676336668664925}
@@ -7712,6 +7742,7 @@ SkinnedMeshRenderer:
   - {fileID: 4388386944224993763}
   - {fileID: 8602946916976024597}
   - {fileID: 6123727515365706751}
+  - {fileID: 3702884651061702496}
   - {fileID: 2033210474031212708}
   - {fileID: 8463524075245890459}
   - {fileID: 6121913699522228054}

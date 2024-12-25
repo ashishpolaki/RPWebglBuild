@@ -15,18 +15,18 @@ MonoBehaviour:
   index: 0
   torsoIndex: 0
   upperRightArmIndex: 0
-  lowerRightArmIndex: 0
+  lowerRightArmIndex: -1
   upperLeftArmIndex: 0
-  lowerLeftArmIndex: 0
+  lowerLeftArmIndex: -1
   torsoColors:
   - uvCoordinates: {x: 0, y: 15}
-    textureColor: {r: 0.6226415, g: 0.2731399, b: 0.3810649, a: 0}
+    textureColor: {r: 0.3921569, g: 0.2509804, b: 0.18431373, a: 0}
   - uvCoordinates: {x: 0, y: 14}
     textureColor: {r: 0.6509434, g: 0.47572452, b: 0.31011927, a: 0}
   - uvCoordinates: {x: 0, y: 13}
-    textureColor: {r: 0.5849056, g: 0.37798145, b: 0.37798145, a: 0}
+    textureColor: {r: 0.909804, g: 0.6313726, b: 0.1764706, a: 0}
   upperArmColors:
   - uvCoordinates: {x: 1, y: 15}
-    textureColor: {r: 0.5882353, g: 0.47450984, b: 0.3647059, a: 0}
+    textureColor: {r: 0.27058825, g: 0.08627451, b: 0.0627451, a: 0}
   - uvCoordinates: {x: 2, y: 15}
-    textureColor: {r: 0.5882353, g: 0.4745098, b: 0.3647059, a: 0}
+    textureColor: {r: 0.27058825, g: 0.08627451, b: 0.0627451, a: 0}

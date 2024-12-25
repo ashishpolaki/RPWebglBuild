@@ -20,18 +20,22 @@ MonoBehaviour:
   leftFootIndex: 0
   hipsColors:
   - uvCoordinates: {x: 0, y: 10}
-    textureColor: {r: 0.5471698, g: 0.42907235, b: 0.2710039, a: 0}
+    textureColor: {r: 0.47450984, g: 0.31764707, b: 0.18039216, a: 0}
   - uvCoordinates: {x: 0, y: 9}
-    textureColor: {r: 0.420386, g: 0.32800817, b: 0.5943396, a: 0}
+    textureColor: {r: 0.5882353, g: 0.54509807, b: 0.44705886, a: 0}
   - uvCoordinates: {x: 0, y: 6}
     textureColor: {r: 0.5754717, g: 0.4530203, b: 0.31216627, a: 0}
   legColors:
   - uvCoordinates: {x: 1, y: 9}
-    textureColor: {r: 0.33187968, g: 0.5118548, b: 0.6226415, a: 0}
+    textureColor: {r: 0.42352945, g: 0.18431373, b: 0.13333334, a: 0}
   - uvCoordinates: {x: 1, y: 8}
-    textureColor: {r: 0.31612673, g: 0.6037736, b: 0.5104172, a: 0}
+    textureColor: {r: 0.72156864, g: 0.34509805, b: 0.14509805, a: 0}
   - uvCoordinates: {x: 2, y: 9}
-    textureColor: {r: 0.33333334, g: 0.5137255, b: 0.62352943, a: 0}
+    textureColor: {r: 0.42352942, g: 0.18431373, b: 0.13333334, a: 0}
   - uvCoordinates: {x: 2, y: 8}
-    textureColor: {r: 0.31764707, g: 0.6039216, b: 0.50980395, a: 0}
-  footColors: []
+    textureColor: {r: 0.72156864, g: 0.34509805, b: 0.14509805, a: 0}
+  footColors:
+  - uvCoordinates: {x: 3, y: 9}
+    textureColor: {r: 0.6431373, g: 0.39607847, b: 0.12941177, a: 0}
+  - uvCoordinates: {x: 4, y: 9}
+    textureColor: {r: 0.6431373, g: 0.39607844, b: 0.12941177, a: 0}

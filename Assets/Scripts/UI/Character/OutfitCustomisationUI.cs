@@ -42,6 +42,13 @@ public class OutfitCustomisationUI : MonoBehaviour
             outfitCaptureCharacter.GetComponent<Animator>().CrossFade("CaptureCharacter", 0);
             outfitCaptureCharacter.transform.position = outfitCaptureCharacterPosition;
             outfitCaptureCharacter.transform.rotation = Quaternion.Euler(0, 180, 0);
+
+            //If Character Doesnt have any outfit applied, apply the default first outfit 
+            if(character.CurrentTorso == -1 || character.CurrentHips == -1)
+            {
+                character.ChangeUpperOutfit(CharacterCustomisationManager.Instance.GetUpperOutfitEconomy(0));
+                character.ChangeLowerOutfit(CharacterCustomisationManager.Instance.GetLowerOutfitEconomy(0));
+            }
         }
         //Set Transform
         if (outfitCaptureCharacter != null)

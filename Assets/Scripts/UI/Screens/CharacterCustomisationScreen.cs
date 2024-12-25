@@ -15,12 +15,12 @@ namespace UI.Screen
         {
             Character character = CharacterCustomisationManager.Instance.InstantiateCharacter();
             await LoadCharacterData(character);
-            if (isCharacterDataExist)
-            {
-                UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
-                UIController.Instance.ScreenEvent(ScreenType.CharacterCustomisation, UIScreenEvent.Close);
-            }
-            else
+            //if (isCharacterDataExist)
+            //{
+            //    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+            //    UIController.Instance.ScreenEvent(ScreenType.CharacterCustomisation, UIScreenEvent.Close);
+            //}
+            //else
             {
                 base.Open(screenTabType);
             }
