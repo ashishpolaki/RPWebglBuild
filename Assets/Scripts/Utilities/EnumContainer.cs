@@ -126,7 +126,6 @@ public enum SyntyCharacterPartType : byte
     LegRight,
     FootLeft,
     FootRight,
-    AttachmentHead,
     Nose,
     Teeth,
     Tongue,

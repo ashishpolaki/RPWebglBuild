@@ -63,6 +63,15 @@ namespace UI.Screen.Tab
             LoadingScreen.Instance.Show();
             List<CurrentRacePlayerCheckIn> racePlayerCheckIns = await UGSManager.Instance.CloudCode.GetRaceCheckIns();
 
+            //{
+            //    // Cheat
+            //    GameManager.Instance.LoadHorsesInRaceOrder();
+            //    List<CurrentRacePlayerCheckIn> cheatPlayersCheckin = new List<CurrentRacePlayerCheckIn>();
+            //    cheatPlayersCheckin.Add(new CurrentRacePlayerCheckIn() { CurrentDayCheckIns = 1, PlayerName = "VijithTembur", PlayerID = "hRBEmIizDoBwzmlzWYFzOx9SHJPa" });
+            //    cheatPlayersCheckin.Add(new CurrentRacePlayerCheckIn() { CurrentDayCheckIns = 11, PlayerName = "AjithReddy", PlayerID = "yOMFiqaN6zF0z9xNQ95s2H1Wvagc" });
+            //    racePlayerCheckIns = cheatPlayersCheckin;
+            //}
+
             //no players checked in
             if (racePlayerCheckIns.Count == 0)
             {
@@ -73,7 +82,7 @@ namespace UI.Screen.Tab
                 messageTxt.text = "One Player Checked In";
             }
             //Check Min 2 players to start a race
-            else if (racePlayerCheckIns.Count > 2)
+            else if (racePlayerCheckIns.Count >= 2)
             {
                 lobbyPlayersScrollObject.gameObject.SetActive(true);
                 startRace_btn.interactable = true;
@@ -110,16 +119,6 @@ namespace UI.Screen.Tab
         private async void StartRace()
         {
             LoadingScreen.Instance.Show();
-            //{
-            //    GameManager.Instance.LoadHorsesInRaceOrder();
-            //    List<RaceLobbyParticipant> qualifiedPlayers = new List<RaceLobbyParticipant>();
-            //    qualifiedPlayers.Add(new RaceLobbyParticipant() { HorseNumber = GameManager.Instance.HorsesInPreRaceOrderList[0], PlayerName = "NareshReddy",PlayerID = "nVTTUdMqqjqnmoJhFrid0Yh2mt7I" });
-            //    qualifiedPlayers.Add(new RaceLobbyParticipant() { HorseNumber = GameManager.Instance.HorsesInPreRaceOrderList[1], PlayerName = "AjithReddy",PlayerID = "dvWxMXzQv0kHYagsTvbqVLflrzaT"});
-            //    HostRaceData hostRaceData = new HostRaceData();
-            //    hostRaceData.qualifiedPlayers = qualifiedPlayers;
-            //    UGSManager.Instance.SetHostRaceData(hostRaceData);
-            //    await UGSManager.Instance.CloudCode.StartRace(qualifiedPlayers, UGSManager.Instance.HostRaceData.unQualifiedPlayersList);
-            //}
             await UGSManager.Instance.CloudCode.StartRace(UGSManager.Instance.HostRaceData.qualifiedPlayers, UGSManager.Instance.HostRaceData.unQualifiedPlayersList);
             LoadingScreen.Instance.Hide();
         }

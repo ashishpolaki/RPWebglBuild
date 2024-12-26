@@ -31,7 +31,7 @@ namespace HorseRace
         {
             if (isLoadGameScene)
             {
-                // LoadCharacter();
+              // LoadCharactersCheat();
             }
             HorseController[] horseControllers = new HorseController[spawnHorses.Count];
             HostRaceData hostRaceData = new HostRaceData();
@@ -74,24 +74,19 @@ namespace HorseRace
 
 
         #region Temp Load CharacterData
-        private void LoadCharacter()
+        private void LoadCharactersCheat()
         {
             //Delete Later
-            //HostRaceData hostRaceData = new HostRaceData();
-            //List<UGS.RaceLobbyParticipant> raceLobbyParticipants = new List<UGS.RaceLobbyParticipant>();
-            //raceLobbyParticipants.Add(new UGS.RaceLobbyParticipant() { HorseNumber = horsesByNumber.Keys.ElementAt(0) });
-            //raceLobbyParticipants.Add(new UGS.RaceLobbyParticipant() { HorseNumber = horsesByNumber.Keys.ElementAt(1) });
-            //raceLobbyParticipants.Add(new UGS.RaceLobbyParticipant() { HorseNumber = horsesByNumber.Keys.ElementAt(2) });
-            //hostRaceData.qualifiedPlayers = raceLobbyParticipants;
-            //UGSManager.Instance.SetHostRaceData(hostRaceData);
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
+            GameManager.Instance.LoadHorsesInRaceOrder();
             HostRaceData hostRaceData = new HostRaceData();
             Dictionary<int, CharacterCustomisationEconomy> characterCustomisationDatas = new Dictionary<int, CharacterCustomisationEconomy>();
             foreach (var horseNumber in GameManager.Instance.HorsesToSpawnList)
             {
                 characterCustomisationDatas[horseNumber] = new CharacterCustomisationEconomy();
 
-                int upperArm = Utils.GenerateRandomNumber(0, 3);
-                int lowerArm = Utils.GenerateRandomNumber(0, 3);
+                int upperArm = Utils.GenerateRandomNumber(0, 1);
+                int lowerArm = Utils.GenerateRandomNumber(0, 1);
                 characterCustomisationDatas[horseNumber].upperOutfit = new UpperOutfitEconomy()
                 {
                     torso = Utils.GenerateRandomNumber(0, 3),
@@ -102,8 +97,8 @@ namespace HorseRace
                 };
 
                 int hips = Utils.GenerateRandomNumber(0, 3);
-                int leg = Utils.GenerateRandomNumber(0, 3);
-                int foot = Utils.GenerateRandomNumber(0, 3);
+                int leg = Utils.GenerateRandomNumber(0, 1);
+                int foot = Utils.GenerateRandomNumber(0, 1);
                 characterCustomisationDatas[horseNumber].lowerOutfit = new LowerOutfitEconomy()
                 {
                     hips = hips,
@@ -112,27 +107,6 @@ namespace HorseRace
                     leftFoot = foot,
                     rightFoot = foot,
                 };
-
-                int randomRange = Utils.GenerateRandomNumber(0, 3);
-                switch (randomRange)
-                {
-                    case 0:
-                        characterCustomisationDatas[horseNumber].customParts.Add(new CustomPartEconomy()
-                        {
-                            styleNumber = Utils.GenerateRandomNumber(0, 3),
-                            type = (int)BlendPartType.FacialHair,
-                        });
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        characterCustomisationDatas[horseNumber].customParts.Add(new CustomPartEconomy()
-                        {
-                            styleNumber = Utils.GenerateRandomNumber(0, 3),
-                            type = (int)BlendPartType.Hair,
-                        });
-                        break;
-                }
             }
             hostRaceData.characterCustomisationDatas = characterCustomisationDatas;
             UGSManager.Instance.SetHostRaceData(hostRaceData);

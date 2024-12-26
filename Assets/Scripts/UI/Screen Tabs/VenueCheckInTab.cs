@@ -266,7 +266,7 @@ namespace UI.Screen.Tab
                     enterRaceButton.onClick.AddListener(() => UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RaceCheckIn));
 
                     //Save Data
-                    upcomingRaceTime = DateTime.ParseExact(enterRaceResponse.UpcomingRaceTime, "MM/dd/yyyy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+                    upcomingRaceTime = DateTime.ParseExact(enterRaceResponse.UpcomingRaceTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
                     raceInterval = enterRaceResponse.RaceInterval;
                     using (PlayerRaceData playerRaceData = new PlayerRaceData())
                     {
