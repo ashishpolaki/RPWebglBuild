@@ -2591,11 +2591,11 @@ MonoBehaviour:
     meshRenderer: {fileID: 2407942035775069530}
   - CharacterPartType: 21
     meshRenderer: {fileID: 5287185388115321432}
-  - CharacterPartType: 23
+  - CharacterPartType: 22
     meshRenderer: {fileID: 2670296282593576471}
-  - CharacterPartType: 24
+  - CharacterPartType: 23
     meshRenderer: {fileID: 2705318199435163814}
-  - CharacterPartType: 25
+  - CharacterPartType: 24
     meshRenderer: {fileID: 6792708968135198686}
   rootBone: {fileID: 1436993689583071026}
   texture: {fileID: 2800000, guid: 8a388c6097516f54f97ad45c416a48e8, type: 3}

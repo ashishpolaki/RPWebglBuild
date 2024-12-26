@@ -386,10 +386,6 @@ namespace UGS
             {
                 Debug.LogException(exception);
             }
-            finally
-            {
-                raceLobbyParticipants.Clear();
-            }
         }
 
         #endregion

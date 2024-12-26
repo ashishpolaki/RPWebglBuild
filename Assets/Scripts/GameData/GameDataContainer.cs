@@ -56,7 +56,6 @@ public class GameDataContainer : MonoBehaviour
     #endregion
 
     #region Private Methods
-
     private void UpdateModifiedFields<T>(T existingData, T newData, bool setDefaultValues) where T : GameData
     {
         // Get all the fields of the class T

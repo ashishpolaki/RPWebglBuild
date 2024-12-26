@@ -97,6 +97,7 @@ public class OutfitCustomisationUI : MonoBehaviour
     IEnumerator IESpawnLowerOutfits()
     {
         List<OutfitStyleUI> partStyleUIList = new List<OutfitStyleUI>();
+        yield return null;
         foreach (var item in CharacterCustomisationManager.Instance.LowerOutfits)
         {
             //Capture Styles in UI with the character parts
@@ -104,6 +105,7 @@ public class OutfitCustomisationUI : MonoBehaviour
             outfitCaptureCharacter.ChangeLowerOutfit(CharacterCustomisationManager.Instance.GetLowerOutfitEconomy(item.index));
             yield return null;
             RenderTexture renderTexture = GameManager.Instance.CaptureObject.CaptureWithCustom(outfitCaptureCharacter.gameObject, captureOutfitTextureSettings.Offset, captureOutfitTextureSettings.FieldOfView, captureOutfitTextureSettings.RenderTextureSize);
+            yield return null;
 
             OutfitStyleUI outfitStyle = Instantiate(outfitPRefab, scrollParent);
             outfitStyle.SetData(this, renderTexture, item.index, outfitType);

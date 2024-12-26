@@ -25,16 +25,13 @@ public class GPS
     #region Static Methods
     public static void RequestPermission()
     {
-        if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
-        {
-            Permission.RequestUserPermission(Permission.FineLocation);
-            Permission.RequestUserPermission(Permission.CoarseLocation);
-        }
+        Permission.RequestUserPermission(Permission.FineLocation);
+        Permission.RequestUserPermission(Permission.CoarseLocation);
     }
 
     public static bool IsLocationPermissionGranted()
     {
-        return Permission.HasUserAuthorizedPermission(Permission.FineLocation);
+        return Permission.HasUserAuthorizedPermission(Permission.FineLocation) && Permission.HasUserAuthorizedPermission(Permission.CoarseLocation);
     }
 
     public static bool IsValidGpsLocation(double latitude, double longitude)
@@ -52,9 +49,9 @@ public class GPS
         Longitude = 0;
 
 #if CHEAT_CODE
-        if(CheatCode.Instance.IsCheatEnabled)
+        if (CheatCode.Instance.IsCheatEnabled)
         {
-            Latitude = CheatCode.Instance.Latitude; 
+            Latitude = CheatCode.Instance.Latitude;
             Longitude = CheatCode.Instance.Longitude;
             OnLocationResult?.Invoke(Message, Latitude, Longitude);
             yield break;
@@ -64,9 +61,10 @@ public class GPS
         // Check if the user has location service enabled.
         if (!Input.location.isEnabledByUser)
         {
+            RequestPermission();
             Message = "Location access denied or not enabled";
-            OnLocationResult?.Invoke(Message, Latitude, Longitude);
-            yield break;
+          //  OnLocationResult?.Invoke(Message, Latitude, Longitude);
+  //          yield break;
         }
 
         // Starts the location service.
