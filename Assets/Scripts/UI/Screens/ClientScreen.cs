@@ -24,7 +24,9 @@ namespace UI.Screen
 
         private void OnSignedOut()
         {
+            UGSManager.Instance.ResetData();
             UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.CharacterCustomisation, UIScreenEvent.Destroy);
             UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Close);
         }
 

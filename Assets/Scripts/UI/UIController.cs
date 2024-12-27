@@ -47,5 +47,6 @@ public enum UIScreenEvent
     Open,
     Close,
     Show,
-    Hide
+    Hide,
+    Destroy
 }

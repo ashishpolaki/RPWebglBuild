@@ -36,6 +36,18 @@ namespace UI.Screen
                 case UIScreenEvent.Hide:
                     HideScreen(_screenType, screenTabType);
                     break;
+                case UIScreenEvent.Destroy:
+                    DestroyScreen(_screenType);
+                    break;
+            }
+        }
+
+        public void DestroyScreen(ScreenType screenType)
+        {
+            if (screenDictionary.ContainsKey(screenType))
+            {
+                screenDictionary[screenType].Destroy();
+                screenDictionary.Remove(screenType);
             }
         }
 

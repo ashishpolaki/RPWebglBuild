@@ -21,6 +21,18 @@ public class OutfitCustomisationUI : MonoBehaviour
     private Character outfitCaptureCharacter;
     private bool isCharacterLoaded;
 
+    private void OnDestroy()
+    {
+        if (outfitCaptureCharacter != null)
+        {
+            Destroy(outfitCaptureCharacter.gameObject);
+        }
+        if (character != null)
+        {
+            Destroy(character.gameObject);
+        }
+    }
+
     private void DisableCurrentOutfits()
     {
         if (outfitStylesDictionary.ContainsKey(outfitType))
@@ -44,7 +56,7 @@ public class OutfitCustomisationUI : MonoBehaviour
             outfitCaptureCharacter.transform.rotation = Quaternion.Euler(0, 180, 0);
 
             //If Character Doesnt have any outfit applied, apply the default first outfit 
-            if(character.CurrentTorso == -1 || character.CurrentHips == -1)
+            if (character.CurrentTorso == -1 || character.CurrentHips == -1)
             {
                 character.ChangeUpperOutfit(CharacterCustomisationManager.Instance.GetUpperOutfitEconomy(0));
                 character.ChangeLowerOutfit(CharacterCustomisationManager.Instance.GetLowerOutfitEconomy(0));
@@ -126,7 +138,7 @@ public class OutfitCustomisationUI : MonoBehaviour
             outfitNameText.text = "Upper Outfit";
             if (!outfitStylesDictionary.ContainsKey(outfitType))
             {
-              StartCoroutine(IESpawnUpperOutfits());
+                StartCoroutine(IESpawnUpperOutfits());
             }
             else
             {

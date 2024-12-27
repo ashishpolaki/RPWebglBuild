@@ -68,6 +68,11 @@ namespace UI.Screen
         {
             gameObject.SetActive(false);
         }
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
+
         public virtual void OnScreenBack()
         {
             //Close the tab that is open and then return.

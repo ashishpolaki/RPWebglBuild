@@ -44,8 +44,9 @@ namespace UI.Screen
         #region Private Methods
         private void LogOutHandle()
         {
+            UGSManager.Instance.ResetData();
             UIController.Instance.ScreenEvent(ScreenType.Login, UIScreenEvent.Open);
-            UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Close);    
+            UIController.Instance.ScreenEvent(ScreenType.Host, UIScreenEvent.Destroy);    
         }
         #endregion
 

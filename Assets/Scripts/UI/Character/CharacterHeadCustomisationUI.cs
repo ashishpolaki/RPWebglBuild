@@ -67,6 +67,10 @@ public class CharacterHeadCustomisationUI : MonoBehaviour
         {
             Destroy(headCaptureCharacterInstance.gameObject);
         }
+        if (character != null)
+        {
+            Destroy(character.gameObject);
+        }
         if (renderTexture != null)
         {
             renderTexture.Release();

@@ -141,6 +141,7 @@ public class UGSManager : MonoBehaviour
         SetPlayerData(new PlayerData(), true);
         SetVenueRegistrationData(new VenueRegistrationData(), true);
         SetPlayerRaceData(new PlayerRaceData(), true);
+        SetHostRaceData(new HostRaceData(), true);
         Authentication.ResetData();
     }
     #endregion
