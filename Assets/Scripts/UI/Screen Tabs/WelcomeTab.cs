@@ -51,6 +51,19 @@ namespace UI.Screen.Tab
             //Hide loading screen after checking if the user is a host or not.
             LoadingScreen.Instance.Hide();
 
+            OpenScreen();
+        }
+        private void OnSignFailed(string message)
+        {
+            LoadingScreen.Instance.Hide();
+            Debug.Log(message);
+        }
+        #endregion
+
+        #region Private Methods
+
+        private void OpenScreen()
+        {
             //Open Host Screen
             if (UGSManager.Instance.PlayerData.isHost)
             {
@@ -62,7 +75,7 @@ namespace UI.Screen.Tab
                 bool isPlayerNameEmpty = StringUtils.IsStringEmpty(UGSManager.Instance.PlayerData.playerName);
                 bool isCharacterNotCustomized = true;
 
-                if(isPlayerNameEmpty)
+                if (isPlayerNameEmpty)
                 {
                     UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.PlayerName);
                 }
@@ -74,17 +87,16 @@ namespace UI.Screen.Tab
                 }
             }
         }
-        private void OnSignFailed(string message)
-        {
-            LoadingScreen.Instance.Hide();
-            Debug.Log(message);
-        }
-        #endregion
-
-        #region Private Methods
         private async void CheckCacheSignIn()
         {
-            //Check if user is already signed in
+            //Check if the user is active.
+            if(UGSManager.Instance.Authentication.IsCurrentlySignedIn())
+            {
+                OpenScreen();
+                return;
+            }
+
+            //Check if user is already signed in past
             if (UGSManager.Instance.Authentication.IsSignInCached())
             {
                 LoadingScreen.Instance.Show();

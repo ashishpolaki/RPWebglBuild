@@ -41,6 +41,7 @@ namespace UI.Screen
                 raceWinnerUIBoardList[i].SetRaceWinner(horseNumber, UGSManager.Instance.HostRaceData.currentRaceAvatars[horseNumber]);
             }
             UGSManager.Instance.HostRaceData.Dispose();
+            UGSManager.Instance.SetHostRaceData(new HostRaceData(),true);
         }
         #endregion
 

@@ -102,12 +102,17 @@ namespace UGS
             PlayerName = string.Empty;
         }
 
+        public bool IsCurrentlySignedIn()
+        {
+            return AuthenticationService.Instance.IsSignedIn;
+        }
+
         public bool IsSignInCached()
         {
             // Check if a cached player already exists by checking if the session token exists
             if (AuthenticationService.Instance.SessionTokenExists)
             {
-                return true;
+                 return true;
             }
             return false;
         }
