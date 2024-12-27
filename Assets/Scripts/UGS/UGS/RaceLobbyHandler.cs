@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace UGS
 {
@@ -54,42 +54,14 @@ namespace UGS
         /// Get the Qualified Players in the race.
         /// </summary>
         /// <returns></returns>
-        public async Task<List<RaceLobbyParticipant>> GetQualifiedPlayers()
+        public List<RaceLobbyParticipant> GetQualifiedPlayers()
         {
-            await SetRaceWinner();
-            await ChooseRemainingLobbyPlayers();
-
-            return qualifiedPlayers;
-        }
-
-        /// <summary>
-        /// Get the Un Qualified Players in the race.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<CurrentRacePlayerCheckIn>> GetUnQualifiedPlayers()
-        {
-            await Task.Run(() =>
-            {
-                foreach (var player in checkInPlayersList)
-                {
-                    unQualifiedPlayersList.Add(player);
-                }
-            });
-            return unQualifiedPlayersList;
-        }
-
-        /// <summary>
-        /// Set Race Winner with cumulative odd entries.
-        /// </summary>
-        /// <returns></returns>
-        private async Task SetRaceWinner()
-        {
-            System.Random random = new System.Random();
+            // Use UnityEngine.Random instead of System.Random
             double cumulative = 0.0;
-            long totalCheckIns = await Task.Run(() => checkInPlayersList.Sum(player => (long)player.CurrentDayCheckIns));
+            long totalCheckIns = checkInPlayersList.Sum(player => (long)player.CurrentDayCheckIns);
 
             // Generate a random number between 0 and totalCheckIns
-            double randomNumber = random.NextDouble() * totalCheckIns;
+            double randomNumber = Utils.GenerateRandomNumber(0f, (float)totalCheckIns);
 
             // Select the winner based on the weighted random number
             for (int i = 0; i < checkInPlayersList.Count; i++)
@@ -102,30 +74,36 @@ namespace UGS
                     break;
                 }
             }
-        }
 
-        /// <summary>
-        /// Choose Remaining Players for Host Lobby.
-        /// </summary>
-        private async Task ChooseRemainingLobbyPlayers()
-        {
-            //Adjust maxLobbyPlayersCount to match checkInPlayersCount, if maxLobbyPlayersCount is less than checkInPlayersCount.
+            //Choose Remaining Players
+            // Adjust maxLobbyPlayersCount to match checkInPlayersCount, if maxLobbyPlayersCount is less than checkInPlayersCount.
             int lobbyPlayersCount = maxLobbyPlayers - 1;
             if (checkInPlayersList.Count < lobbyPlayersCount)
             {
                 lobbyPlayersCount = checkInPlayersList.Count;
             }
 
-            //Add Remaining Players
-            await Task.Run(() =>
+            // Add Remaining Players
+            for (int i = 0; i < lobbyPlayersCount; i++)
             {
-                for (int i = 0; i < lobbyPlayersCount; i++)
-                {
-                    System.Random random = new System.Random();
-                    int randomPlayerIndex = random.Next(checkInPlayersList.Count);
-                    AddPlayerToLobby(checkInPlayersList[randomPlayerIndex], randomPlayerIndex);
-                }
-            });
+                int randomPlayerIndex = UnityEngine.Random.Range(0, checkInPlayersList.Count);
+                AddPlayerToLobby(checkInPlayersList[randomPlayerIndex], randomPlayerIndex);
+            }
+
+            return qualifiedPlayers;
+        }
+
+        /// <summary>
+        /// Get the Un Qualified Players in the race.
+        /// </summary>
+        /// <returns></returns>
+        public List<CurrentRacePlayerCheckIn> GetUnQualifiedPlayers()
+        {
+            foreach (var player in checkInPlayersList)
+            {
+                unQualifiedPlayersList.Add(player);
+            }
+            return unQualifiedPlayersList;
         }
 
         /// <summary>

@@ -88,9 +88,8 @@ namespace UI.Screen.Tab
                 startRace_btn.interactable = true;
                 RaceLobbyHandler raceLobbyHandler = new RaceLobbyHandler(racePlayerCheckIns);
                 DisplayRaceCheckins(racePlayerCheckIns);
-                List<RaceLobbyParticipant> raceLobbyParticipants = await raceLobbyHandler.GetQualifiedPlayers();
-                List<CurrentRacePlayerCheckIn> currentRacePlayerCheckIns = await raceLobbyHandler.GetUnQualifiedPlayers();
-
+                List<RaceLobbyParticipant> raceLobbyParticipants = raceLobbyHandler.GetQualifiedPlayers();
+                List<CurrentRacePlayerCheckIn> currentRacePlayerCheckIns = raceLobbyHandler.GetUnQualifiedPlayers();
                 HostRaceData hostRaceData = new HostRaceData();
                 hostRaceData.qualifiedPlayers = raceLobbyParticipants;
                 hostRaceData.unQualifiedPlayersList = currentRacePlayerCheckIns;
