@@ -82,5 +82,8 @@ public class CheatCode : MonoBehaviour
         DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(localDateTime, localTimeZone);
         return utcDateTime.ToString("yyyy-MM-dd HH:mm:ss");
     }
+
+    //PlayerIds
+    public string Ajith1 = "yOMFiqaN6zF0z9xNQ95s2H1Wvagc";
 }
 #endif

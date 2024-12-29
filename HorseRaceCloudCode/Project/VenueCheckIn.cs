@@ -46,9 +46,10 @@ namespace HorseRaceCloudCode
             //Get the player checkin records from the cloud
             string playerCheckinsKey = $"{venueName}{currentDateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
             List<PlayerVenueCheckIn>? currentVenueCheckInsList = await Utils.GetProtectedDataWithKey<List<PlayerVenueCheckIn>>(context, gameApiClient, context.PlayerId, playerCheckinsKey);
+            int dayIndex = GetVenueDayIndex(currentVenueCheckInsList,currentDateTime);
 
             //Check if Player has already checked in today
-            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime, out int dayIndex))
+            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime))
             {
                 //Update today's venue checkin record.
                 UpdatePlayerCheckIn(currentVenueCheckInsList[dayIndex], currentDateTime);
@@ -96,9 +97,10 @@ namespace HorseRaceCloudCode
             //Get the player checkin records from the cloud
             string playerCheckinsKey = $"{venueName}{currentDateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
             List<PlayerVenueCheckIn>? currentVenueCheckInsList = await Utils.GetProtectedDataWithKey<List<PlayerVenueCheckIn>>(context, gameApiClient, context.PlayerId, playerCheckinsKey);
+            int lastCheckInIndex = GetVenueDayIndex(currentVenueCheckInsList, currentDateTime);
 
             //Check if Player has already checked in today
-            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime, out int lastCheckInIndex))
+            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime))
             {
                 //Get Todays Checkin Count
                 response.CheckInCount = currentVenueCheckInsList[lastCheckInIndex].Count;
@@ -147,16 +149,26 @@ namespace HorseRaceCloudCode
             return nextCheckInTime;
         }
 
-        public bool IsAlreadyCheckedInToday(List<PlayerVenueCheckIn> venueCheckInsList, DateTime currentDateTime, out int dayIndex)
+        public int GetVenueDayIndex(List<PlayerVenueCheckIn> venueCheckInsList, DateTime currentDateTime)
         {
-            dayIndex = 0;
+            for (int i = 0; i < venueCheckInsList.Count; i++)
+            {
+                if (venueCheckInsList[i].Date == currentDateTime.Date.ToString(StringUtils.DAY_FORMAT))
+                {
+                    return i;
+                }
+            }
+            return venueCheckInsList.Count;
+        }
+
+        public bool IsAlreadyCheckedInToday(List<PlayerVenueCheckIn> venueCheckInsList, DateTime currentDateTime)
+        {
             if (venueCheckInsList.Count > 0)
             {
                 for (int i = 0; i < venueCheckInsList.Count; i++)
                 {
                     if (venueCheckInsList[i].Date == currentDateTime.Date.ToString(StringUtils.DAY_FORMAT))
                     {
-                        dayIndex = i;
                         return true;
                     }
                 }
