@@ -27,13 +27,16 @@ namespace HorseRaceCloudCode
             EnterRaceResponse enterRaceResponse = new EnterRaceResponse();
             DateTime currentDateTime = DateTime.UtcNow;
 
+
             if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
             {
                 enterRaceResponse.Message = "Invalid Player ID";
                 return enterRaceResponse;
             }
 
+#if !CheatCode
             currentDateTime = cheatCode.IsCheatCodeActive(context.PlayerId) ? cheatCode.CurrentDateTime(context.PlayerId) : currentDateTime;
+#endif
 
             if (StringUtils.IsEmpty(venueName))
             {
@@ -191,8 +194,8 @@ namespace HorseRaceCloudCode
         }
         public void AdjustEndTimeIfEarlierThanStartTime(string startTime, string endTime, out DateTime raceStartTime, out DateTime raceEndTime)
         {
-            raceStartTime = DateTime.ParseExact(startTime, StringUtils.HOUR_MINUTE_FORMAT, CultureInfo.InvariantCulture);
-            raceEndTime = DateTime.ParseExact(endTime, StringUtils.HOUR_MINUTE_FORMAT, CultureInfo.InvariantCulture);
+            raceStartTime = DateTimeUtils.ConvertStringToDateTimeParseExact(startTime, StringUtils.HOUR_MINUTE_FORMAT);
+            raceEndTime = DateTimeUtils.ConvertStringToDateTimeParseExact(endTime, StringUtils.HOUR_MINUTE_FORMAT);
 
             // If the end time is earlier in the day than the start time, add a day to the end time
             if (raceEndTime < raceStartTime)

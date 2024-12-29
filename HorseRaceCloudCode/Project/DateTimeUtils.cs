@@ -5,6 +5,11 @@ namespace HorseRaceCloudCode
 {
     public static class DateTimeUtils
     {
+        public static DateTime ConvertStringToDateTime(string dateTimeString)
+        {
+            return DateTime.Parse(dateTimeString);
+        }
+
         public static DateTime ConvertStringToUTCTime(string dateTimeString)
         {
             DateTime dateTime = DateTime.Parse(dateTimeString);
@@ -21,6 +26,10 @@ namespace HorseRaceCloudCode
         public static bool IsValidDateTime(string dateTimeString)
         {
             return DateTime.TryParse(dateTimeString, out DateTime time);
+        }
+        public static DateTime ConvertStringToDateTimeParseExact(string dateTimeString, string format)
+        {
+            return DateTime.ParseExact(dateTimeString, format, CultureInfo.InvariantCulture);
         }
     }
 }

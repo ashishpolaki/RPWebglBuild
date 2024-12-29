@@ -152,8 +152,8 @@ namespace HorseRaceCloudCode
 
         private bool CheckIfRaceScheduleTimesAreEqual(string startTime, string endTime, out string message)
         {
-            DateTime startScheduleTime = DateTime.Parse(startTime);
-            DateTime endScheduleTime = DateTime.Parse(endTime);
+            DateTime startScheduleTime = DateTimeUtils.ConvertStringToDateTime(startTime);
+            DateTime endScheduleTime = DateTimeUtils.ConvertStringToDateTime(endTime);
             if (DateTimeUtils.AreDateTimesEqual(startScheduleTime, endScheduleTime))
             {
                 message = "Start Race Time and End Race Time are same";
@@ -171,8 +171,8 @@ namespace HorseRaceCloudCode
                 return false;
             }
 
-            DateTime startScheduleTime = DateTime.Parse(startTime);
-            DateTime endScheduleTime = DateTime.Parse(endTime);
+            DateTime startScheduleTime = DateTimeUtils.ConvertStringToDateTime(startTime);
+            DateTime endScheduleTime = DateTimeUtils.ConvertStringToDateTime(endTime);
             //If end time is less than start time, add a day to end time
             if (startScheduleTime > endScheduleTime)
             {

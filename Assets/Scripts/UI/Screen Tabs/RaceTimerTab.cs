@@ -26,24 +26,41 @@ namespace UI.Screen.Tab
         private void StartTimer()
         {
             raceTime = UGSManager.Instance.PlayerRaceData.upcomingRaceTime;
-            DateTime currentTime = DateTime.UtcNow;
-
-#if CHEAT_CODE
-            if (CheatCode.Instance.IsCheatEnabled)
-            {
-                currentTime = CheatCode.Instance.GetCheatDateTime();
-            }
-#endif
-            raceStartTimeLeft = raceTime - currentTime;
             waitForSeconds = new WaitForSecondsRealtime(1);
             StartCoroutine(IEStartTimer());
         }
         IEnumerator IEStartTimer()
         {
             StringBuilder sb = new StringBuilder();
+            DateTime currentTime = DateTime.UtcNow;
+            bool isCheatCodeActive = false;
 
-            while (raceStartTimeLeft.TotalSeconds >= 0)
+#if CHEAT_CODE
+            isCheatCodeActive = CheatCode.Instance.IsCheatEnabled;
+            if (CheatCode.Instance.IsCheatEnabled)
             {
+                currentTime = CheatCode.Instance.GetCheatDateTime();
+            }
+#endif
+            raceStartTimeLeft = raceTime - currentTime;
+
+            while (true)
+            {
+                if(isCheatCodeActive)
+                {
+                    raceStartTimeLeft = raceStartTimeLeft.Add(TimeSpan.FromSeconds(raceStartTimeDecrement));
+                }
+                else
+                {
+                    raceStartTimeLeft = raceTime - DateTime.UtcNow;
+                }
+
+                //Stop the timer if the countdown is over
+                if (raceStartTimeLeft.TotalSeconds < 0)
+                {
+                    break;
+                }
+
                 sb.Clear();
                 sb.Append("Race Starts in : \n ")
                   .Append(raceStartTimeLeft.Hours.ToString("D2")).Append(" Hours ")
@@ -51,7 +68,6 @@ namespace UI.Screen.Tab
                   .Append(raceStartTimeLeft.Seconds.ToString("D2")).Append(" Seconds ");
                 messageText.text = sb.ToString();
                 yield return waitForSeconds;
-                raceStartTimeLeft = raceStartTimeLeft.Add(TimeSpan.FromSeconds(raceStartTimeDecrement));
             }
             messageText.text = "Race Will Start Soon";
             yield return null;

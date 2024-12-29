@@ -134,9 +134,9 @@ namespace UI.Screen.Tab
             LoadingScreen.Instance.Hide();
         }
         #endregion
-        
-    #region Venue CheckIn Methods
-    private async Task FetchVenueCheckInAsync()
+
+        #region Venue CheckIn Methods
+        private async Task FetchVenueCheckInAsync()
         {
             VenueCheckInResponse venueCheckInResponse = await UGSManager.Instance.CloudCode.GetVenueCheckInData(UGSManager.Instance.PlayerData.hostVenueName);
             //Can able to checkIn
@@ -164,15 +164,33 @@ namespace UI.Screen.Tab
         {
             StringBuilder sb = new StringBuilder();
             DateTime currentTime = DateTime.UtcNow;
+            bool isCheatCodeActive = false;
+
 #if CHEAT_CODE
+            isCheatCodeActive = CheatCode.Instance.IsCheatEnabled;
             if (CheatCode.Instance.IsCheatEnabled)
             {
                 currentTime = CheatCode.Instance.GetCheatDateTime();
             }
 #endif
             venueTimeLeft = nextVenueCheckInTime - currentTime;
-            while (venueTimeLeft.TotalSeconds >= 0)
+            while (true)
             {
+                if (isCheatCodeActive)
+                {
+                    venueTimeLeft = venueTimeLeft.Add(TimeSpan.FromSeconds(venueCheckInTimeDecrement));
+                }
+                else
+                {
+                    venueTimeLeft = nextVenueCheckInTime - DateTime.UtcNow;
+                }
+
+                // Stop the timer if the countdown is complete
+                if (venueTimeLeft.TotalSeconds < 0)
+                {
+                    break;
+                }
+
                 sb.Clear();
                 sb.Append("Next Venue check-In : \n ")
                   .Append(venueTimeLeft.Hours.ToString("D2")).Append(" Hours ")
@@ -180,7 +198,6 @@ namespace UI.Screen.Tab
                   .Append(venueTimeLeft.Seconds.ToString("D2")).Append(" Seconds ");
                 venueCheckInMessageText.text = sb.ToString();
                 yield return venueWaitForSeconds;
-                venueTimeLeft = venueTimeLeft.Add(TimeSpan.FromSeconds(venueCheckInTimeDecrement));
             }
 
             venueCheckInMessageText.text = "Click to Check-In";
@@ -293,7 +310,7 @@ namespace UI.Screen.Tab
 
             if (raceLobbyParticipant.HorseNumber > 0)
             {
-                using(PlayerRaceData playerRaceData = new PlayerRaceData())
+                using (PlayerRaceData playerRaceData = new PlayerRaceData())
                 {
                     playerRaceData.horseNumber = raceLobbyParticipant.HorseNumber;
                     UGSManager.Instance.SetPlayerRaceData(playerRaceData);
@@ -328,7 +345,7 @@ namespace UI.Screen.Tab
             DateTime currentTime = DateTime.UtcNow;
 
 #if CHEAT_CODE
-            if(CheatCode.Instance.IsCheatEnabled)
+            if (CheatCode.Instance.IsCheatEnabled)
             {
                 currentTime = CheatCode.Instance.GetCheatDateTime();
             }
@@ -357,16 +374,34 @@ namespace UI.Screen.Tab
         {
             StringBuilder sb = new StringBuilder();
             DateTime currentTime = DateTime.UtcNow;
+            bool isCheatCodeActive = false;
 
 #if CHEAT_CODE
+            isCheatCodeActive = CheatCode.Instance.IsCheatEnabled;
             if (CheatCode.Instance.IsCheatEnabled)
             {
                 currentTime = CheatCode.Instance.GetCheatDateTime();
             }
 #endif
             raceCheckInTimeLeft = (upcomingRaceTime - currentTime) + new TimeSpan(0, -raceInterval, 0);
-            while (raceCheckInTimeLeft.TotalSeconds >= 0)
+
+            while (true)
             {
+                if (isCheatCodeActive)
+                {
+                    raceCheckInTimeLeft = raceCheckInTimeLeft.Add(TimeSpan.FromSeconds(raceCheckInTimeDecrement));
+                }
+                else
+                {
+                    raceCheckInTimeLeft = (upcomingRaceTime - DateTime.UtcNow) + new TimeSpan(0, -raceInterval, 0);
+                }
+
+                // Stop the timer if the countdown is complete
+                if (raceCheckInTimeLeft.TotalSeconds < 0)
+                {
+                    break;
+                }
+
                 sb.Clear();
                 sb.Append("Next Race check-In : \n ")
                   .Append(raceCheckInTimeLeft.Hours.ToString("D2")).Append(" Hours ")
@@ -374,7 +409,6 @@ namespace UI.Screen.Tab
                   .Append(raceCheckInTimeLeft.Seconds.ToString("D2")).Append(" Seconds ");
                 enterRaceMessageText.text = sb.ToString();
                 yield return enterRaceWaitForSeconds;
-                raceCheckInTimeLeft = raceCheckInTimeLeft.Add(TimeSpan.FromSeconds(raceCheckInTimeDecrement));
             }
 
             enterRaceMessageText.text = "Click to Enter";

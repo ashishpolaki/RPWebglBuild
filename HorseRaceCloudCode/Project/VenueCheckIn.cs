@@ -8,6 +8,7 @@ using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
 using Unity.Services.CloudSave.Model;
 
+
 namespace HorseRaceCloudCode
 {
     public class VenueCheckIn
@@ -20,54 +21,9 @@ namespace HorseRaceCloudCode
             this.gameApiClient = _gameApiClient;
             this._logger = logger;
         }
-        #region CheatCode Cloud Methods
-        [CloudCodeFunction("CheatCodeVenueCheckIn")]
-        public async Task<VenueCheckInResponse> CheatCodeCheckInVenue(IExecutionContext context, string venueName, string dateTimeString)
-        {
-            VenueCheckInResponse response = new VenueCheckInResponse();
-            DateTime currentDateTime = DateTimeUtils.ConvertStringToUTCTime(dateTimeString);
-
-            if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
-            {
-                response.Message = "Invalid Player ID";
-                return response;
-            }
-
-            if (StringUtils.IsEmpty(venueName))
-            {
-                response.Message = "Invalid Host Venue";
-                return response;
-            }
-
-            //Get the player checkin records from the cloud
-            string playerCheckinsKey = $"{venueName}{currentDateTime.ToString(StringUtils.YEAR_MONTH_FORMAT)}";
-            List<PlayerVenueCheckIn>? currentVenueCheckInsList = await Utils.GetProtectedDataWithKey<List<PlayerVenueCheckIn>>(context, gameApiClient, context.PlayerId, playerCheckinsKey);
-
-            //Check if Player has already checked in today
-            if (IsAlreadyCheckedInToday(currentVenueCheckInsList, currentDateTime, out int lastCheckInIndex))
-            {
-                //Get Todays Checkin Count
-                response.CheckInCount = currentVenueCheckInsList[lastCheckInIndex].Count;
-
-                //If the player has already checked in the current interval, then return the next check-in time.
-                if (IsAlreadyCheckedInCurrentInterval(currentVenueCheckInsList[lastCheckInIndex].LastCheckInTime, currentDateTime))
-                {
-                    // Tell the player when they can check in next.
-                    DateTime nextCheckInTime = GetNextCheckInTime(currentDateTime, HostConfig.venueCheckInInterval);
-                    response.NextCheckInTime = nextCheckInTime.ToString();
-                    return response;
-                }
-            }
-
-            response.CanCheckIn = true;
-            response.Message = "Click to Check-In";
-            return response;
-        }
-
-        #endregion
 
         [CloudCodeFunction("SetVenueCheckIn")]
-        public async Task<VenueCheckInResponse> SetVenueCheckIn(IExecutionContext context, string venueName)
+        public async Task<VenueCheckInResponse> SetVenueCheckIn(IExecutionContext context, ICheatCode cheatCode, string venueName)
         {
             VenueCheckInResponse response = new VenueCheckInResponse();
             DateTime currentDateTime = DateTime.UtcNow;
@@ -78,6 +34,9 @@ namespace HorseRaceCloudCode
                 return response;
             }
 
+#if !CheatCode
+            currentDateTime = cheatCode.IsCheatCodeActive(context.PlayerId) ? cheatCode.CurrentDateTime(context.PlayerId) : currentDateTime;
+#endif
             if (StringUtils.IsEmpty(venueName))
             {
                 response.Message = "Invalid Host Venue";
@@ -113,10 +72,14 @@ namespace HorseRaceCloudCode
 
 
         [CloudCodeFunction("CheckedInVenue")]
-        public async Task<VenueCheckInResponse> CheckInVenue(IExecutionContext context, string venueName)
+        public async Task<VenueCheckInResponse> CheckInVenue(IExecutionContext context, ICheatCode cheatCode, string venueName)
         {
             VenueCheckInResponse response = new VenueCheckInResponse();
             DateTime currentDateTime = DateTime.UtcNow;
+
+#if !CheatCode
+            currentDateTime = cheatCode.IsCheatCodeActive(context.PlayerId) ? cheatCode.CurrentDateTime(context.PlayerId) : currentDateTime;
+#endif
 
             if (context.PlayerId == null || StringUtils.IsEmpty(context.PlayerId))
             {
@@ -210,7 +173,7 @@ namespace HorseRaceCloudCode
         public bool IsAlreadyCheckedInCurrentInterval(string lastCheckInTime, DateTime currentDateTime)
         {
             //Parse the last checkin time.
-            DateTime lastCheckInDateTime = DateTime.ParseExact(lastCheckInTime, StringUtils.HOUR_MINUTE_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            DateTime lastCheckInDateTime = DateTimeUtils.ConvertStringToDateTimeParseExact(lastCheckInTime, StringUtils.HOUR_MINUTE_FORMAT);
             int lastCheckInInterval = (lastCheckInDateTime.Hour * 60 + lastCheckInDateTime.Minute) / HostConfig.venueCheckInInterval;
             int currentInterval = (currentDateTime.Hour * 60 + currentDateTime.Minute) / HostConfig.venueCheckInInterval;
 

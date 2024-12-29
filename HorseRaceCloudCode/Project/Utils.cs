@@ -10,20 +10,6 @@ namespace HorseRaceCloudCode
 {
     public class Utils
     {
-        //The method will parse the string into a datetime format
-        public static DateTime ParseDateTime(string dateTimeString)
-        {
-            DateTime dateTime = DateTime.UtcNow;
-            if (!string.IsNullOrEmpty(dateTimeString))
-            {
-                if (!DateTime.TryParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
-                {
-                    return dateTime;
-                }
-            }
-            return dateTime;
-        }
-
         public static async Task<T> GetCustomDataWithKey<T>(IExecutionContext context, IGameApiClient gameApiClient, string _customID, string key)
         {
             T? item = Activator.CreateInstance<T>();
