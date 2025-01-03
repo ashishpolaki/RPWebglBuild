@@ -102,8 +102,9 @@ namespace UI.Screen.Tab
             {
                 venueCheckInBlackPanel.SetActive(true);
                 enterRaceBlackPanel.SetActive(true);
-                venueCheckInMessageText.text = "No Venue Found at this location";
-                enterRaceMessageText.text = "No Venue Found at this location";
+                string messageText = !Input.location.isEnabledByUser ? "Location access denied or not enabled" : "No Venue Found at this location";
+                venueCheckInMessageText.text = messageText;
+                enterRaceMessageText.text = messageText;
             }
             else
             {

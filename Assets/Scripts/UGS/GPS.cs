@@ -44,6 +44,7 @@ public class GPS
     public IEnumerator IEGetLocation()
     {
         const int maxWaitSeconds = 10;
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
         Message = string.Empty;
         Latitude = 0;
         Longitude = 0;
@@ -62,9 +63,6 @@ public class GPS
         if (!Input.location.isEnabledByUser)
         {
             RequestPermission();
-            Message = "Location access denied or not enabled";
-          //  OnLocationResult?.Invoke(Message, Latitude, Longitude);
-  //          yield break;
         }
 
         // Starts the location service.
@@ -73,32 +71,48 @@ public class GPS
         // Waits until the location service initializes
         for (int waitTime = 0; Input.location.status == LocationServiceStatus.Initializing && waitTime < maxWaitSeconds; waitTime++)
         {
-            yield return new WaitForSeconds(1);
+            yield return waitForSeconds;
         }
 
-        // If the service didn't initialize in maxWait seconds this cancels location service use.
-        if (Input.location.status == LocationServiceStatus.Initializing)
+        try
         {
-            Message = "Timed out";
-            OnLocationResult?.Invoke(Message, Latitude, Longitude);
-            yield break;
-        }
+            // If the service didn't initialize in maxWait seconds this cancels location service use.
+            if (Input.location.status == LocationServiceStatus.Initializing)
+            {
+                Message = "Timed out";
+                OnLocationResult?.Invoke(Message, Latitude, Longitude);
+                yield break;
+            }
 
-        // If the connection failed this cancels location service use.
-        if (Input.location.status == LocationServiceStatus.Failed)
+            // If the connection failed this cancels location service use.
+            if (Input.location.status == LocationServiceStatus.Failed)
+            {
+                Message = "Unable to determine device location";
+                OnLocationResult?.Invoke(Message, Latitude, Longitude);
+                yield break;
+            }
+
+            // Successfully retrieved location
+            Latitude = Input.location.lastData.latitude;
+            Longitude = Input.location.lastData.longitude;
+            Message = (Latitude != 0 && Longitude != 0) ? "Location Fetch Successful" : "Unable to determine device location";
+
+            //Check again if the user has enabled location service or not
+            if (!Input.location.isEnabledByUser && (Latitude == 0 && Longitude == 0))
+            {
+                Message = "Location not enabled on device or does not have permission";
+                OnLocationResult?.Invoke(Message, Latitude, Longitude);
+                yield break;
+            }
+
+            OnLocationResult?.Invoke(Message, Latitude, Longitude);
+        }
+       
+        finally
         {
-            Message = "Unable to determine device location";
-            OnLocationResult?.Invoke(Message, Latitude, Longitude);
-            yield break;
+
+            // Stops the location service if there is no need to query location updates continuously.
+            Input.location.Stop();
         }
-
-        // Successfully retrieved location
-        Latitude = Input.location.lastData.latitude;
-        Longitude = Input.location.lastData.longitude;
-        Message = (Latitude != 0 && Longitude != 0) ? "Location Fetch Successful" : "Unable to determine device location";
-        OnLocationResult?.Invoke(Message, Latitude, Longitude);
-
-        // Stops the location service if there is no need to query location updates continuously.
-        Input.location.Stop();
     }
 }

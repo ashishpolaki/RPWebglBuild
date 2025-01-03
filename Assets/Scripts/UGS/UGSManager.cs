@@ -115,7 +115,7 @@ public class UGSManager : MonoBehaviour
         _latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
         _longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
 #endif
-        if (string.IsNullOrEmpty(PlayerData.hostID))
+        if (string.IsNullOrEmpty(PlayerData.hostVenueName))
         {
             float latitude = _latitude;
             float longitude = _longitude;
@@ -129,7 +129,7 @@ public class UGSManager : MonoBehaviour
         }
         else
         {
-            return PlayerData.hostID;
+            return PlayerData.hostVenueName;
         }
     }
 
