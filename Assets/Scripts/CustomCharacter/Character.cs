@@ -25,6 +25,7 @@ public class Character : MonoBehaviour
     #region Property
     public int CurrentTorso => customisationData.upperOutfit.torso;
     public int CurrentHips => customisationData.lowerOutfit.hips;
+    public CharacterCustomisationEconomy CustomisationData { get { return customisationData; } }
     #endregion
 
     #region Texture UV's

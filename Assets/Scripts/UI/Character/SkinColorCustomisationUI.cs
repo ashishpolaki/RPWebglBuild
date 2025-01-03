@@ -24,6 +24,7 @@ public class SkinColorCustomisationUI : MonoBehaviour
     private void OnEnable()
     {
         LoadCharacter();
+        LoadColorFromCharacter();
     }
 
     private void LoadCharacter()
@@ -48,6 +49,18 @@ public class SkinColorCustomisationUI : MonoBehaviour
         characterCamera.gameObject.SetActive(true);
 
         OnCharacterAssign?.Invoke(renderTexture, character.transform);
+    }
+
+    private void LoadColorFromCharacter()
+    {
+        foreach (var item in partColorsList)
+        {
+            if (character.CustomisationData.skinToneColor == (Utils.ToHex(item.Color)))
+            {
+                item.Select();
+                break;
+            }
+        }
     }
 
     public void SetData(ColorPresetSO colorPresetSO)

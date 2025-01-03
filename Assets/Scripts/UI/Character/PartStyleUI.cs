@@ -14,6 +14,8 @@ public class PartStyleUI : MonoBehaviour
     private BlendPartType blendPartType;
     private CharacterHeadCustomisationUI characterHeadCustomisationUI;
 
+    public int PartIndex => partIndex;
+
     private void OnEnable()
     {
         Button.onClick.AddListener(OnButtonClick);

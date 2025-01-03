@@ -169,6 +169,7 @@ public class CharacterHeadCustomisationUI : MonoBehaviour
             {
                 partStyleUI.gameObject.SetActive(true);
             }
+            SelectLoadedPartFromCharacter();
         }
     }
     IEnumerator IESpawnStyles()
@@ -213,7 +214,36 @@ public class CharacterHeadCustomisationUI : MonoBehaviour
             partStyleUIList.Add(part);
         }
         storedPartStyles.Add(currentPartSO.partType, partStyleUIList);
+        SelectLoadedPartFromCharacter();
     }
+
+    private void SelectLoadedPartFromCharacter()
+    {
+        bool isPartUISelected = false;
+        foreach (var customPart in character.CustomisationData.customParts)
+        {
+            if (customPart.type == (int)currentPartSO.partType)
+            {
+                foreach (var partStyleUI in storedPartStyles[currentPartSO.partType])
+                {
+                    if (partStyleUI.PartIndex == customPart.styleNumber)
+                    {
+                        partStyleUI.Select();
+                        isPartUISelected = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        //If the Part is not selected, set the first Prefab as Selected;
+        if(!isPartUISelected)
+        {
+            storedPartStyles[currentPartSO.partType][0].Select();
+        }
+    }
+
     private void DisableStoredStyles()
     {
         if (currentPartSO == null)
@@ -242,6 +272,32 @@ public class CharacterHeadCustomisationUI : MonoBehaviour
     #endregion
 
     #region Color
+    private void LoadColorFromCharacter()
+    {
+        bool isPartUISelected = false;
+        foreach (var customPart in character.CustomisationData.customParts)
+        {
+            if (customPart.type == (int)currentPartSO.partType)
+            {
+                foreach (var partColorUI in storedPartColors[currentPartSO.partType])
+                {
+                    if (Utils.ToHex(partColorUI.Color) == customPart.color)
+                    {
+                        partColorUI.Select();
+                        isPartUISelected = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        //If the PartColor is not selected, set the first Prefab as Selected;
+        if (!isPartUISelected)
+        {
+            storedPartColors[currentPartSO.partType][0].Select();
+        }
+    }
     private void SpawnColors()
     {
         gridLayoutGroup.cellSize = colorCellSize;
@@ -266,6 +322,7 @@ public class CharacterHeadCustomisationUI : MonoBehaviour
                 partColorUI.gameObject.SetActive(true);
             }
         }
+        LoadColorFromCharacter();
     }
     private void DisableStoredColors()
     {

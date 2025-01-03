@@ -10,6 +10,8 @@ public class PartColorUI : MonoBehaviour
     [SerializeField] private Color selectedColor;
     private Color color;
 
+    public Color Color => color;
+
     public event System.Action<Color> OnColorSelected;
 
     private void OnEnable()

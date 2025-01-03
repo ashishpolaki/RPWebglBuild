@@ -26,6 +26,7 @@ public class BodyShapeCustomisationUI : MonoBehaviour
         bodySizeSlider.onValueChanged.AddListener((value) => OnBodySizeValueChanged(value));
         musculatureSlider.onValueChanged.AddListener((value) => OnMusculatureValueChanged(value));
         LoadCharacter();
+        LoadSlidersFromCharacter();
     }
     private void OnDisable()
     {
@@ -43,6 +44,12 @@ public class BodyShapeCustomisationUI : MonoBehaviour
             character = UGSManager.Instance.PlayerData.character;
         }
         SetTransform();
+    }
+    private void LoadSlidersFromCharacter()
+    {
+        bodyTypeSlider.value = character.CustomisationData.bodyGenderType;
+        bodySizeSlider.value = character.CustomisationData.bodyType;
+        musculatureSlider.value = character.CustomisationData.bodyMuscleType;
     }
     private void SetTransform()
     {
@@ -67,7 +74,7 @@ public class BodyShapeCustomisationUI : MonoBehaviour
     }
     #endregion
 
-    #region Button Listener Methods
+    #region Slider Listener Methods
     private void OnBodyTypeValueChanged(float value)
     {
         character.BodyGenderBlendShape(value);
