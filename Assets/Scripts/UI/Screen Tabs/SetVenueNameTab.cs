@@ -49,7 +49,7 @@ namespace UI.Screen.Tab
                 return;
             }
 
-            if (venueInputField.text.Length > 15)
+            if (venueInputField.text.Length > 20)
             {
                 errorMessageText.text = StringUtils.VENUE_NAME_LENGTH_ERROR;
                 return;
