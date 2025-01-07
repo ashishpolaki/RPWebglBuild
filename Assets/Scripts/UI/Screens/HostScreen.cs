@@ -17,6 +17,7 @@ namespace UI.Screen
                 {
                     VenueRegistrationData venueRegistrationData = new VenueRegistrationData();
                     venueRegistrationData.Name = venueRegistrationResponse.Name;
+                    venueRegistrationData.DisplayName = venueRegistrationResponse.DisplayName;
                     venueRegistrationData.Latitude = venueRegistrationResponse.Latitude;
                     venueRegistrationData.Longitude = venueRegistrationResponse.Longitude;
                     UGSManager.Instance.SetVenueRegistrationData(venueRegistrationData);

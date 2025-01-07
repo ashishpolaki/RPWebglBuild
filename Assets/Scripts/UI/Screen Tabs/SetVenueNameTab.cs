@@ -56,7 +56,8 @@ namespace UI.Screen.Tab
             }
 
             VenueRegistrationRequest venueRegistrationRequest = new VenueRegistrationRequest();
-            venueRegistrationRequest.Name = venueInputField.text;
+            venueRegistrationRequest.DisplayName = venueInputField.text;
+            venueRegistrationRequest.Name = StringUtils.RemoveSymbolsAndSpaces(venueInputField.text);
 
             Func<Task<SetVenueNameResponse>> method = () => UGSManager.Instance.CloudCode.SetVenueName(venueRegistrationRequest);
             SetVenueNameResponse setVenueNameResponse = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
@@ -67,7 +68,8 @@ namespace UI.Screen.Tab
                 UIController.Instance.ChangeCurrentScreenTab(ScreenTabType.RegisterVenue);
 
                 VenueRegistrationData venueRegistrationData = new VenueRegistrationData();
-                venueRegistrationData.Name = venueInputField.text;
+                venueRegistrationData.DisplayName = venueInputField.text;
+                venueRegistrationData.Name = StringUtils.RemoveSymbolsAndSpaces(venueInputField.text);
                 UGSManager.Instance.SetVenueRegistrationData(venueRegistrationData);
             }
             else

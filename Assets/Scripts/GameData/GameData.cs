@@ -14,6 +14,7 @@ public class GameData
 public class VenueRegistrationData : GameData, IDisposable
 {
     public string Name { get; set; }
+    public string DisplayName { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public float Radius { get; set; }
@@ -21,6 +22,7 @@ public class VenueRegistrationData : GameData, IDisposable
     public VenueRegistrationData()
     {
         Name = string.Empty;
+        DisplayName = string.Empty;
         Latitude = 0;
         Longitude = 0;
         Radius = 0;

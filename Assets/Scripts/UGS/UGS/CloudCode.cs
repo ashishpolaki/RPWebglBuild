@@ -138,6 +138,7 @@ namespace UGS
             try
             {
                 venueRegistrationRequest.Name = UGSManager.Instance.VenueRegistrationData.Name;
+                venueRegistrationRequest.DisplayName = UGSManager.Instance.VenueRegistrationData.DisplayName;
                 venueRegistrationRequest.Latitude = _latitude;
                 venueRegistrationRequest.Longitude = _longitude;
                 venueRegistrationRequest.Radius = _radius;

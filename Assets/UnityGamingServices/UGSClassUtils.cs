@@ -85,10 +85,12 @@ namespace UGS
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public float Radius { get; set; }
+        public string DisplayName { get; set; }
 
         public VenueRegistrationRequest()
         {
             Name = string.Empty;
+            DisplayName = string.Empty;
             Latitude = 0;
             Longitude = 0;
             Radius = 0;

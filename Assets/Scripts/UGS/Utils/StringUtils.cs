@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 public class StringUtils
 {
     #region UGS Method Names
@@ -16,7 +18,7 @@ public class StringUtils
 
     #region Venue
     public const string VENUE_NAME_EMPTY_ERROR = "Please enter the venue name";
-    public const string VENUE_NAME_LENGTH_ERROR = "Venue name should not be more than 15 characters";
+    public const string VENUE_NAME_LENGTH_ERROR = "Venue name should not be more than 20 characters";
     #endregion
 
     #region RACE SCHEDULE
@@ -74,5 +76,10 @@ public class StringUtils
     public static bool IsStringEmpty(string value)
     {
         return string.IsNullOrEmpty(value);
+    }
+
+    public static string RemoveSymbolsAndSpaces(string input)
+    {
+        return Regex.Replace(input, @"[^a-zA-Z0-9]", "");
     }
 }
