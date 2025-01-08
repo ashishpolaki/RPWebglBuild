@@ -111,15 +111,25 @@ public class UGSManager : MonoBehaviour
     #region Public Methods
     public async Task<string> GetHostVenueName(float _latitude, float _longitude)
     {
+        string hostVenueName = PlayerData.hostVenueName;
 #if CHEAT_CODE
         _latitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Latitude : _latitude;
         _longitude = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.Longitude : _longitude;
+        hostVenueName = CheatCode.Instance.IsCheatEnabled ? CheatCode.Instance.VenueName : hostVenueName;
+        if(CheatCode.Instance.IsCheatEnabled)
+        {
+            using (PlayerData playerData = new PlayerData())
+            {
+                playerData.hostVenueName = hostVenueName;
+                SetPlayerData(playerData);
+            }
+        }
 #endif
-        if (string.IsNullOrEmpty(PlayerData.hostVenueName))
+        if (string.IsNullOrEmpty(hostVenueName))
         {
             float latitude = _latitude;
             float longitude = _longitude;
-            string hostVenueName = await CloudSave.GetHostVenueName(StringUtils.HOSTVENUE, latitude, longitude);
+            hostVenueName = await CloudSave.GetHostVenueName(StringUtils.HOSTVENUE, latitude, longitude);
             using (PlayerData playerData = new PlayerData())
             {
                 playerData.hostVenueName = hostVenueName;
@@ -129,7 +139,7 @@ public class UGSManager : MonoBehaviour
         }
         else
         {
-            return PlayerData.hostVenueName;
+            return hostVenueName;
         }
     }
 

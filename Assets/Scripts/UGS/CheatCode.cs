@@ -16,6 +16,7 @@ public class CheatCode : MonoBehaviour
     [SerializeField] private Toggle cheatToggle;
     [SerializeField] private InputField latitudeInput;
     [SerializeField] private InputField longitudeInput;
+    [SerializeField] private InputField venueNameInput;
 
     private bool IsCheatPanelActive;
     public bool IsCheatEnabled;
@@ -23,6 +24,7 @@ public class CheatCode : MonoBehaviour
     public string CheatDateTime { get; private set; }
     public float Latitude { get; private set; }
     public float Longitude { get; private set; }
+    public string VenueName { get; private set; }
 
     [SerializeField] private TimeAdjustmentSettings cheatTime;
     [SerializeField] private DateSelectorUI dateSelectorUI;
@@ -64,9 +66,8 @@ public class CheatCode : MonoBehaviour
         CheatDateTime = ConvertDateTimeToUTC(cheatTime.ReturnTime(), dateSelectorUI.ReturnDate());
         Latitude = !string.IsNullOrEmpty(latitudeInput.text) ? float.Parse(latitudeInput.text) : 0;
         Longitude = !string.IsNullOrEmpty(longitudeInput.text) ? float.Parse(longitudeInput.text) : 0;
-
+        VenueName = !string.IsNullOrEmpty(venueNameInput.text) ? StringUtils.RemoveSymbolsAndSpaces(venueNameInput.text) : string.Empty;
         await UGSManager.Instance.CloudCode.SetCheatCode(CheatDateTime, IsCheatEnabled);
-
     }
 
     public DateTime GetCheatDateTime()
