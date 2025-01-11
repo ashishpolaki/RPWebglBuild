@@ -21,6 +21,7 @@ public class HorseSplineManager : MonoBehaviour
     public float ChangeThresholdDistance => changeThresholdDistance;
     public float3 Extents => extents;
     public int TotalSplinesCount => splineDataList.Count;
+    public int TotalSplinePointsCount => splineDataList[0].splinePoints.Count;
     public int ControlPointLength => controlPointLength;
     public List<int> HorsesCountPerSpline => horsesCountPerSpline;
     #endregion

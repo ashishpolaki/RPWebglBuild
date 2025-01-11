@@ -129,7 +129,7 @@ namespace HorseRace
             SpeedState();
             AnimationState();
         }
-       
+
         public virtual void SetSpline(SplineData splineData)
         {
             currentSplineData = splineData;

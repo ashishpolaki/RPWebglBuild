@@ -13,6 +13,10 @@ namespace HorseRace
         #region Inspector Variables
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private PreWinnerManager preWinnerManager;
+        [SerializeField] private int startOvertakeControlPointOffset;
+        [SerializeField] private int endOvertakeControlPointOffset;
+        [SerializeField] private float overtakeCheckTime = 3f;
+        [SerializeField] private int minHorsesOvertake = 3;
         #endregion
 
         #region Private Variables
@@ -94,6 +98,10 @@ namespace HorseRace
             for (int i = 1; i <= _horses.Length; i++)
             {
                 horseFinishLineAccelerationValues.Add(horseSpeedSO.finishRaceAccelerationIncrement + (i * horseSpeedSO.finishRaceAccelerationMultiplier));
+                if (_horses[i - 1] is HorseControllerSave horseControllerSave)
+                {
+                    horseControllerSave.SetOvertakeControlPointsData(horseSplineManager.TotalSplinePointsCount, startOvertakeControlPointOffset, endOvertakeControlPointOffset,minHorsesOvertake,overtakeCheckTime);
+                }
             }
         }
         /// <summary>

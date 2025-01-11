@@ -294,6 +294,8 @@ MonoBehaviour:
   colliderTransform: {fileID: 3318369290850497794}
   canDrawGizmos: 0
   controlPointsSaveList: []
+  overtakeCheckTime: 4
+  minHorsesOvertake: 3
 --- !u!1 &5302657878742996796
 GameObject:
   m_ObjectHideFlags: 0

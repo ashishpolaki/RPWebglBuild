@@ -5,17 +5,15 @@ namespace HorseRace
 {
     public class HorseControllerSave : HorseController, ISaveHorseData
     {
-        [SerializeField] private List<ControlPointSave> controlPointsSaveList = new List<ControlPointSave>();
-
-        //private float previousSavedTime;
-        //private int overtakeVelocityIndex;
-        //private int previousRacePosition = -1;
-
-        //private List<int> overtakeVelocityIndexList = new List<int>();
-        //[SerializeField] private int overtakeCameraWaypointGroupMin;
-        //[SerializeField] private int overtakeCameraWaypointGroupMax;
-        //[SerializeField] private float overtakeCheckTime = 3f;
-        //[SerializeField] private int minHorsesOvertake = 2;
+        private List<ControlPointSave> controlPointsSaveList = new List<ControlPointSave>();
+        private List<int> overtakeControlPointGroupIndices = new List<int>();
+        private float overtakeCheckTime = 3f;
+        private float previousSavedTime;
+        private int minHorsesOvertake = 2;
+        private int previousRacePosition = -1;
+        private int overtakeControlPointIndex;
+        private int minOvertakeControlPointNumber;
+        private int maxOvertakeControlPointNumber;
         private int previousSplineIndex = -1;
         private int nextSplineIndex = -1;
 
@@ -26,18 +24,15 @@ namespace HorseRace
         public override void UpdateState()
         {
             base.UpdateState();
+            SaveOvertakeCameraData();
         }
+
         public override void InitializeData(SplineData _splineData, float _speed, float _maxSpeed, float _accleration, float _thresHold)
         {
-            controlPointsSaveList.Add(new ControlPointSave
-            {
-                speed = _speed,
-                acceleration = _accleration,
-                splineIndex = _splineData.splineIndex,
-                controlPointIndex = CurrentControlPointIndex
-            });
+            AddControlPointData(_speed, _accleration, _splineData.splineIndex, CurrentControlPointIndex);
             base.InitializeData(_splineData, _speed, _maxSpeed, _accleration, _thresHold);
         }
+
         protected override void OnControlPointChange()
         {
             base.OnControlPointChange();
@@ -52,6 +47,13 @@ namespace HorseRace
             EventManager.Instance.OnControlPointChange(HorseNumber, CurrentControlPointIndex);
         }
 
+        public void SetOvertakeControlPointsData(int totalControlPoints, int startOffset, int endOffset, int minOvertakeHorses,float overtakeCheckTime)
+        {
+            minOvertakeControlPointNumber = startOffset;
+            maxOvertakeControlPointNumber = totalControlPoints - endOffset;
+            minHorsesOvertake = minOvertakeHorses;
+            this.overtakeCheckTime = overtakeCheckTime;
+        }
         public override void SetSpline(SplineData splineData)
         {
             if (splineData.splineIndex != currentSplineIndex)
@@ -63,46 +65,51 @@ namespace HorseRace
             base.SetSpline(splineData);
         }
 
-        #region Speed
-        public override void SetSpeed(float speed, float aceleration)
+        private void AddControlPointData(float speed, float aceleration, int splineIndex, int currentControLpointIndex)
         {
-            base.SetSpeed(speed, aceleration);
             controlPointsSaveList.Add(new ControlPointSave
             {
                 speed = speed,
                 acceleration = aceleration,
-                splineIndex = CurrentSplineData.splineIndex,
-                controlPointIndex = CurrentControlPointIndex
+                splineIndex = splineIndex,
+                controlPointIndex = currentControLpointIndex
             });
+        }
+
+        #region Speed
+        public override void SetSpeed(float speed, float aceleration)
+        {
+            base.SetSpeed(speed, aceleration);
+            AddControlPointData(speed, aceleration, CurrentSplineData.splineIndex, CurrentControlPointIndex);
         }
         #endregion
 
         #region Save Info
         private void SaveOvertakeCameraData()
         {
-            //    if (currentWaypointGroupIndex > overtakeCameraWaypointGroupMin &&
-            //          currentWaypointGroupIndex < overtakeCameraWaypointGroupMax)
-            //{
-            //    if (previousRacePosition > 0)
-            //    {
-            //        if (Time.fixedTime - previousSavedTime > overtakeCheckTime)
-            //        {
-            //            if (RacePosition <= previousRacePosition - minHorsesOvertake)
-            //            {
-            //                //Save horsevelocityIndex
-            //                overtakeVelocityIndexList.Add(overtakeVelocityIndex);
-            //            }
-            //            previousRacePosition = -1;
-            //        }
-            //    }
+            if (CurrentControlPointIndex > minOvertakeControlPointNumber &&
+                 CurrentControlPointIndex < maxOvertakeControlPointNumber)
+            {
+                if (previousRacePosition > 0)
+                {
+                    if (Time.fixedTime - previousSavedTime > overtakeCheckTime)
+                    {
+                        if (RacePosition <= previousRacePosition - minHorsesOvertake)
+                        {
+                            //Save horsevelocityIndex
+                            overtakeControlPointGroupIndices.Add(overtakeControlPointIndex);
+                        }
+                        previousRacePosition = -1;
+                    }
+                }
 
-            //    if (previousRacePosition <= 0)
-            //    {
-            //        previousRacePosition = RacePosition;
-            //        previousSavedTime = Time.fixedTime;
-            //        overtakeVelocityIndex = horseVelocityList.Count;
-            //    }
-            //}
+                if (previousRacePosition <= 0)
+                {
+                    previousRacePosition = RacePosition;
+                    previousSavedTime = Time.fixedTime;
+                    overtakeControlPointIndex = CurrentControlPointIndex;
+                }
+            }
         }
 
         public HorseData HorseSaveData()
