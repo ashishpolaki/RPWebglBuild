@@ -67,7 +67,8 @@ public enum ScreenTabType : byte
     NotInRace,
     CharacterBodyCustomize,
     CharacterFaceCustomize,
-    CharacterOutfitCustomize
+    CharacterOutfitCustomize,
+    HorseColor,
 }
 public enum ScreenType : byte
 {
@@ -77,6 +78,7 @@ public enum ScreenType : byte
     RaceResults,
     Race,
     CharacterCustomisation,
+    HorseCustomisation,
     None
 }
 #endregion

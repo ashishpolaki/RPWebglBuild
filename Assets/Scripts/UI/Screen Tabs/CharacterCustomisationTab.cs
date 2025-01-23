@@ -33,7 +33,7 @@ namespace UI.Screen.Tab
         #region Button Listener Methods
         private void OnSubmitButton()
         {
-            UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
+            UIController.Instance.ScreenEvent(ScreenType.HorseCustomisation, UIScreenEvent.Open);
             UIController.Instance.ScreenEvent(ScreenType.CharacterCustomisation, UIScreenEvent.Close);
         }
 

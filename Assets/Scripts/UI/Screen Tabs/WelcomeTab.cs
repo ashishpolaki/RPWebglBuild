@@ -61,7 +61,6 @@ namespace UI.Screen.Tab
         #endregion
 
         #region Private Methods
-
         private void OpenScreen()
         {
             //Open Host Screen
@@ -90,7 +89,7 @@ namespace UI.Screen.Tab
         private async void CheckCacheSignIn()
         {
             //Check if the user is active.
-            if(UGSManager.Instance.Authentication.IsCurrentlySignedIn())
+            if (UGSManager.Instance.Authentication.IsCurrentlySignedIn())
             {
                 OpenScreen();
                 return;

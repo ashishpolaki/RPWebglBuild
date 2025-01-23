@@ -375,6 +375,7 @@ namespace UGS
                 {
                     HostRaceData hostRaceData = new HostRaceData();
                     hostRaceData.characterCustomisationDatas = startRaceResponse.playerOutfits;
+                    hostRaceData.horseCustomisationDatas = startRaceResponse.playersHorseColors;
                     UGSManager.Instance.SetHostRaceData(hostRaceData);
                     OnRaceStartSuccessEvent?.Invoke();
                 }

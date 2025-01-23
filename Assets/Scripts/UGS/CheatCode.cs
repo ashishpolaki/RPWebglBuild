@@ -1,5 +1,6 @@
 #if CHEAT_CODE
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +19,25 @@ public class CheatCode : MonoBehaviour
     [SerializeField] private InputField longitudeInput;
     [SerializeField] private InputField venueNameInput;
 
-    private bool IsCheatPanelActive;
     public bool IsCheatEnabled;
+    [Tooltip("item1 = playername, item2 = playerID")]
+    public List<(string, string)> PlayerIdsList = new List<(string, string)>
+    {
+        ("Player1","ay5rJehHu03oKkdN2HNssNcWlsv0"),
+        ("Player2","XDsLifkArnnQr97mTZwlZBlLSYnM"),
+        ("Player3",""),
+        ("Player4",""),
+        ("Player5",""),
+        ("Player6",""),
+        ("Player7",""),
+        ("Player8",""),
+        ("Player9",""),
+        ("Player10",""),
+        ("Player11",""),
+        ("Player12",""),
+    };
+
+    private bool IsCheatPanelActive;
 
     public string CheatDateTime { get; private set; }
     public float Latitude { get; private set; }
@@ -84,7 +102,5 @@ public class CheatCode : MonoBehaviour
         return utcDateTime.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
-    //PlayerIds
-    public string Ajith1 = "yOMFiqaN6zF0z9xNQ95s2H1Wvagc";
 }
 #endif

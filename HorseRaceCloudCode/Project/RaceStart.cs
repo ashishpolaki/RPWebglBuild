@@ -47,15 +47,23 @@ namespace HorseRaceCloudCode
 
             VenueRegistrationRequest venueRegistrationRequest = await Utils.GetCustomDataWithKey<VenueRegistrationRequest>(context, gameApiClient, StringUtils.HOSTVENUEKEY, context.PlayerId);
 
-            //Get Player Outfits
+            //Get Player Outfits and horse colors
             Dictionary<int, CharacterCustomisationEconomy> playerOutfits = new Dictionary<int, CharacterCustomisationEconomy>();
+            Dictionary<int, HorseCustomisationEconomy> playerHorseColors = new Dictionary<int, HorseCustomisationEconomy>();
             foreach (var player in startRaceRequest.RaceLobbyParticipants)
             {
-                var playerInventory = await gameApiClient.EconomyInventory.GetPlayerInventoryAsync(context, context.ServiceToken, context.ProjectId, player.PlayerID);
-                CharacterCustomisationEconomy characterCustomisationEconomy = JsonConvert.DeserializeObject<CharacterCustomisationEconomy>(playerInventory.Data.Results[0].InstanceData.ToString());
-                playerOutfits.Add(player.HorseNumber, characterCustomisationEconomy);
+                var playerInventoryCharacter = await gameApiClient.EconomyInventory.GetPlayerInventoryAsync(context, context.ServiceToken, context.ProjectId, player.PlayerID, playersInventoryItemIds: new List<string> { "CurrentCharacterData" });
+                var playerInventoryHorse = await gameApiClient.EconomyInventory.GetPlayerInventoryAsync(context, context.ServiceToken, context.ProjectId, player.PlayerID, playersInventoryItemIds: new List<string> { "CurrentHorseData" });
+                CharacterCustomisationEconomy? characterCustomisationEconomy = JsonConvert.DeserializeObject<CharacterCustomisationEconomy>(playerInventoryCharacter.Data.Results[0].InstanceData.ToString());
+                HorseCustomisationEconomy? horseCustomisationEconomy = JsonConvert.DeserializeObject<HorseCustomisationEconomy>(playerInventoryHorse.Data.Results[0].InstanceData.ToString());
+                if (characterCustomisationEconomy != null && horseCustomisationEconomy != null)
+                {
+                    playerOutfits.Add(player.HorseNumber, characterCustomisationEconomy);
+                    playerHorseColors.Add(player.HorseNumber, horseCustomisationEconomy);
+                }
             }
             response.playerOutfits = playerOutfits;
+            response.playersHorseColors = playerHorseColors;
 
             //Start Race
             await SetLobbyPlayers(context, raceController, venueRegistrationRequest.Name, startRaceRequest.RaceLobbyParticipants);

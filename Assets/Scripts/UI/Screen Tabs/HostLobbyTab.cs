@@ -67,8 +67,8 @@ namespace UI.Screen.Tab
             //    // Cheat
             //    GameManager.Instance.LoadHorsesInRaceOrder();
             //    List<CurrentRacePlayerCheckIn> cheatPlayersCheckin = new List<CurrentRacePlayerCheckIn>();
-            //    cheatPlayersCheckin.Add(new CurrentRacePlayerCheckIn() { CurrentDayCheckIns = 1, PlayerName = "VijithTembur", PlayerID = "hRBEmIizDoBwzmlzWYFzOx9SHJPa" });
-            //    cheatPlayersCheckin.Add(new CurrentRacePlayerCheckIn() { CurrentDayCheckIns = 11, PlayerName = "AjithReddy", PlayerID = "yOMFiqaN6zF0z9xNQ95s2H1Wvagc" });
+            //    cheatPlayersCheckin.Add(new CurrentRacePlayerCheckIn() { CurrentDayCheckIns = 5, PlayerName = CheatCode.Instance.PlayerIdsList[0].Item1, PlayerID = CheatCode.Instance.PlayerIdsList[0].Item2 });
+            //    cheatPlayersCheckin.Add(new CurrentRacePlayerCheckIn() { CurrentDayCheckIns = 6, PlayerName = CheatCode.Instance.PlayerIdsList[1].Item1, PlayerID = CheatCode.Instance.PlayerIdsList[1].Item2 });
             //    racePlayerCheckIns = cheatPlayersCheckin;
             //}
 

@@ -15,15 +15,9 @@ namespace UI.Screen
         {
             Character character = CharacterCustomisationManager.Instance.InstantiateCharacter();
             await LoadCharacterData(character);
-            //if (isCharacterDataExist)
-            //{
-            //    UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
-            //    UIController.Instance.ScreenEvent(ScreenType.CharacterCustomisation, UIScreenEvent.Close);
-            //}
-            //else
-            {
-                base.Open(screenTabType);
-            }
+
+            ScreenTabType screenTab = isCharacterDataExist ? ScreenTabType.CharacterOutfitCustomize : screenTabType;
+            base.Open(screenTab);
         }
 
         public async Task LoadCharacterData(Character character)
@@ -32,7 +26,7 @@ namespace UI.Screen
             Func<Task<List<PlayersInventoryItem>>> method = async () => await UGSManager.Instance.Economy.GetInventoryItem(StringUtils.INVENTORYITEMID_CHARACTER, StringUtils.PLAYERINVENTORYITEMID_CHARACTER);
             List<PlayersInventoryItem> playersInventoryItems = await LoadingScreen.Instance.PerformAsyncWithLoading(method);
 
-             isCharacterDataExist = playersInventoryItems.Count > 0;
+            isCharacterDataExist = playersInventoryItems.Count > 0;
             if (isCharacterDataExist)
             {
                 string deserializeData = playersInventoryItems[0].InstanceData.GetAsString();

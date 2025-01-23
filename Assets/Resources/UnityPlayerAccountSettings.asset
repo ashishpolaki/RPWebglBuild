@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UnityPlayerAccountSettings
   m_EditorClassIdentifier: 
   clientId: 
-  scopeMask: 7
+  scopeMask: 0
   useCustomDeepLinkUri: 0
   customScheme: 
   customHost: 

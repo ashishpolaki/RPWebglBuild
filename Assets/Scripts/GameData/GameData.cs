@@ -82,8 +82,10 @@ public class HostRaceData : GameData, IDisposable
 {
     public List<RaceLobbyParticipant> qualifiedPlayers;
     public List<CurrentRacePlayerCheckIn> unQualifiedPlayersList;
-    [Tooltip("Key : HorseNumber, Value : CharacterCustomisationData")]
+    // [Tooltip("Key : HorseNumber, Value : CharacterCustomisationData")]
     public Dictionary<int, CharacterCustomisationEconomy> characterCustomisationDatas;
+    // [Tooltip("Key : HorseNumber, Value : HorseCustomisationData")]
+    public Dictionary<int, HorseCustomisationEconomy> horseCustomisationDatas;
     public Dictionary<int, RenderTexture> currentRaceAvatars;
 
     public HostRaceData() : base()

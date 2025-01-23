@@ -25,12 +25,15 @@ namespace HorseRaceCloudCode
         public string Message { get; set; }
         public bool IsRaceStart { get; set; }
         public Dictionary<int, CharacterCustomisationEconomy> playerOutfits { get; set; }
+        public Dictionary<int, HorseCustomisationEconomy> playersHorseColors { get; set; }
 
         public StartRaceResponse()
         {
             Message = string.Empty;
             IsRaceStart = false;
             playerOutfits = new Dictionary<int, CharacterCustomisationEconomy>();
+            playersHorseColors = new Dictionary<int, HorseCustomisationEconomy>();
+
         }
     }
     #endregion
@@ -239,7 +242,16 @@ namespace HorseRaceCloudCode
         {
         }
     }
+    [System.Serializable]
+    public class HorseCustomisationEconomy : EconomyCustom
+    {
+        public int bodyColorIndex;
 
+        public HorseCustomisationEconomy() : base()
+        {
+            bodyColorIndex = 0;
+        }
+    }
     [System.Serializable]
     public class CharacterCustomisationEconomy : EconomyCustom
     {

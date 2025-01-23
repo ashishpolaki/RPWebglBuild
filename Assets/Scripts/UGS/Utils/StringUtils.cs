@@ -71,6 +71,8 @@ public class StringUtils
     #region Economy
     public const string INVENTORYITEMID_CHARACTER = "CUSTOMCHARACTER";
     public const string PLAYERINVENTORYITEMID_CHARACTER = "CurrentCharacterData";
+    public const string INVENTORYITEMID_HORSE = "CUSTOMHORSE";
+    public const string PLAYERINVENTORYITEMID_HORSE = "CurrentHorseData";
     #endregion
 
     public static bool IsStringEmpty(string value)

@@ -31,7 +31,7 @@ namespace HorseRace
         {
             if (isLoadGameScene)
             {
-              // LoadCharactersCheat();
+                // LoadCharactersCheat();
             }
             HorseController[] horseControllers = new HorseController[spawnHorses.Count];
             HostRaceData hostRaceData = new HostRaceData();
@@ -49,7 +49,7 @@ namespace HorseRace
                     if (horseControllerLoad != null)
                     {
                         horseControllerLoad.Character.CreateNewTexture();
-                        
+
                         horseControllerLoad.SetCharacter(UGSManager.Instance.HostRaceData.characterCustomisationDatas[horseNumber]);
                         horseControllerLoad.Character.EnableFace();
                         RenderTexture renderTexture = GameManager.Instance.CaptureObject.Capture(horseControllerLoad.Character.gameObject);
@@ -58,8 +58,9 @@ namespace HorseRace
                     }
                 }
 
-                //Generate Random Materials
-                horse.InitializeMaterials(horseJockeyMaterials.horseMaterials[Utils.GenerateRandomNumber(0, horseJockeyMaterials.horseMaterials.Length)]);
+                //Generate Horse Material
+                int materialIndex = UGSManager.Instance.HostRaceData.horseCustomisationDatas[horseNumber].bodyColorIndex;
+                horse.InitializeMaterials(horseJockeyMaterials.horseMaterials[materialIndex]);
                 horse.SetHorseNumber(horseNumber);
                 horseControllers[i] = horse;
             }
@@ -92,7 +93,7 @@ namespace HorseRace
                     torso = Utils.GenerateRandomNumber(0, 3),
                     leftUpperArm = upperArm,
                     rightUpperArm = upperArm,
-                    leftLowerArm =  lowerArm,
+                    leftLowerArm = lowerArm,
                     rightLowerArm = lowerArm,
                 };
 
