@@ -10,11 +10,20 @@ namespace HorseRace
 
         public void PlayLeftLegDustEffect()
         {
+            if(ParticleManager.Instance == null)
+            {
+                return;
+            }
+
             ParticleSystem particle = ParticleManager.Instance.PlayParticle(ParticleType.HorseDustCloud,leftLeg.position);
             StartCoroutine(IDeactiveParticle(particle.gameObject, particle.main.duration));
         }
         public void PlayRightLegDustEffect()
         {
+            if (ParticleManager.Instance == null)
+            {
+                return;
+            }
             ParticleSystem particle = ParticleManager.Instance.PlayParticle(ParticleType.HorseDustCloud, rightLeg.position);
             StartCoroutine(IDeactiveParticle(particle.gameObject, particle.main.duration));
         }
