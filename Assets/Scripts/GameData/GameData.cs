@@ -94,6 +94,7 @@ public class HostRaceData : GameData, IDisposable
         qualifiedPlayers = new List<RaceLobbyParticipant>();
         unQualifiedPlayersList = new List<CurrentRacePlayerCheckIn>();
         characterCustomisationDatas = new Dictionary<int, CharacterCustomisationEconomy>();
+        horseCustomisationDatas = new Dictionary<int, HorseCustomisationEconomy>();
     }
 
     public void Dispose()
@@ -102,6 +103,7 @@ public class HostRaceData : GameData, IDisposable
         qualifiedPlayers = null;
         unQualifiedPlayersList = null;
         characterCustomisationDatas = null;
+        horseCustomisationDatas = null;
         GC.SuppressFinalize(this);
     }
 }

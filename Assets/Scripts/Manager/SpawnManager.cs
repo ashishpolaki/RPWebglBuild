@@ -59,7 +59,15 @@ namespace HorseRace
                 }
 
                 //Generate Horse Material
-                int materialIndex = UGSManager.Instance.HostRaceData.horseCustomisationDatas[horseNumber].bodyColorIndex;
+                int materialIndex = 0;
+                if (UGSManager.Instance.HostRaceData.horseCustomisationDatas.ContainsKey(horseNumber))
+                {
+                    materialIndex = UGSManager.Instance.HostRaceData.horseCustomisationDatas[horseNumber].bodyColorIndex;
+                }
+                else
+                {
+                    materialIndex = Utils.GenerateRandomNumber(0, horseJockeyMaterials.horseMaterials.Length - 1);
+                }
                 horse.InitializeMaterials(horseJockeyMaterials.horseMaterials[materialIndex]);
                 horse.SetHorseNumber(horseNumber);
                 horseControllers[i] = horse;
