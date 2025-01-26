@@ -1,11 +1,12 @@
 using HorseRace;
+using UGS;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UGS;
 using Unity.Services.Economy.Model;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace UI.Screen.Tab
 {
@@ -15,29 +16,53 @@ namespace UI.Screen.Tab
         [SerializeField] private HorseColorUI horseColorUIPrefab;
         [SerializeField] private Transform scrollContent;
         [SerializeField] private Horse horse;
+        [SerializeField] private Horse horsePreview;
         [SerializeField] private Button submitButton;
 
         private List<HorseColorUI> horseColorUIList = new List<HorseColorUI>();
         private int currentBodyColorIndex = 0;
+        private RenderTexture renderTexture;
 
-        [Space(10), Header("Character Render Settings")]
+        [Space(10), Header("Horse Render Settings")]
+        [SerializeField] private TextureAndRotateHandler textureAndRotateHandler;
         [SerializeField] private Vector3 position;
-        [SerializeField] private float scale = 1f;
-        [SerializeField] private Camera characterCamera;
+        [SerializeField] private Camera horseCamera;
         [SerializeField] private Vector3 cameraOffset;
         [SerializeField] private float orthoGraphicSize;
         [SerializeField] private RenderTextureSettings renderTextureSettings;
+        [SerializeField] private Vector3 horsePreviewPosition;
+        [SerializeField] private Vector3 horsePreviewCameraOffset;
+        [SerializeField] private float horsePreviewOrthoGraphicSize;
+        [SerializeField] private Vector2Int horsePreviewRenderTextureSize;
 
         public override async void Open()
         {
             base.Open();
-            InstantiateHorseColorUI();
-            await LoadHorseData();
+            LoadHorses();
+            StartCoroutine(IESpawnHorsePreviews());
+            //  InstantiateHorseColorUI();
+            // await LoadHorseData();
         }
 
         private void OnEnable()
         {
             submitButton.onClick.AddListener(() => OnSubmitButton());
+        }
+
+        IEnumerator IESpawnHorsePreviews()
+        {
+            int index = 0;
+            foreach (var horseColor in horseJockeyMaterials.horseMaterials)
+            {
+                HorseColorUI horseColorUI = Instantiate(horseColorUIPrefab, scrollContent);
+                horsePreview.SetHorseMaterial(horseColor);
+                yield return null;
+                RenderTexture renderTexture = GameManager.Instance.CaptureObject.CaptureWithCustom(horsePreview.gameObject, horsePreviewCameraOffset, horsePreviewOrthoGraphicSize, horsePreviewRenderTextureSize);
+                horseColorUI.SetData(renderTexture, index);
+                horseColorUI.OnHorseColorSelectedAction += HandleHorseColorSelection;
+                horseColorUIList.Add(horseColorUI);
+                index++;
+            }
         }
 
         private void OnDisable()
@@ -50,6 +75,25 @@ namespace UI.Screen.Tab
             await Save();
             UIController.Instance.ScreenEvent(ScreenType.Client, UIScreenEvent.Open);
             UIController.Instance.ScreenEvent(ScreenType.HorseCustomisation, UIScreenEvent.Close);
+        }
+
+        private void LoadHorses()
+        {
+            horse.transform.position = position;
+            horsePreview.transform.position = horsePreviewPosition;
+
+            //Create a new Render Texture and assign it to camera.
+            if (renderTexture == null)
+            {
+                renderTexture = new RenderTexture(renderTextureSettings.renderTextureSize.x, renderTextureSettings.renderTextureSize.y, renderTextureSettings.colorFormat, renderTextureSettings.depthStencilFormat);
+            }
+
+            //Set Horse Camera Position
+            horseCamera.transform.position = horse.transform.position + cameraOffset;
+            horseCamera.targetTexture = renderTexture;
+            horseCamera.orthographicSize = orthoGraphicSize;
+            horseCamera.gameObject.SetActive(true);
+            textureAndRotateHandler.OnCharacterAssign(renderTexture, horse.transform);
         }
 
         public async Task Save()
@@ -89,19 +133,6 @@ namespace UI.Screen.Tab
             horseColorUIList[partIndex].Select();
         }
 
-
-        private void InstantiateHorseColorUI()
-        {
-            int index = 0;
-            foreach (var horseColor in horseJockeyMaterials.horseMaterials)
-            {
-                HorseColorUI horseColorUI = Instantiate(horseColorUIPrefab, scrollContent);
-                horseColorUI.SetData(horseColor.mainTexture, index);
-                horseColorUI.OnHorseColorSelectedAction += HandleHorseColorSelection;
-                horseColorUIList.Add(horseColorUI);
-                index++;
-            }
-        }
         private void HandleHorseColorSelection(int partIndex)
         {
             foreach (var horseColorUI in horseColorUIList)
