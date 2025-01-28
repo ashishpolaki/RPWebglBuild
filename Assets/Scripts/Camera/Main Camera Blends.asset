@@ -13,65 +13,10 @@ MonoBehaviour:
   m_Name: Main Camera Blends
   m_EditorClassIdentifier: 
   CustomBlends:
-  - From: '**ANY CAMERA**'
-    To: DollyCamera3
+  - From: EntryFaceCamera
+    To: Virtual Camera 1
     Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: DollyCamera4
-    Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: DollyCamera5
-    Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: DollyCamera6
-    Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: DollyCamera7
-    Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: DollyCamera8
-    Blend:
-      Style: 0
+      Style: 2
       Time: 1
       CustomCurve:
         serializedVersion: 2
@@ -79,11 +24,11 @@ MonoBehaviour:
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: OvertakeCamera
+  - From: Virtual Camera 1
+    To: Camera 2
     Blend:
-      Style: 0
-      Time: 2
+      Style: 2
+      Time: 1
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -106,39 +51,6 @@ MonoBehaviour:
     Blend:
       Style: 1
       Time: 1
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: RiderFaceCamera1
-    Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: RaceWinnerCamera
-    Blend:
-      Style: 0
-      Time: 2
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
-  - From: '**ANY CAMERA**'
-    To: WinnerMedalsCamera
-    Blend:
-      Style: 0
-      Time: 2
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
