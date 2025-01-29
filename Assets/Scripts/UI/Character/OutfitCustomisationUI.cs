@@ -56,11 +56,15 @@ public class OutfitCustomisationUI : MonoBehaviour
             outfitCaptureCharacter.transform.rotation = Quaternion.Euler(0, 180, 0);
 
             //If Character Doesnt have any outfit applied, apply the default first outfit 
+            int upperOutfitIndex = character.CurrentTorso;
+            int lowerOutfitIndex = character.CurrentHips;
             if (character.CurrentTorso == -1 || character.CurrentHips == -1)
             {
-                character.ChangeUpperOutfit(CharacterCustomisationManager.Instance.GetUpperOutfitEconomy(0));
-                character.ChangeLowerOutfit(CharacterCustomisationManager.Instance.GetLowerOutfitEconomy(0));
+                upperOutfitIndex = 0;
+                lowerOutfitIndex = 0;
             }
+            character.ChangeUpperOutfit(CharacterCustomisationManager.Instance.GetUpperOutfitEconomy(upperOutfitIndex));
+            character.ChangeLowerOutfit(CharacterCustomisationManager.Instance.GetLowerOutfitEconomy(lowerOutfitIndex));
         }
         //Set Transform
         if (outfitCaptureCharacter != null)
@@ -104,6 +108,7 @@ public class OutfitCustomisationUI : MonoBehaviour
             partStyleUIList.Add(outfitStyle);
         }
         outfitStylesDictionary.Add(outfitType, partStyleUIList);
+        outfitStylesDictionary[outfitType][character.CurrentTorso == -1 ? 0 : character.CurrentTorso].Select();
     }
 
     IEnumerator IESpawnLowerOutfits()
@@ -124,6 +129,7 @@ public class OutfitCustomisationUI : MonoBehaviour
             partStyleUIList.Add(outfitStyle);
         }
         outfitStylesDictionary.Add(outfitType, partStyleUIList);
+        outfitStylesDictionary[outfitType][character.CurrentHips == -1 ? 0 : character.CurrentHips].Select();
     }
 
     public void SetOutfitType(OutfitType _outfitType)

@@ -40,8 +40,6 @@ namespace UI.Screen.Tab
             base.Open();
             LoadHorses();
             StartCoroutine(IESpawnHorsePreviews());
-            //  InstantiateHorseColorUI();
-            // await LoadHorseData();
         }
 
         private void OnEnable()
@@ -63,6 +61,7 @@ namespace UI.Screen.Tab
                 horseColorUIList.Add(horseColorUI);
                 index++;
             }
+            LoadHorseData();
         }
 
         private void OnDisable()
@@ -116,7 +115,7 @@ namespace UI.Screen.Tab
             }
         }
 
-        public async Task LoadHorseData()
+        public async void LoadHorseData()
         {
             HorseCustomisationEconomy horseCustomisationEconomy = new HorseCustomisationEconomy();
             Func<Task<List<PlayersInventoryItem>>> method = async () => await UGSManager.Instance.Economy.GetInventoryItem(StringUtils.INVENTORYITEMID_HORSE, StringUtils.PLAYERINVENTORYITEMID_HORSE);

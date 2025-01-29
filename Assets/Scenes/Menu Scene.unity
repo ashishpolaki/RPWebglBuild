@@ -4759,7 +4759,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 384
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 1fd2583c24de29f4b8386661611983f8, type: 2}
   m_TargetDisplay: 0
@@ -5827,7 +5827,6 @@ MonoBehaviour:
   IsCheatEnabled: 0
   cheatTime: {fileID: 1365564717}
   dateSelectorUI: {fileID: 1834427399}
-  Ajith1: yOMFiqaN6zF0z9xNQ95s2H1Wvagc
 --- !u!1 &855767292
 GameObject:
   m_ObjectHideFlags: 0
