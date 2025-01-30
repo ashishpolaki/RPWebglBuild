@@ -18,8 +18,8 @@ MonoBehaviour:
   initialAccelerationRange:
     x: 7
     y: 10
-  finishRaceControlPointIndex: 69
-  finishRaceAccelerationIncrement: 0.5
-  finishRaceAccelerationMultiplier: 0.03
+  finishRaceControlPointIndex: 100
+  finishRaceAccelerationIncrement: 1
+  finishRaceAccelerationMultiplier: 0.05
   acceleration: 2
   maxSpeed: 15
