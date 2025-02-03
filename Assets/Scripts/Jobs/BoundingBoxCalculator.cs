@@ -398,7 +398,11 @@ public struct TestHorseBoundingBoxCalculationJob : IJob
         {
             for (int j = 3; j < 6; j++)
             {
-                axes[index++] = math.normalize(math.cross(axes[i], axes[j]));
+                float3 crossProduct = math.cross(axes[i], axes[j]);
+                if (!math.all(crossProduct == float3.zero))
+                {
+                    axes[index++] = math.normalize(crossProduct);
+                }
             }
         }
 

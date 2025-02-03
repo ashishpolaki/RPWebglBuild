@@ -60,7 +60,7 @@ namespace HorseRace
 
                 //Generate Horse Material
                 int materialIndex = 0;
-                if (UGSManager.Instance.HostRaceData.horseCustomisationDatas.ContainsKey(horseNumber))
+                if (UGSManager.Instance != null && UGSManager.Instance.HostRaceData.horseCustomisationDatas.ContainsKey(horseNumber))
                 {
                     materialIndex = UGSManager.Instance.HostRaceData.horseCustomisationDatas[horseNumber].bodyColorIndex;
                 }
@@ -80,7 +80,6 @@ namespace HorseRace
             GameManager.Instance.CameraController.SetTargetGroup(horseControllers.Select(x => x.transform).ToList());
         }
         #endregion
-
 
         #region Temp Load CharacterData
         private void LoadCharactersCheat()
